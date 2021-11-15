@@ -61,14 +61,12 @@ source build/envsetup.sh &> /dev/null
 mkdir -p $BUILD_OUTPUT
 echo ""
 
-repopick -t android-12.0.0_r12
 repopick -t twelve-monet
 repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
 repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0"
 repopick 317119 # Unset BOARD_EXT4_SHARE_DUP_BLOCKS
 repopick 317574 -f # ThemePicker: Grant missing wallpaper permissions
 repopick 317602 # Keyguard: don't use large clock on landscape
-#repopick 317606 # LineageParts: Temporary hax
 repopick 317608 # Support for device specific key handlers
 repopick 317609 # Allow adjusting progress on touch events.
 repopick 318037 # Statusbar: show vibration icon in collapsed statusbar
