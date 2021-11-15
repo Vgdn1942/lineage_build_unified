@@ -1,0 +1,34 @@
+From dda55226f2b43bc5cf1c60d4a3f9352cb94480cd Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 4 Aug 2021 20:09:39 +0300
+Subject: [PATCH] Use lineage version instead build id
+
+Change-Id: I24cba3b7ec509a2398917c5454fb5918c714df99
+---
+ src/com/android/server/telecom/stats/StatServer.java | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/server/telecom/stats/StatServer.java b/src/com/android/server/telecom/stats/StatServer.java
+index a53d045b..5f467521 100644
+--- a/src/com/android/server/telecom/stats/StatServer.java
++++ b/src/com/android/server/telecom/stats/StatServer.java
+@@ -30,12 +30,15 @@ public class StatServer {
+     private String build_property = "persist.sys.id_build";
+     private String stats_property = "persist.sys.id_stats";
+     private String google_property = "ro.com.google.gmsversion";
++    private String lineage_property = "ro.lineage.version";
+ 
+     private String id_build = System.getProperty(build_property, "none");
+     private String id_stats = System.getProperty(stats_property, "false");
+     private String id_google = System.getProperty(google_property, "none");
+     private String android_id = ("7.0_r4".equals(id_google)) ? "true" : "false"; // deprecated
+-    private String build_id = Build.DISPLAY;
++    //private String build_id = Build.DISPLAY;
++    private String build_id = System.getProperty(lineage_property, "none");
++
+     private String result = "";
+ 
+     SendToServer sendToServer;
+-- 
+2.20.1
+

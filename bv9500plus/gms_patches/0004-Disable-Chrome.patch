@@ -1,0 +1,46 @@
+From 24cf922dc6e2e3519f94dca8d2ad224d30973062 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Mon, 8 Nov 2021 18:56:15 +0300
+Subject: [PATCH] Disable Chrome
+
+---
+ products/gms_eea_type4c.mk    | 6 ++----
+ products/gms_eea_v2_type4c.mk | 7 ++-----
+ 2 files changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/products/gms_eea_type4c.mk b/products/gms_eea_type4c.mk
+index 0b24614..248afce 100644
+--- a/products/gms_eea_type4c.mk
++++ b/products/gms_eea_type4c.mk
+@@ -1,9 +1,7 @@
+ $(call inherit-product, vendor/partner_gms/products/eea_common.mk)
+ 
+ PRODUCT_PACKAGES += \
+-    sysconfig_eea_v1_search_chrome \
+     GmsConfigOverlayGSA \
+     Velvet \
+-    Chrome \
+-    GmsEEAType4cIntegration \
+-    SearchLauncherQuickStep
++    GmsEEAType4cIntegration
++
+diff --git a/products/gms_eea_v2_type4c.mk b/products/gms_eea_v2_type4c.mk
+index d91d059..248afce 100644
+--- a/products/gms_eea_v2_type4c.mk
++++ b/products/gms_eea_v2_type4c.mk
+@@ -1,10 +1,7 @@
+ $(call inherit-product, vendor/partner_gms/products/eea_common.mk)
+ 
+ PRODUCT_PACKAGES += \
+-    sysconfig_eea_v2_search_chrome \
+     GmsConfigOverlayGSA \
+     Velvet \
+-    Chrome \
+-    SearchSelector \
+-    GmsEEAType4cIntegration \
+-    SearchLauncherQuickStep
++    GmsEEAType4cIntegration
++
+-- 
+2.20.1
+

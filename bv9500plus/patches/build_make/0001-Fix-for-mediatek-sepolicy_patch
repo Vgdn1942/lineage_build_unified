@@ -1,0 +1,68 @@
+From 8251ba8c453f7059c2c07455adc64f739bca4480 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Thu, 11 Nov 2021 23:34:08 +0300
+Subject: [PATCH] Fix for mediatek sepolicy
+
+Change-Id: Ic78e1af0000c9dbc138d3afb83adbb59d7c2a96f
+---
+ target/board/generic_arm64/BoardConfig.mk         |  4 ----
+ target/board/generic_arm64/sepolicy/OWNERS        |  1 -
+ target/board/generic_arm64/sepolicy/file.te       |  6 ------
+ target/board/generic_arm64/sepolicy/file_contexts | 12 ------------
+ 4 files changed, 23 deletions(-)
+ delete mode 100644 target/board/generic_arm64/sepolicy/OWNERS
+ delete mode 100644 target/board/generic_arm64/sepolicy/file.te
+ delete mode 100644 target/board/generic_arm64/sepolicy/file_contexts
+
+diff --git a/target/board/generic_arm64/BoardConfig.mk b/target/board/generic_arm64/BoardConfig.mk
+index 49ae21698..269bd5acd 100644
+--- a/target/board/generic_arm64/BoardConfig.mk
++++ b/target/board/generic_arm64/BoardConfig.mk
+@@ -92,7 +92,3 @@ endif
+ BOARD_ROOT_EXTRA_SYMLINKS += /vendor/lib/dsp:/dsp
+ BOARD_ROOT_EXTRA_SYMLINKS += /mnt/vendor/persist:/persist
+ BOARD_ROOT_EXTRA_SYMLINKS += /vendor/firmware_mnt:/firmware
+-
+-# TODO(b/36764215): remove this setting when the generic system image
+-# no longer has QCOM-specific directories under /.
+-BOARD_SEPOLICY_DIRS += build/make/target/board/generic_arm64/sepolicy
+diff --git a/target/board/generic_arm64/sepolicy/OWNERS b/target/board/generic_arm64/sepolicy/OWNERS
+deleted file mode 100644
+index 6dc2b8675..000000000
+--- a/target/board/generic_arm64/sepolicy/OWNERS
++++ /dev/null
+@@ -1 +0,0 @@
+-include platform/system/sepolicy:/OWNERS
+diff --git a/target/board/generic_arm64/sepolicy/file.te b/target/board/generic_arm64/sepolicy/file.te
+deleted file mode 100644
+index 7adfdfa4e..000000000
+--- a/target/board/generic_arm64/sepolicy/file.te
++++ /dev/null
+@@ -1,6 +0,0 @@
+-# TODO(b/36764215): remove this file when the generic system image
+-# no longer has these directories
+-type persist_file, file_type;
+-
+-# Default type for anything under /firmware.
+-type firmware_file, fs_type, contextmount_type;
+diff --git a/target/board/generic_arm64/sepolicy/file_contexts b/target/board/generic_arm64/sepolicy/file_contexts
+deleted file mode 100644
+index 0a80559e1..000000000
+--- a/target/board/generic_arm64/sepolicy/file_contexts
++++ /dev/null
+@@ -1,12 +0,0 @@
+-# TODO(b/36764215): remove this file when the generic system image
+-# no longer has these directories. They are specific to QCOM.
+-
+-# /
+-/tombstones             u:object_r:rootfs:s0
+-/dsp                    u:object_r:rootfs:s0
+-
+-# /persist
+-/persist(/.*)?          u:object_r:persist_file:s0
+-
+-# files in firmware
+-/firmware(/.*)?         u:object_r:firmware_file:s0
+-- 
+2.20.1
+

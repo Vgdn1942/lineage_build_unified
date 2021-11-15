@@ -1,0 +1,31 @@
+From edb58f455c87f8f1867edca7bce829b66dc136ca Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 7 Nov 2021 20:39:30 +0300
+Subject: [PATCH] Fix build vendor_init
+
+Change-Id: I26081841fd832793f54fa3cb4a2770ea3eb25d6d
+---
+ init/Android.bp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/init/Android.bp b/init/Android.bp
+index 3014df2de..bf07530d8 100644
+--- a/init/Android.bp
++++ b/init/Android.bp
+@@ -95,6 +95,13 @@ cc_library_static {
+     srcs: [
+         "vendor_init.cpp",
+     ],
++    include_dirs: [
++        "system/libbase/include",
++        "system/core/init",
++    ],
++    shared_libs: [
++        "libbase",
++    ],
+ }
+ 
+ cc_defaults {
+-- 
+2.20.1
+

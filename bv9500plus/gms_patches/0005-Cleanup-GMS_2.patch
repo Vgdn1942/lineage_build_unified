@@ -1,0 +1,162 @@
+From 378bfc20cacc508d185dd2e2b0caed4dee909b71 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Mon, 8 Nov 2021 23:38:11 +0300
+Subject: [PATCH] Cleanup GMS
+
+---
+ .../privapp-permissions-google-comms-suite.xml  | 17 -----------------
+ .../privapp-permissions-google-system.xml       | 10 ----------
+ etc/sysconfig/google.xml                        |  2 +-
+ etc/sysconfig/google_go.xml                     |  2 +-
+ .../res/values/config.xml                       |  5 +++--
+ .../vendor_required_apps_managed_device.xml     |  5 -----
+ .../vendor_required_apps_managed_user.xml       |  4 ----
+ products/google_comms_suite.mk                  |  3 +--
+ 8 files changed, 6 insertions(+), 42 deletions(-)
+
+diff --git a/etc/permissions/privapp-permissions-google-comms-suite.xml b/etc/permissions/privapp-permissions-google-comms-suite.xml
+index 344447a..a460fac 100644
+--- a/etc/permissions/privapp-permissions-google-comms-suite.xml
++++ b/etc/permissions/privapp-permissions-google-comms-suite.xml
+@@ -1,22 +1,5 @@
+ <?xml version="1.0" ?>
+ <permissions>
+-    <privapp-permissions package="com.google.android.dialer">
+-        <permission name="android.permission.ALLOW_ANY_CODEC_FOR_PLAYBACK"/>
+-        <permission name="android.permission.CAPTURE_AUDIO_OUTPUT"/>
+-        <permission name="android.permission.CAPTURE_VOICE_COMMUNICATION_OUTPUT"/>
+-        <permission name="android.permission.CONNECTIVITY_USE_RESTRICTED_NETWORKS"/>
+-        <permission name="android.permission.CONTROL_INCALL_EXPERIENCE"/>
+-        <permission name="android.permission.GET_ACCOUNTS_PRIVILEGED"/>
+-        <permission name="android.permission.INTERACT_ACROSS_USERS"/>
+-        <permission name="android.permission.MODIFY_AUDIO_ROUTING"/>
+-        <permission name="android.permission.MODIFY_PHONE_STATE"/>
+-        <permission name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
+-        <permission name="android.permission.STATUS_BAR"/>
+-        <permission name="android.permission.STOP_APP_SWITCHES"/>
+-        <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+-        <permission name="com.android.voicemail.permission.READ_VOICEMAIL"/>
+-        <permission name="com.android.voicemail.permission.WRITE_VOICEMAIL"/>
+-    </privapp-permissions>
+     <privapp-permissions package="com.google.android.ims">
+         <permission name="android.permission.CONNECTIVITY_USE_RESTRICTED_NETWORKS"/>
+         <permission name="android.permission.PACKET_KEEPALIVE_OFFLOAD"/>
+diff --git a/etc/permissions/privapp-permissions-google-system.xml b/etc/permissions/privapp-permissions-google-system.xml
+index 953eeaf..b54ec30 100644
+--- a/etc/permissions/privapp-permissions-google-system.xml
++++ b/etc/permissions/privapp-permissions-google-system.xml
+@@ -4,16 +4,6 @@ This XML file declares which signature|privileged permissions should be granted
+ privileged Google applications in GMS devices.
+ -->
+ <permissions>
+-    <privapp-permissions package="com.google.android.packageinstaller">
+-        <permission name="android.permission.DELETE_PACKAGES"/>
+-        <permission name="android.permission.INSTALL_PACKAGES"/>
+-        <permission name="android.permission.MANAGE_USERS"/>
+-        <permission name="android.permission.PACKAGE_USAGE_STATS"/>
+-        <permission name="android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME"/>
+-        <permission name="android.permission.UPDATE_APP_OPS_STATS"/>
+-        <permission name="android.permission.USE_RESERVED_DISK"/>
+-    </privapp-permissions>
+-
+     <privapp-permissions package="com.google.android.tag">
+         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+     </privapp-permissions>
+diff --git a/etc/sysconfig/google.xml b/etc/sysconfig/google.xml
+index 74b7100..d3ba75c 100644
+--- a/etc/sysconfig/google.xml
++++ b/etc/sysconfig/google.xml
+@@ -9,7 +9,7 @@
+     <allow-in-data-usage-save package="com.google.android.gms" />
+     <allow-unthrottled-location package="com.google.android.gms" />
+     <allow-ignore-location-settings package="com.google.android.gms" attributionTag="com.google.android.gms.thunderbird" />
+-    <allow-ignore-location-settings package="com.google.android.dialer" attributionTag="*" />
++    <allow-ignore-location-settings package="com.android.dialer" attributionTag="*" />
+ 
+     <!-- Turbo must not have App Standby restrictions in order to push new
+          App Standby buckets to the platform periodically -->
+diff --git a/etc/sysconfig/google_go.xml b/etc/sysconfig/google_go.xml
+index 57e40f5..974c5f7 100644
+--- a/etc/sysconfig/google_go.xml
++++ b/etc/sysconfig/google_go.xml
+@@ -9,7 +9,7 @@
+     <allow-in-data-usage-save package="com.google.android.gms" />
+     <allow-unthrottled-location package="com.google.android.gms" />
+     <allow-ignore-location-settings package="com.google.android.gms" attributionTag="com.google.android.gms.thunderbird" />
+-    <allow-ignore-location-settings package="com.google.android.dialer" attributionTag="*" />
++    <allow-ignore-location-settings package="com.android.dialer" attributionTag="*" />
+ 
+     <!-- Turbo must not have App Standby restrictions in order to push new
+          App Standby buckets to the platform periodically -->
+diff --git a/overlay/GmsConfigOverlayCommon/res/values/config.xml b/overlay/GmsConfigOverlayCommon/res/values/config.xml
+index aedb3aa..517cbb0 100644
+--- a/overlay/GmsConfigOverlayCommon/res/values/config.xml
++++ b/overlay/GmsConfigOverlayCommon/res/values/config.xml
+@@ -112,12 +112,13 @@
+     <string-array name="config_nonBlockableNotificationPackages" translatable="false">
+         <item>com.google.android.setupwizard</item>
+         <item>com.google.android.apps.restore</item>
+-        <item>com.google.android.dialer</item>
++        <item>com.android.dialer</item>
++        <item>com.android.messaging</item>
+     </string-array>
+ 
+     <!-- An array of packages that can make sound on the ringer stream in priority-only DND mode -->
+     <string-array name="config_priorityOnlyDndExemptPackages" translatable="false">
+-        <item>com.google.android.dialer</item>
++        <item>com.android.dialer</item>
+         <item>com.android.server.telecom</item>
+         <item>android</item>
+         <item>com.android.systemui</item>
+diff --git a/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_device.xml b/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_device.xml
+index 0723c33..ac2dfb3 100644
+--- a/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_device.xml
++++ b/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_device.xml
+@@ -4,16 +4,11 @@
+     <string-array name="vendor_required_apps_managed_device" translatable="false">
+         <item>com.android.vending</item> <!-- Google Play -->
+         <item>com.google.android.gms</item> <!-- Required by Play -->
+-        <item>com.google.android.contacts</item> <!-- Google Contacts -->
+         <item>com.google.android.apps.wellbeing</item> <!-- Digital Wellbeing -->
+-        <item>com.google.android.googlequicksearchbox</item> <!-- package that contains Google Launcher -->
+         <item>com.android.launcher</item> <!-- Android Launcher (if it's preloaded) -->
+-        <item>com.google.android.dialer</item> <!-- Google dialer to enable making phone calls -->
+-        <item>com.google.android.apps.messaging</item> <!-- Google Messenger for SMS -->
+         <item>com.google.android.setupwizard</item> <!-- Google SetupWizard to finish DO provisioning properly -->
+         <item>com.google.android.documentsui</item> <!-- Files -->
+         <item>com.google.android.apps.assistant</item> <!-- Google Assistant -->
+-        <item>com.google.android.apps.searchlite</item> <!-- Google Search GO -->
+         <item>com.google.android.projection.gearhead</item> <!-- Android Auto -->
+     </string-array>
+ </resources>
+diff --git a/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_user.xml b/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_user.xml
+index 3edc6c3..30242a6 100644
+--- a/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_user.xml
++++ b/overlay/GmsConfigOverlayCommon/res/values/vendor_required_apps_managed_user.xml
+@@ -5,12 +5,8 @@
+     <string-array name="vendor_required_apps_managed_user" translatable="false">
+         <item>com.android.vending</item> <!-- Google Play -->
+         <item>com.google.android.gms</item> <!-- Required by Play -->
+-        <item>com.google.android.contacts</item> <!-- Google Contacts -->
+         <item>com.google.android.apps.wellbeing</item> <!-- Digital Wellbeing -->
+-        <item>com.google.android.googlequicksearchbox</item> <!-- Google Launcher -->
+         <item>com.android.launcher</item> <!-- Android Launcher (default on some Nexus devices) -->
+-        <item>com.google.android.dialer</item> <!-- Google dialer to enable making phone calls -->
+-        <item>com.google.android.apps.messaging</item> <!-- Google Messenger for SMS -->
+         <item>com.google.android.documentsui</item> <!-- Files -->
+     </string-array>
+ </resources>
+diff --git a/products/google_comms_suite.mk b/products/google_comms_suite.mk
+index 7442a29..f1060e8 100644
+--- a/products/google_comms_suite.mk
++++ b/products/google_comms_suite.mk
+@@ -1,5 +1,4 @@
+ PRODUCT_PACKAGES += \
+     privapp_permissions_google_comms_suite \
+-    CarrierServices \
+-    com.google.android.dialer.support.jar
++    CarrierServices
+ 
+-- 
+2.20.1
+

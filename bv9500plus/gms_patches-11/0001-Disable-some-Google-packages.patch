@@ -1,0 +1,118 @@
+From e71f7c3c42edea7f5f7cb9d8e0fa1488ba4aef50 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 14 Jul 2021 20:28:36 +0300
+Subject: [PATCH] Disable some Google packages
+
+---
+ products/gms.mk                | 51 ++++++++++++++++++----------------
+ products/google_comms_suite.mk |  5 ++--
+ 2 files changed, 30 insertions(+), 26 deletions(-)
+
+diff --git a/products/gms.mk b/products/gms.mk
+index b50f18c..10e9ed9 100644
+--- a/products/gms.mk
++++ b/products/gms.mk
+@@ -15,23 +15,25 @@ PRODUCT_PACKAGES := \
+     AndroidPlatformServices \
+     ConfigUpdater \
+     GoogleExtShared \
+-    GoogleFeedback \
+     GoogleLocationHistory \
+     GoogleOneTimeInitializer \
+-    GooglePackageInstaller \
+-    GooglePartnerSetup \
+     GooglePrintRecommendationService \
+     GoogleRestore \
+     GoogleServicesFramework \
+     GoogleCalendarSyncAdapter \
+     GoogleContactsSyncAdapter \
+-    GoogleTTS \
+     GmsCore \
+     Phonesky \
+     SetupWizard \
+-    WebViewGoogle \
+     Wellbeing
+ 
++#    GoogleFeedback \
++#    GooglePackageInstaller \
++#    GooglePartnerSetup \
++#    WebViewGoogle \
++#    GoogleTTS \
++
++
+ # GMS common RRO packages
+ PRODUCT_PACKAGES += GmsConfigOverlayCommon GmsConfigOverlayGSA
+ 
+@@ -53,34 +55,35 @@ PRODUCT_PACKAGE_OVERLAYS += $(ANDROID_PARTNER_GMS_HOME)/overlay/gms_overlay
+ 
+ # GMS mandatory application packages
+ PRODUCT_PACKAGES += \
+-    Chrome \
+-    Drive \
+     Gmail2 \
+-    Duo \
+     Maps \
+-    YTMusic \
+-    Photos \
+-    Velvet \
+-    Videos \
+-    YouTube
++    Velvet
++
++#    Chrome \
++#    YouTube
++#    Drive \
++#    Videos \
++#    YTMusic \
++#    Photos \
++#    Duo \
+ 
+ # GMS comms suite
+ $(call inherit-product, $(ANDROID_PARTNER_GMS_HOME)/products/google_comms_suite.mk)
+ 
+ # GMS optional application packages
+-PRODUCT_PACKAGES += \
+-    CalendarGoogle \
+-    DeskClockGoogle \
+-    LatinImeGoogle \
+-    TagGoogle \
+-    talkback \
+-    Keep \
+-    CalculatorGoogle
++#PRODUCT_PACKAGES += \
++#    CalendarGoogle \
++#    DeskClockGoogle \
++#    LatinImeGoogle \
++#    TagGoogle \
++#    talkback \
++#    Keep \
++#    CalculatorGoogle
+ 
+ # GMS sample application packages
+-PRODUCT_PACKAGES += \
+-    GmsSampleIntegration \
+-    SearchLauncherQuickStep
++#PRODUCT_PACKAGES += \
++#    GmsSampleIntegration \
++#    SearchLauncherQuickStep
+ 
+ PRODUCT_PRODUCT_PROPERTIES += \
+     ro.setupwizard.rotation_locked=true \
+diff --git a/products/google_comms_suite.mk b/products/google_comms_suite.mk
+index 8a799e4..3cd5d2e 100644
+--- a/products/google_comms_suite.mk
++++ b/products/google_comms_suite.mk
+@@ -3,7 +3,8 @@ PRODUCT_PACKAGE_OVERLAYS += vendor/partner_gms/overlay/gms_overlay_comms
+ PRODUCT_PACKAGES += \
+     privapp_permissions_google_comms_suite \
+     CarrierServices \
+-    GoogleContacts \
+-    GoogleDialer \
+     GmsConfigOverlayComms \
+     Messages
++
++#    GoogleContacts \
++#    GoogleDialer \
+-- 
+2.20.1
+

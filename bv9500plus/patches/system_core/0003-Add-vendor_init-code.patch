@@ -1,0 +1,244 @@
+From 53c24c55afffaf248d3924cbe05b9875cc5c06a8 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 7 Nov 2021 18:53:12 +0300
+Subject: [PATCH] Add vendor_init code
+
+Change-Id: If720c7c5b99c9929637f7e45214d39864618017b
+---
+ init/vendor_init.cpp | 217 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 215 insertions(+), 2 deletions(-)
+
+diff --git a/init/vendor_init.cpp b/init/vendor_init.cpp
+index d3fd5ffe2..5d074552a 100644
+--- a/init/vendor_init.cpp
++++ b/init/vendor_init.cpp
+@@ -27,11 +27,224 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
++#include <stdlib.h>
++#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
++#include <sys/_system_properties.h>
++
++#include <android-base/properties.h>
++#include <android-base/strings.h>
++#include "property_service.h"
+ #include "vendor_init.h"
+ 
+-/* init vendor override stubs */
++using android::base::GetProperty;
++
++void property_override(char const prop[], char const value[], bool add = true)
++{
++    auto pi = (prop_info *) __system_property_find(prop);
++
++    if (pi != nullptr) {
++        __system_property_update(pi, value, strlen(value));
++    } else if (add) {
++        __system_property_add(prop, strlen(prop), value, strlen(value));
++    }
++}
+ 
+-__attribute__ ((weak))
+ void vendor_load_properties()
+ {
++    const std::string board = GetProperty("ro.product.board", "");
++
++    // fingerprint
++    if (board.find("s62v71c2k_jk_tee") == 0) {
++        property_override("ro.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++        property_override("ro.bootimage.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++        property_override("ro.product.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++        property_override("ro.product_services.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++        property_override("ro.odm.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++        property_override("ro.vendor.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++        property_override("ro.system.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++        property_override("ro.system_ext.build.fingerprint", "Blackview/BV9500Plus/BV9500Plus:9/PPR1.180610.011/root.20190821.184752:user/release-keys");
++    } else if (board.find("s62v71c2k_jk_eea") == 0) {
++        property_override("ro.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++        property_override("ro.bootimage.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++        property_override("ro.product.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++        property_override("ro.product_services.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++        property_override("ro.odm.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++        property_override("ro.vendor.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++        property_override("ro.system.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++        property_override("ro.system_ext.build.fingerprint", "Blackview/BV9500Plus_EEA/BV9500Plus:9/PPR1.180610.011/root.20190813.133031:user/release-keys");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++        property_override("ro.bootimage.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++        property_override("ro.product.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++        property_override("ro.product_services.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++        property_override("ro.odm.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++        property_override("ro.vendor.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++        property_override("ro.system.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++        property_override("ro.system_ext.build.fingerprint", "Blackview/BV6900_RU/BV6900:9/PPR1.180610.011/1576500675:user/release-keys");
++    }
++    // incremental
++    if (board.find("s62v71c2k_jk_tee") == 0) {
++        property_override("ro.build.version.incremental", "root.20190821.184752");
++        property_override("ro.bootimage.build.version.incremental", "root.20190821.184752");
++        property_override("ro.product.build.version.incremental", "root.20190821.184752");
++        property_override("ro.product_services.build.version.incremental", "root.20190821.184752");
++        property_override("ro.odm.build.version.incremental", "root.20190821.184752");
++        property_override("ro.vendor.build.version.incremental", "root.20190821.184752");
++        property_override("ro.system.build.version.incremental", "root.20190821.184752");
++        property_override("ro.system_ext.build.version.incremental", "root.20190821.184752");
++    } else if (board.find("s62v71c2k_jk_eea") == 0) {
++        property_override("ro.build.version.incremental", "root.20190813.133031");
++        property_override("ro.bootimage.build.version.incremental", "root.20190813.133031");
++        property_override("ro.product.build.version.incremental", "root.20190813.133031");
++        property_override("ro.product_services.build.version.incremental", "root.20190813.133031");
++        property_override("ro.odm.build.version.incremental", "root.20190813.133031");
++        property_override("ro.vendor.build.version.incremental", "root.20190813.133031");
++        property_override("ro.system.build.version.incremental", "root.20190813.133031");
++        property_override("ro.system_ext.build.version.incremental", "root.20190813.133031");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.build.version.incremental", "1576500675");
++        property_override("ro.bootimage.build.version.incremental", "1576500675");
++        property_override("ro.product.build.version.incremental", "1576500675");
++        property_override("ro.product_services.build.version.incremental", "1576500675");
++        property_override("ro.odm.build.version.incremental", "1576500675");
++        property_override("ro.vendor.build.version.incremental", "1576500675");
++        property_override("ro.system.build.version.incremental", "1576500675");
++        property_override("ro.system_ext.build.version.incremental", "1576500675");
++    }
++    // name
++    if (board.find("s62v71c2k_jk_tee") == 0) {
++        property_override("ro.product.name", "BV9500Plus");
++        property_override("ro.product.bootimage.name", "BV9500Plus");
++        property_override("ro.product.product.name", "BV9500Plus");
++        property_override("ro.product.product_services.name", "BV9500Plus");
++        property_override("ro.product.odm.name", "BV9500Plus");
++        property_override("ro.product.vendor.name", "BV9500Plus");
++        property_override("ro.product.system.name", "BV9500Plus");
++        property_override("ro.product.system_ext.name", "BV9500Plus");
++    } else if (board.find("s62v71c2k_jk_eea") == 0) {
++        property_override("ro.product.name", "BV9500Plus_EEA");
++        property_override("ro.product.bootimage.name", "BV9500Plus_EEA");
++        property_override("ro.product.product.name", "BV9500Plus_EEA");
++        property_override("ro.product.product_services.name", "BV9500Plus_EEA");
++        property_override("ro.product.odm.name", "BV9500Plus_EEA");
++        property_override("ro.product.vendor.name", "BV9500Plus_EEA");
++        property_override("ro.product.system.name", "BV9500Plus_EEA");
++        property_override("ro.product.system_ext.name", "BV9500Plus_EEA");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.product.name", "BV6900_RU");
++        property_override("ro.product.bootimage.name", "BV6900_RU");
++        property_override("ro.product.product.name", "BV6900_RU");
++        property_override("ro.product.product_services.name", "BV6900_RU");
++        property_override("ro.product.odm.name", "BV6900_RU");
++        property_override("ro.product.vendor.name", "BV6900_RU");
++        property_override("ro.product.system.name", "BV6900_RU");
++        property_override("ro.product.system_ext.name", "BV6900_RU");
++    }
++    // brand
++    property_override("ro.product.brand", "Blackview");
++    property_override("ro.product.bootimage.brand", "Blackview");
++    property_override("ro.product.product.brand", "Blackview");
++    property_override("ro.product.product_services.brand", "Blackview");
++    property_override("ro.product.odm.brand", "Blackview");
++    property_override("ro.product.vendor.brand", "Blackview");
++    property_override("ro.product.system.brand", "Blackview");
++    property_override("ro.product.system_ext.brand", "Blackview");
++    // device
++    if ((board.find("s62v71c2k_jk_tee") == 0) || (board.find("s62v71c2k_jk_eea") == 0)) {
++        property_override("ro.product.device", "BV9500Plus");
++        property_override("ro.product.bootimage.device", "BV9500Plus");
++        property_override("ro.product.product.device", "BV9500Plus");
++        property_override("ro.product.product_services.device", "BV9500Plus");
++        property_override("ro.product.odm.device", "BV9500Plus");
++        property_override("ro.product.vendor.device", "BV9500Plus");
++        property_override("ro.product.system.device", "BV9500Plus");
++        property_override("ro.product.system_ext.device", "BV9500Plus");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.product.device", "BV6900");
++        property_override("ro.product.bootimage.device", "BV6900");
++        property_override("ro.product.product.device", "BV6900");
++        property_override("ro.product.product_services.device", "BV6900");
++        property_override("ro.product.odm.device", "BV6900");
++        property_override("ro.product.vendor.device", "BV6900");
++        property_override("ro.product.system.device", "BV6900");
++        property_override("ro.product.system_ext.device", "BV6900");
++    }
++    // model
++    if ((board.find("s62v71c2k_jk_tee") == 0) || (board.find("s62v71c2k_jk_eea") == 0)) {
++        property_override("ro.product.model", "BV9500Plus");
++        property_override("ro.product.bootimage.model", "BV9500Plus");
++        property_override("ro.product.product.model", "BV9500Plus");
++        property_override("ro.product.product_services.model", "BV9500Plus");
++        property_override("ro.product.odm.model", "BV9500Plus");
++        property_override("ro.product.vendor.model", "BV9500Plus");
++        property_override("ro.product.system.model", "BV9500Plus");
++        property_override("ro.product.system_ext.model", "BV9500Plus");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.product.model", "BV6900");
++        property_override("ro.product.bootimage.model", "BV6900");
++        property_override("ro.product.product.model", "BV6900");
++        property_override("ro.product.product_services.model", "BV6900");
++        property_override("ro.product.odm.model", "BV6900");
++        property_override("ro.product.vendor.model", "BV6900");
++        property_override("ro.product.system.model", "BV6900");
++        property_override("ro.product.system_ext.model", "BV6900");
++    }
++    // manufacturer
++    if ((board.find("s62v71c2k_jk_tee") == 0) || (board.find("s62v71c2k_jk_eea") == 0)) {
++        property_override("ro.product.manufacturer", "A-gold");
++        property_override("ro.product.bootimage.manufacturer", "A-gold");
++        property_override("ro.product.product.manufacturer", "A-gold");
++        property_override("ro.product.product_services.manufacturer", "A-gold");
++        property_override("ro.product.odm.manufacturer", "A-gold");
++        property_override("ro.product.vendor.manufacturer", "A-gold");
++        property_override("ro.product.system.manufacturer", "A-gold");
++        property_override("ro.product.system_ext.manufacturer", "A-gold");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.product.manufacturer", "Blackview");
++        property_override("ro.product.bootimage.manufacturer", "Blackview");
++        property_override("ro.product.product.manufacturer", "Blackview");
++        property_override("ro.product.product_services.manufacturer", "Blackview");
++        property_override("ro.product.odm.manufacturer", "Blackview");
++        property_override("ro.product.vendor.manufacturer", "Blackview");
++        property_override("ro.product.system.manufacturer", "Blackview");
++        property_override("ro.product.system_ext.manufacturer", "Blackview");
++    }
++    // other
++    if (board.find("s62v71c2k_jk_tee") == 0) {
++        property_override("ro.build.display.id", "BV9500Plus-user 9 PPR1.180610.011 root.20190821.184752 release-keys");
++        property_override("ro.build.description", "BV9500Plus-user 9 PPR1.180610.011 root.20190821.184752 release-keys");
++    } else if (board.find("s62v71c2k_jk_eea") == 0) {
++        property_override("ro.build.display.id", "BV9500Plus-user 9 PPR1.180610.011 root.20190813.133031 release-keys");
++        property_override("ro.build.description", "BV9500Plus-user 9 PPR1.180610.011 root.20190813.133031 release-keys");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.build.display.id", "BV6900_S1_200529");
++        property_override("ro.build.description", "full_k57pv1_dm_64-user 9 PPR1.180610.011 eng.releas.20200529.104329 release-keys");
++    }
++    if ((board.find("s62v71c2k_jk_tee") == 0) || (board.find("s62v71c2k_jk_eea") == 0)) {
++        property_override("ro.build.flavor", "BV9500Plus-user");
++        property_override("ro.build.product", "BV9500Plus");
++        property_override("ro.build.version.security_patch", "2019-07-05");
++        //property_override("ro.lineage.build.vendor_security_patch", "2019-07-05");
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.build.flavor", "full_k57pv1_dm_64-user");
++        property_override("ro.build.product", "BV6900_RU");
++        property_override("ro.build.version.security_patch", "2020-05-05");
++        //property_override("ro.lineage.build.vendor_security_patch", "2020-05-05");
++    }
++    property_override("ro.build.tags", "release-keys");
++    property_override("ro.boot.vbmeta.device_state", "locked");
++    property_override("ro.boot.verifiedbootstate", "green");
++    property_override("ro.boot.flash.locked", "1");
++    property_override("ro.boot.veritymode", "enforcing");
++    property_override("ro.boot.warranty_bit", "0");
++    property_override("ro.warranty_bit", "0");
++    property_override("ro.debuggable", "0");
++    property_override("ro.secure", "1");
++    property_override("ro.build.type", "user");
++    property_override("ro.build.selinux", "0");
++    property_override("ro.adb.secure", "1");
++    property_override("sys.use_fifo_ui", "1");
++    property_override("debug.sf.latch_unsignaled", "0");
++    property_override("vendor.debug.sf.latch_unsignaled", "0");
+ }
++
+-- 
+2.20.1
+

@@ -1,0 +1,22 @@
+From a1fa3fca8a77b899e69c0b6c625468478c32cd18 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Tue, 27 Jul 2021 18:59:23 +0300
+Subject: [PATCH] Add sepolicy for sh from java
+
+Change-Id: Ib8f4e885aa873370ed73f724e234124d37ef6bff
+---
+ sepolicy/sh_java.te | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 sepolicy/sh_java.te
+
+diff --git a/sepolicy/sh_java.te b/sepolicy/sh_java.te
+new file mode 100644
+index 0000000..290018c
+--- /dev/null
++++ b/sepolicy/sh_java.te
+@@ -0,0 +1,2 @@
++allow system_server { shell_exec vendor_shell_exec }:file { execute execute_no_trans };
++
+-- 
+2.20.1
+

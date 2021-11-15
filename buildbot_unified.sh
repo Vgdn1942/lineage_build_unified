@@ -40,11 +40,16 @@ echo\
 START=`date +%s`
 BUILD_DATE="$(date +%Y%m%d)"
 WITHOUT_CHECK_API=true
-WITH_SU=true
+WITH_SU=false
+BUILD_OUTPUT=~/GSI_treble_build/build-output
+export OUT_DIR_COMMON_BASE=~/gsi_out
 
 echo "Preparing local manifests"
+#repo init -u git://github.com/AndyCGYan/android.git -b lineage-19.0
 mkdir -p .repo/local_manifests
 cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
+cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
+rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
 echo ""
 
 echo "Syncing repos"
@@ -53,7 +58,7 @@ echo ""
 
 echo "Setting up build environment"
 source build/envsetup.sh &> /dev/null
-mkdir -p ~/build-output
+mkdir -p $BUILD_OUTPUT
 echo ""
 
 repopick -t android-12.0.0_r12
@@ -63,16 +68,41 @@ repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lin
 repopick 317119 # Unset BOARD_EXT4_SHARE_DUP_BLOCKS
 repopick 317574 -f # ThemePicker: Grant missing wallpaper permissions
 repopick 317602 # Keyguard: don't use large clock on landscape
-repopick 317606 # LineageParts: Temporary hax
+#repopick 317606 # LineageParts: Temporary hax
 repopick 317608 # Support for device specific key handlers
 repopick 317609 # Allow adjusting progress on touch events.
 repopick 318037 # Statusbar: show vibration icon in collapsed statusbar
 repopick 318379 # Partially revert "lineage-sdk: Comment out LineageAudioService"
 repopick 318380 # lineage: Temporarily disable LineageAudioService overlay
 
+gms_patches() {
+    NOW=$PWD
+    cd vendor/partner_gms
+    git clean -fdx; git reset --hard
+    for patch in $NOW/lineage_build_unified/bv9500plus/gms_patches/*.patch; do
+        if git apply --check $patch; then
+            git am $patch
+        elif patch -f -p1 --dry-run < $patch > /dev/null; then
+            #This will fail
+            git am $patch || true
+            patch -f -p1 < $patch
+            git add -u
+            git am --continue
+        else
+            echo "Failed applying $patch"
+        fi
+    done
+    cd ../..
+}
+
+apply_patches_personal() {
+    echo "Applying patch personal ${1}"
+    bash $PWD/../treble_experimentations/apply-patches.sh ./lineage_build_unified/${1}
+}
+
 apply_patches() {
     echo "Applying patch group ${1}"
-    bash ~/treble_experimentations/apply-patches.sh ./lineage_patches_unified/${1}
+    bash $PWD/../treble_experimentations/apply-patches.sh ./lineage_patches_unified/${1}
 }
 
 prep_device() {
@@ -93,12 +123,13 @@ finalize_treble() {
     cd device/phh/treble
     git clean -fdx
     bash generate.sh lineage
+    rm treble_a*.mk
     cd ../../..
 }
 
 build_device() {
     brunch ${1}
-    mv $OUT/lineage-*.zip ~/build-output/lineage-19.0-$BUILD_DATE-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "").zip
+    mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.0-$BUILD_DATE-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "").zip
 }
 
 build_treble() {
@@ -106,19 +137,24 @@ build_treble() {
         #("32B") TARGET=treble_arm_bvS;;
         ("A64B") TARGET=treble_a64_bvS;;
         ("64B") TARGET=treble_arm64_bvS;;
+        ("bv9500plus") TARGET=bv9500plus;;
         (*) echo "Invalid target - exiting"; exit 1;;
     esac
+    IMAGE_NAME=lineage-19.0-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")
     lunch ${TARGET}-userdebug
     make installclean
     make -j$(nproc --all) systemimage
-    mv $OUT/system.img ~/build-output/lineage-19.0-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "").img
-    make vndk-test-sepolicy
+    mv $OUT/system.img $BUILD_OUTPUT/${IMAGE_NAME}.img
+    xz -c $BUILD_OUTPUT/$IMAGE_NAME.img -T$(nproc --all) > $BUILD_OUTPUT/$IMAGE_NAME.img.xz
+    #make vndk-test-sepolicy
 }
 
 echo "Applying patches"
 prep_${MODE}
 apply_patches patches_platform
 apply_patches patches_${MODE}
+apply_patches_personal bv9500plus/patches
+gms_patches
 if ${PERSONAL}
 then
     apply_patches patches_platform_personal
@@ -136,7 +172,8 @@ do
     echo "Starting $(${PERSONAL} && echo "personal " || echo "")build for ${MODE} ${var}"
     build_${MODE} ${var}
 done
-ls ~/build-output | grep 'lineage' || true
+ls $BUILD_OUTPUT | grep 'lineage' || true
+du -hs $BUILD_OUTPUT/lineage*
 
 END=`date +%s`
 ELAPSEDM=$(($(($END-$START))/60))

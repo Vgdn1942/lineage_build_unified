@@ -1,0 +1,388 @@
+From bcf1140f8a59b023a513bafbb510d9cf01778841 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 6 Nov 2021 06:58:55 +0300
+Subject: [PATCH] Fix build on A12
+
+Change-Id: I791228ea91c9d38a451ce2af45b93c900001b1ed
+---
+ external/audio_utils/common_utils/AudioToolkit/Android.mk   | 2 +-
+ external/libudf/Android.bp                                  | 2 +-
+ external/libudf/libladder/Android.bp                        | 4 ++--
+ frameworks/av/AVEnhance/libavextensions/Android.bp          | 6 ++++--
+ .../libavextensions/stagefright/AVStageExtensions.h         | 4 ++--
+ .../libavextensions/stagefright/AVStageFactory.cpp          | 4 ++--
+ frameworks/av/AVEnhance/libmtkavenhancements/Android.bp     | 3 ++-
+ .../AVEnhance/libmtkavenhancements/MtkAVStageExtensions.h   | 2 +-
+ .../av/AVEnhance/libmtkavenhancements/MtkAVStageFactory.cpp | 2 +-
+ .../av/AVEnhance/libmtkavenhancements/MtkImageDecoder.cpp   | 2 +-
+ .../av/AVEnhance/libmtkavenhancements/MtkImageDecoder.h     | 2 +-
+ .../wifi-display/source/MtkWifiDisplaySource.cpp            | 4 ++--
+ frameworks/av/AVEnhance/mtkextractors/mkv/Android.bp        | 1 +
+ .../av/AVEnhance/mtkextractors/mkv/MtkMatroskaExtractor.cpp | 2 +-
+ frameworks/av/AVEnhance/mtkextractors/mpeg2/Android.bp      | 1 +
+ frameworks/av/drm/common/mtkutil/Android.bp                 | 2 +-
+ frameworks/av/drm/cta/drmctaplugin/Android.mk               | 2 +-
+ frameworks/av/drm/oma/mtkplugin/Android.mk_disable          | 2 +-
+ hardware/audio/common/impl/5.0/Device.cpp                   | 4 ++--
+ hardware/audio/common/impl/6.0/Device.cpp                   | 4 ++--
+ .../connectivity/bluetooth/service/1.0/mediatek/Android.bp  | 6 +++---
+ 21 files changed, 33 insertions(+), 28 deletions(-)
+
+diff --git a/external/audio_utils/common_utils/AudioToolkit/Android.mk b/external/audio_utils/common_utils/AudioToolkit/Android.mk
+index 44942a6..555da48 100644
+--- a/external/audio_utils/common_utils/AudioToolkit/Android.mk
++++ b/external/audio_utils/common_utils/AudioToolkit/Android.mk
+@@ -18,7 +18,7 @@ LOCAL_SHARED_LIBRARIES := \
+ LOCAL_C_INCLUDES := \
+     vendor/mediatek/opensource/external/audio_utils/common_headers/ \
+     frameworks/av/media/libaudioclient/include/media/ \
+-    system/core/base/include
++    system/libbase/include
+ 
+ LOCAL_CFLAGS := -DSYS_IMPL
+ 
+diff --git a/external/libudf/Android.bp b/external/libudf/Android.bp
+index 567d85c..f71c64a 100644
+--- a/external/libudf/Android.bp
++++ b/external/libudf/Android.bp
+@@ -130,7 +130,7 @@ cc_library_shared {
+ 
+     include_dirs: [
+         "vendor/mediatek/opensource/external/aee/binary/inc",
+-        "system/core/libunwindstack/include"
++        "system/unwinding/libunwindstack/include"
+     ],
+ 
+     local_include_dirs: ["include"],
+diff --git a/external/libudf/libladder/Android.bp b/external/libudf/libladder/Android.bp
+index 553898f..649d18d 100644
+--- a/external/libudf/libladder/Android.bp
++++ b/external/libudf/libladder/Android.bp
+@@ -10,8 +10,8 @@ cc_library {
+     proprietary: true,
+     owner: "mtk",
+     include_dirs: [
+-        "system/core/libunwindstack",
+-        "system/core/base/include",
++        "system/unwinding/libunwindstack",
++        "system/libbase/include",
+         ],
+     shared_libs: [
+         "libunwindstack",
+diff --git a/frameworks/av/AVEnhance/libavextensions/Android.bp b/frameworks/av/AVEnhance/libavextensions/Android.bp
+index bfd35b1..75468cc 100644
+--- a/frameworks/av/AVEnhance/libavextensions/Android.bp
++++ b/frameworks/av/AVEnhance/libavextensions/Android.bp
+@@ -18,6 +18,7 @@ cc_library_static {
+     ],
+ 
+     shared_libs: [
++        "framework-permission-aidl-cpp",
+         "libutils",
+         "liblog",
+         "libbinder",
+@@ -29,11 +30,12 @@ cc_library_static {
+     ],
+ 
+     static_libs: [
+-    	"libarect",
++        "libarect",
+     ],
+ 
+     header_libs: [
+-    	"media_plugin_headers",
++        "av-headers",
++        "media_plugin_headers",
+     ],
+ 
+     cflags: [
+diff --git a/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageExtensions.h b/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageExtensions.h
+index 85253f7..ed85091 100644
+--- a/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageExtensions.h
++++ b/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageExtensions.h
+@@ -24,7 +24,7 @@ namespace android {
+ 
+ struct ACodec;
+ class MPEG4Writer;
+-struct ImageDecoder;
++struct MediaImageDecoder;
+ struct AString;
+ class MetaData;
+ class IMediaSource;
+@@ -35,7 +35,7 @@ class IMediaSource;
+ struct AVStageFactory {
+     virtual sp<ACodec> createACodec();
+     virtual sp<MPEG4Writer> createMPEG4Writer(int fd);
+-    virtual sp<ImageDecoder> createImageDecoder(
++    virtual sp<MediaImageDecoder> createImageDecoder(
+             const AString &componentName,
+             const sp<MetaData> &trackMeta,
+             const sp<IMediaSource> &source);
+diff --git a/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageFactory.cpp b/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageFactory.cpp
+index 5424c4c..3793694 100644
+--- a/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageFactory.cpp
++++ b/frameworks/av/AVEnhance/libavextensions/stagefright/AVStageFactory.cpp
+@@ -44,9 +44,9 @@ sp<MPEG4Writer> AVStageFactory::createMPEG4Writer(int fd) {
+     return new MPEG4Writer(fd);
+ }
+ 
+-sp<ImageDecoder> AVStageFactory::createImageDecoder(const AString &componentName,
++sp<MediaImageDecoder> AVStageFactory::createImageDecoder(const AString &componentName,
+     const sp<MetaData> &trackMeta, const sp<IMediaSource> &source) {
+-    return new ImageDecoder(componentName, trackMeta, source);
++    return new MediaImageDecoder(componentName, trackMeta, source);
+ }
+ 
+ // static
+diff --git a/frameworks/av/AVEnhance/libmtkavenhancements/Android.bp b/frameworks/av/AVEnhance/libmtkavenhancements/Android.bp
+index 6c0bf60..2f43fe9 100644
+--- a/frameworks/av/AVEnhance/libmtkavenhancements/Android.bp
++++ b/frameworks/av/AVEnhance/libmtkavenhancements/Android.bp
+@@ -17,7 +17,7 @@ cc_library_shared {
+ 	"vendor/mediatek/opensource/frameworks/av/AVEnhance/libmtkavenhancements",
+ 	"vendor/mediatek/opensource/frameworks/av/AVEnhance/libavextensions",
+         "frameworks/av/media/libstagefright",
+-        "system/core/base/include",
++        "system/libbase/include",
+         "frameworks/av/include",
+         "frameworks/av/include/media",
+         "frameworks/av/media/libstagefright/include",
+@@ -33,6 +33,7 @@ cc_library_shared {
+         "liblog",
+         "libutils",
+         "libstagefright",
++        "libstagefright_codecbase",
+         "libstagefright_foundation",
+         "libcrypto",
+         "libmedia",
+diff --git a/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageExtensions.h b/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageExtensions.h
+index 6eadab5..e498a58 100644
+--- a/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageExtensions.h
++++ b/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageExtensions.h
+@@ -31,7 +31,7 @@ struct MtkAVStageFactory : public AVStageFactory {
+ 
+     virtual sp<ACodec> createACodec();
+     virtual sp<MPEG4Writer> createMPEG4Writer(int fd);
+-    virtual sp<ImageDecoder> createImageDecoder(
++    virtual sp<MediaImageDecoder> createImageDecoder(
+         const AString &componentName,
+         const sp<MetaData> &trackMeta,
+         const sp<IMediaSource> &source);
+diff --git a/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageFactory.cpp b/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageFactory.cpp
+index d86224a..bc73efb 100644
+--- a/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageFactory.cpp
++++ b/frameworks/av/AVEnhance/libmtkavenhancements/MtkAVStageFactory.cpp
+@@ -47,7 +47,7 @@ sp<MPEG4Writer> MtkAVStageFactory::createMPEG4Writer(int fd) {
+     return new MtkMPEG4Writer(fd);
+ }
+ 
+-sp<ImageDecoder> MtkAVStageFactory::createImageDecoder(
++sp<MediaImageDecoder> MtkAVStageFactory::createImageDecoder(
+         const AString &componentName,
+         const sp<MetaData> &trackMeta,
+         const sp<IMediaSource> &source) {
+diff --git a/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.cpp b/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.cpp
+index cde942b..0db50e5 100644
+--- a/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.cpp
++++ b/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.cpp
+@@ -146,7 +146,7 @@ MtkImageDecoder::MtkImageDecoder(
+         const AString &componentName,
+         const sp<MetaData> &trackMeta,
+         const sp<IMediaSource> &source)
+-    : ImageDecoder(componentName, trackMeta, source),
++    : MediaImageDecoder(componentName, trackMeta, source),
+       mComponentName(componentName),
+       mTrackMeta(trackMeta),
+       mSource(source),
+diff --git a/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.h b/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.h
+index 8fa2156..b52d537 100644
+--- a/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.h
++++ b/frameworks/av/AVEnhance/libmtkavenhancements/MtkImageDecoder.h
+@@ -30,7 +30,7 @@ class IMediaSource;
+ class VideoFrame;
+ struct MediaCodec;
+ 
+-struct MtkImageDecoder : public ImageDecoder {
++struct MtkImageDecoder : public MediaImageDecoder {
+     MtkImageDecoder(
+             const AString &componentName,
+             const sp<MetaData> &trackMeta,
+diff --git a/frameworks/av/AVEnhance/libmtkavenhancements/wifi-display/source/MtkWifiDisplaySource.cpp b/frameworks/av/AVEnhance/libmtkavenhancements/wifi-display/source/MtkWifiDisplaySource.cpp
+index 00b533a..63ef174 100644
+--- a/frameworks/av/AVEnhance/libmtkavenhancements/wifi-display/source/MtkWifiDisplaySource.cpp
++++ b/frameworks/av/AVEnhance/libmtkavenhancements/wifi-display/source/MtkWifiDisplaySource.cpp
+@@ -48,7 +48,7 @@
+ #include <unistd.h>
+ #include <gui/SurfaceComposerClient.h>
+ #include <gui/ISurfaceComposer.h>
+-#include <ui/DisplayInfo.h>
++#include <ui/StaticDisplayInfo.h>
+ /// @}
+ 
+ ///M: add for rtsp generic message{@
+@@ -57,10 +57,10 @@
+ 
+ 
+ ///M: @{
++#include <android/media/IAudioPolicyService.h>
+ #include <system/audio.h>
+ #include <system/audio_policy.h>
+ #include <media/AudioSystem.h>
+-#include <media/IAudioPolicyService.h>
+ #include "DataPathTrace.h"
+ /// @}
+ 
+diff --git a/frameworks/av/AVEnhance/mtkextractors/mkv/Android.bp b/frameworks/av/AVEnhance/mtkextractors/mkv/Android.bp
+index 34f7887..b0cca1b 100644
+--- a/frameworks/av/AVEnhance/mtkextractors/mkv/Android.bp
++++ b/frameworks/av/AVEnhance/mtkextractors/mkv/Android.bp
+@@ -19,6 +19,7 @@ cc_library_shared {
+ 
+     static_libs: [
+         "libflacextractor",
++        "libstagefright_foundation_colorutils_ndk",
+         "libstagefright_metadatautils",
+         "libwebm",
+         "libutils",
+diff --git a/frameworks/av/AVEnhance/mtkextractors/mkv/MtkMatroskaExtractor.cpp b/frameworks/av/AVEnhance/mtkextractors/mkv/MtkMatroskaExtractor.cpp
+index 1f47077..cf2f58c 100644
+--- a/frameworks/av/AVEnhance/mtkextractors/mkv/MtkMatroskaExtractor.cpp
++++ b/frameworks/av/AVEnhance/mtkextractors/mkv/MtkMatroskaExtractor.cpp
+@@ -1886,7 +1886,7 @@ status_t MatroskaExtractor::initTrackInfo(
+             AMediaFormat_setBuffer(trackInfo->mMeta,
+                     AMEDIAFORMAT_KEY_CRYPTO_KEY, encryption->key_id, encryption->key_id_len);
+             trackInfo->mEncrypted = true;
+-            break;
++            //break;
+         }
+ 
+         for(size_t j = 0; j < encoding->GetCompressionCount(); j++) {
+diff --git a/frameworks/av/AVEnhance/mtkextractors/mpeg2/Android.bp b/frameworks/av/AVEnhance/mtkextractors/mpeg2/Android.bp
+index 72da2a7..62b64f3 100644
+--- a/frameworks/av/AVEnhance/mtkextractors/mpeg2/Android.bp
++++ b/frameworks/av/AVEnhance/mtkextractors/mpeg2/Android.bp
+@@ -12,6 +12,7 @@ cc_library_shared {
+     ],
+ 
+     shared_libs: [
++        "framework-permission-aidl-cpp",
+         "android.hardware.cas@1.0",
+         "android.hardware.cas.native@1.0",
+         "android.hidl.token@1.0-utils",
+diff --git a/frameworks/av/drm/common/mtkutil/Android.bp b/frameworks/av/drm/common/mtkutil/Android.bp
+index 1b8e854..1efd5f8 100644
+--- a/frameworks/av/drm/common/mtkutil/Android.bp
++++ b/frameworks/av/drm/common/mtkutil/Android.bp
+@@ -42,7 +42,7 @@ cc_library_shared {
+         "external/libvpx/libwebm/mkvparser",
+         "external/libxml2/include",
+         "bionic",
+-        "system/core/base/include",
++        "system/libbase/include",
+     ],
+     local_include_dirs: [
+         "include",
+diff --git a/frameworks/av/drm/cta/drmctaplugin/Android.mk b/frameworks/av/drm/cta/drmctaplugin/Android.mk
+index 6d54dbb..a31389b 100644
+--- a/frameworks/av/drm/cta/drmctaplugin/Android.mk
++++ b/frameworks/av/drm/cta/drmctaplugin/Android.mk
+@@ -23,7 +23,7 @@ LOCAL_C_INCLUDES += \
+     $(LOCAL_PATH)/include \
+     external/libxml2/include \
+     bionic \
+-    system/core/base/include
++    system/libbase/include
+ 
+ LOCAL_SHARED_LIBRARIES := \
+     libandroidicu \
+diff --git a/frameworks/av/drm/oma/mtkplugin/Android.mk_disable b/frameworks/av/drm/oma/mtkplugin/Android.mk_disable
+index a46a6a9..9003884 100644
+--- a/frameworks/av/drm/oma/mtkplugin/Android.mk_disable
++++ b/frameworks/av/drm/oma/mtkplugin/Android.mk_disable
+@@ -40,7 +40,7 @@ LOCAL_C_INCLUDES += \
+     $(LOCAL_PATH)/include \
+     external/libxml2/include \
+     bionic \
+-    $(TOP)/system/core/base/include
++    $(TOP)/system/libbase/include
+ 
+ LOCAL_SHARED_LIBRARIES := \
+     libbinder \
+diff --git a/hardware/audio/common/impl/5.0/Device.cpp b/hardware/audio/common/impl/5.0/Device.cpp
+index a6eafc6..af0b61e 100644
+--- a/hardware/audio/common/impl/5.0/Device.cpp
++++ b/hardware/audio/common/impl/5.0/Device.cpp
+@@ -173,7 +173,7 @@ std::tuple<Result, sp<IStreamOut>> Device::openOutputStreamImpl(int32_t ioHandle
+         streamOut = new StreamOut(this, halStream);
+         ++mOpenedStreamsCount;
+     }
+-    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, suggestedConfig);
++    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, false /* isInput */, suggestedConfig);
+     ALOGW_IF(convertStatus != OK, "%s: suggested config with incompatible fields", __func__);
+     return {analyzeStatus("open_output_stream", status, {EINVAL} /*ignore*/), streamOut};
+ }
+@@ -201,7 +201,7 @@ std::tuple<Result, sp<IStreamIn>> Device::openInputStreamImpl(
+         streamIn = new StreamIn(this, halStream);
+         ++mOpenedStreamsCount;
+     }
+-    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, suggestedConfig);
++    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, true /* isInput */, suggestedConfig);
+     ALOGW_IF(convertStatus != OK, "%s: suggested config with incompatible fields", __func__);
+     return {analyzeStatus("open_input_stream", status, {EINVAL} /*ignore*/), streamIn};
+ }
+diff --git a/hardware/audio/common/impl/6.0/Device.cpp b/hardware/audio/common/impl/6.0/Device.cpp
+index a6eafc6..af0b61e 100644
+--- a/hardware/audio/common/impl/6.0/Device.cpp
++++ b/hardware/audio/common/impl/6.0/Device.cpp
+@@ -173,7 +173,7 @@ std::tuple<Result, sp<IStreamOut>> Device::openOutputStreamImpl(int32_t ioHandle
+         streamOut = new StreamOut(this, halStream);
+         ++mOpenedStreamsCount;
+     }
+-    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, suggestedConfig);
++    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, false /* isInput */, suggestedConfig);
+     ALOGW_IF(convertStatus != OK, "%s: suggested config with incompatible fields", __func__);
+     return {analyzeStatus("open_output_stream", status, {EINVAL} /*ignore*/), streamOut};
+ }
+@@ -201,7 +201,7 @@ std::tuple<Result, sp<IStreamIn>> Device::openInputStreamImpl(
+         streamIn = new StreamIn(this, halStream);
+         ++mOpenedStreamsCount;
+     }
+-    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, suggestedConfig);
++    status_t convertStatus = HidlUtils::audioConfigFromHal(halConfig, true /* isInput */, suggestedConfig);
+     ALOGW_IF(convertStatus != OK, "%s: suggested config with incompatible fields", __func__);
+     return {analyzeStatus("open_input_stream", status, {EINVAL} /*ignore*/), streamIn};
+ }
+diff --git a/hardware/connectivity/bluetooth/service/1.0/mediatek/Android.bp b/hardware/connectivity/bluetooth/service/1.0/mediatek/Android.bp
+index 2df2afd..fbc1266 100644
+--- a/hardware/connectivity/bluetooth/service/1.0/mediatek/Android.bp
++++ b/hardware/connectivity/bluetooth/service/1.0/mediatek/Android.bp
+@@ -4,7 +4,7 @@ cc_library_static {
+     defaults: ["mtk_bt_hal_defaults"],
+     local_include_dirs: ["."],
+     include_dirs: [
+-        "system/core/base/include",
++        "system/libbase/include",
+         "vendor/mediatek/opensource/hardware/connectivity/bluetooth/service/1.0/",
+     ],
+ 
+@@ -30,7 +30,7 @@ cc_library_static {
+     defaults: ["mtk_bt_hal_defaults"],
+     local_include_dirs: ["."],
+     include_dirs: [
+-        "system/core/base/include",
++        "system/libbase/include",
+         "vendor/mediatek/opensource/hardware/connectivity/bluetooth/service/1.0/",
+     ],
+ 
+@@ -59,7 +59,7 @@ cc_test {
+         "test",
+     ],
+ 	include_dirs: [
+-		"system/core/base/include",
++		"system/libbase/include",
+ 		"vendor/mediatek/opensource/hardware/connectivity/bluetooth/service/1.0/",
+ 	],
+     srcs: [
+-- 
+2.20.1
+

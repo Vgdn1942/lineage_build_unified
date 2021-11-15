@@ -1,0 +1,26 @@
+From 4a996aceb86a09e7d07a5a85dde601df19367e42 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Mon, 15 Nov 2021 09:26:47 +0300
+Subject: [PATCH 2/2] Fix broken USB
+
+Change-Id: Icd5156bfc811e52db98867e7fdbd42e89897b66f
+---
+ rw-system.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rw-system.sh b/rw-system.sh
+index ebba97d..8e2f781 100644
+--- a/rw-system.sh
++++ b/rw-system.sh
+@@ -60,7 +60,7 @@ if [ "$vndk" = 26 ];then
+ fi
+ 
+ setprop sys.usb.ffs.aio_compat true
+-setprop persist.adb.nonblocking_ffs false
++setprop persist.adb.nonblocking_ffs true
+ 
+ fixSPL() {
+     if [ "$(getprop ro.product.cpu.abi)" = "armeabi-v7a" ]; then
+-- 
+2.20.1
+
