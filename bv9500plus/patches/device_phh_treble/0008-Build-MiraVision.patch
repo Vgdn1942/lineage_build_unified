@@ -1,0 +1,34 @@
+From 8bb3be22f1d81caab837079c0632da2229e247df Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Tue, 16 Nov 2021 13:29:53 +0300
+Subject: [PATCH] Build MiraVision
+
+Change-Id: I71a6553d4ddc88da474f288501ad838e9f2a1eeb
+---
+ base.mk | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/base.mk b/base.mk
+index cc058e7..a6695d5 100644
+--- a/base.mk
++++ b/base.mk
+@@ -171,7 +171,15 @@ PRODUCT_PACKAGES += \
+ 	Stk
+ 
+ PRODUCT_PACKAGES += \
+-    FMRadio
++    FMRadio \
++    MiraVision
++
++PRODUCT_PACKAGES += \
++    aal \
++    libaal_cust \
++    libjni_pq \
++    libPQDCjni \
++    libPQjni
+ 
+ PRODUCT_PACKAGES += \
+ 	resetprop_phh
+-- 
+2.20.1
+

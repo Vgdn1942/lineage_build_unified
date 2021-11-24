@@ -1,0 +1,40 @@
+From d3fe2ff32de32cd4d2feca56df7fba78a2fd8cae Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Tue, 16 Nov 2021 12:25:37 +0300
+Subject: [PATCH] Works FM radio without antenna
+
+Change-Id: Ibbce42b019c66315d48f819a8073ac724534e474
+---
+ src/com/android/fmradio/FmMainActivity.java | 2 +-
+ src/com/android/fmradio/FmService.java      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/com/android/fmradio/FmMainActivity.java b/src/com/android/fmradio/FmMainActivity.java
+index 82db51b..3a3e213 100644
+--- a/src/com/android/fmradio/FmMainActivity.java
++++ b/src/com/android/fmradio/FmMainActivity.java
+@@ -852,7 +852,7 @@ public class FmMainActivity extends Activity implements FmFavoriteEditDialog.Edi
+      * @return true or false indicate antenna available or not
+      */
+     private boolean isAntennaAvailable() {
+-        return mAudioManager.isWiredHeadsetOn();
++        return true; // Now works without antenna
+     }
+ 
+     /**
+diff --git a/src/com/android/fmradio/FmService.java b/src/com/android/fmradio/FmService.java
+index 3323fb0..7595a42 100644
+--- a/src/com/android/fmradio/FmService.java
++++ b/src/com/android/fmradio/FmService.java
+@@ -363,7 +363,7 @@ public class FmService extends Service implements FmRecorder.OnRecorderStateChan
+      * @return true, antenna available; false, antenna not available
+      */
+     public boolean isAntennaAvailable() {
+-        return mAudioManager.isWiredHeadsetOn();
++        return true; // Now works without antenna
+     }
+ 
+     private void setForceUse(boolean isSpeaker) {
+-- 
+2.20.1
+

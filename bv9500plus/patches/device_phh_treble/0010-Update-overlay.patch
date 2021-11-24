@@ -1,0 +1,46 @@
+From ef3a6049065d4987bc64f1a70701a460f89c0ba8 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 21 Nov 2021 11:23:00 +0300
+Subject: [PATCH] Update overlay
+
+Change-Id: Ia508eb27dd7a22e8ae0826ccd2ce4c87934e3cec
+---
+ .../lineage-sdk/lineage/res/res/values/config.xml      | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/overlay-lineage/lineage-sdk/lineage/res/res/values/config.xml b/overlay-lineage/lineage-sdk/lineage/res/res/values/config.xml
+index 8df673a..d78bc2a 100644
+--- a/overlay-lineage/lineage-sdk/lineage/res/res/values/config.xml
++++ b/overlay-lineage/lineage-sdk/lineage/res/res/values/config.xml
+@@ -14,6 +14,12 @@
+      limitations under the License.
+ -->
+ <resources>
++    <!-- Default value for proximity check on screen wake
++     NOTE ! - Enable for devices that have a fast response proximity sensor (ideally < 300ms)-->
++    <bool name="config_proximityCheckOnWake">true</bool>
++    <integer name="config_proximityCheckTimeout">250</integer>
++    <bool name="config_proximityCheckOnWakeEnabledByDefault">true</bool>
++
+     <!-- Whether device has screen with higher aspect ratio -->
+     <bool name="config_haveHigherAspectRatioScreen">true</bool>
+ 
+@@ -63,7 +69,7 @@
+             64 - Volume rocker
+          For example, a device with Home, Back and Menu keys would set this
+          config to 7. -->
+-    <integer name="config_deviceHardwareKeys">127</integer>
++    <integer name="config_deviceHardwareKeys">104</integer>
+ 
+     <!-- Hardware keys present on the device with the ability to wake, stored as a bit field.
+          This integer should equal the sum of the corresponding value for each
+@@ -77,5 +83,5 @@
+             64 - Volume rocker
+          For example, a device with Home, Back and Menu keys would set this
+          config to 7. -->
+-    <integer name="config_deviceHardwareWakeKeys">127</integer>
++    <integer name="config_deviceHardwareWakeKeys">104</integer>
+ </resources>
+-- 
+2.20.1
+

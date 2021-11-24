@@ -50,6 +50,8 @@ mkdir -p .repo/local_manifests
 cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
 cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
 rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
+rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
+rm -rf ./device/phh/treble/miravision
 echo ""
 
 echo "Syncing repos"
@@ -61,17 +63,17 @@ source build/envsetup.sh &> /dev/null
 mkdir -p $BUILD_OUTPUT
 echo ""
 
+repopick -t twelve-buttons
 repopick -t twelve-monet
 repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
 repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0"
-repopick 317119 # Unset BOARD_EXT4_SHARE_DUP_BLOCKS
 repopick 317574 -f # ThemePicker: Grant missing wallpaper permissions
 repopick 317602 # Keyguard: don't use large clock on landscape
-repopick 317608 # Support for device specific key handlers
-repopick 317609 # Allow adjusting progress on touch events.
-repopick 318037 # Statusbar: show vibration icon in collapsed statusbar
-repopick 318379 # Partially revert "lineage-sdk: Comment out LineageAudioService"
-repopick 318380 # lineage: Temporarily disable LineageAudioService overlay
+repopick 318747 # Trebuchet: fix all app search overlap
+
+cd frameworks/native
+git revert 340882c --no-edit # Plumb attribution tag to Sensor Service
+cd ../..
 
 gms_patches() {
     NOW=$PWD
@@ -123,6 +125,7 @@ finalize_treble() {
     bash generate.sh lineage
     rm treble_a*.mk
     cd ../../..
+    tar -xf ./lineage_build_unified/bv9500plus/miravision.tar.gz -C ./device/phh/treble/
 }
 
 build_device() {

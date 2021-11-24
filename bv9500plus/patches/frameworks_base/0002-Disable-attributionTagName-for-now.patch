@@ -1,0 +1,26 @@
+From 4a81115a6c35d36b98538f7684efed47b3196f81 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Tue, 16 Nov 2021 17:14:13 +0300
+Subject: [PATCH] Disable attributionTagName for now
+
+Change-Id: Ib1889332188ced47010f07fc1494a0232f0a913b
+---
+ core/jni/android_hardware_SensorManager.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/core/jni/android_hardware_SensorManager.cpp b/core/jni/android_hardware_SensorManager.cpp
+index d0504fb481ca..eb74cfcd39bf 100644
+--- a/core/jni/android_hardware_SensorManager.cpp
++++ b/core/jni/android_hardware_SensorManager.cpp
+@@ -432,7 +432,7 @@ static jlong nativeInitSensorEventQueue(JNIEnv *env, jclass clazz, jlong sensorM
+         ScopedUtfChars attrUtf(env, attributionTag);
+         attributionTagName = String16(attrUtf.c_str());
+     }
+-    sp<SensorEventQueue> queue(mgr->createEventQueue(clientName, mode, attributionTagName));
++    sp<SensorEventQueue> queue(mgr->createEventQueue(clientName, mode/*, attributionTagName */));
+ 
+     if (queue == NULL) {
+         jniThrowRuntimeException(env, "Cannot construct native SensorEventQueue.");
+-- 
+2.20.1
+
