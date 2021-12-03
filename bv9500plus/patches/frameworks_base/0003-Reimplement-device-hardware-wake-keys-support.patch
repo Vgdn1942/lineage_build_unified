@@ -5,18 +5,19 @@ Subject: [PATCH] Reimplement device hardware wake keys support
 
 Change-Id: If70e01f9080ccb02322da9495a53fed5c52bd6e1
 ---
- core/java/android/view/KeyEvent.java          |   3 +
+ core/java/android/view/KeyEvent.java          |   4 +
  .../server/policy/PhoneWindowManager.java     | 148 +++++++++++++++++-
- 2 files changed, 143 insertions(+), 8 deletions(-)
+ 2 files changed, 144 insertions(+), 8 deletions(-)
 
 diff --git a/core/java/android/view/KeyEvent.java b/core/java/android/view/KeyEvent.java
 index bb35e3172165..a9b886defd89 100644
 --- a/core/java/android/view/KeyEvent.java
 +++ b/core/java/android/view/KeyEvent.java
-@@ -1994,6 +1994,9 @@ public class KeyEvent extends InputEvent implements Parcelable {
+@@ -1994,6 +1994,10 @@ public class KeyEvent extends InputEvent implements Parcelable {
              case KeyEvent.KEYCODE_STEM_2:
              case KeyEvent.KEYCODE_STEM_3:
              case KeyEvent.KEYCODE_WAKEUP:
++            case KeyEvent.KEYCODE_ASSIST:
 +            case KeyEvent.KEYCODE_VOLUME_UP:
 +            case KeyEvent.KEYCODE_VOLUME_DOWN:
 +            case KeyEvent.KEYCODE_VOLUME_MUTE:

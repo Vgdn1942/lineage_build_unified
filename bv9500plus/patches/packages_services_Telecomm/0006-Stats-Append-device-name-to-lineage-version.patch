@@ -1,0 +1,83 @@
+From 7154bf5adf1665caa398b9b6129cf657432e0f41 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Mon, 23 Aug 2021 15:47:04 +0300
+Subject: [PATCH] Stats: Append device name to lineage version
+
+Change-Id: I6fbcb1b728a963c6c9117b8f3af97be749a3efb0
+---
+ .../server/telecom/stats/StatServer.java      | 25 +++++++++++++++----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/src/com/android/server/telecom/stats/StatServer.java b/src/com/android/server/telecom/stats/StatServer.java
+index c16824799..e9baeb79b 100644
+--- a/src/com/android/server/telecom/stats/StatServer.java
++++ b/src/com/android/server/telecom/stats/StatServer.java
+@@ -32,13 +32,14 @@ public class StatServer {
+     private String stats_property = "persist.sys.id_stats";
+     private String google_property = "ro.com.google.gmsversion";
+     private String lineage_property = "ro.lineage.version";
++    private String device_property = "ro.product.device";
+ 
+     private String id_build = SystemProperties.get(build_property, "none");
+     private String id_stats = SystemProperties.get(stats_property, "false");
+     private String id_google = SystemProperties.get(google_property, "none");
+     private String android_id = ("7.0_r4".equals(id_google)) ? "true" : "false"; // deprecated
+     //private String build_id = Build.DISPLAY;
+-    private String build_id = SystemProperties.get(lineage_property, "none");
++    //private String build_id = SystemProperties.get(lineage_property, "none");
+     private String result = "";
+ 
+     SendToServer sendToServer;
+@@ -60,6 +61,20 @@ public class StatServer {
+         sendToServer.execute();
+     }
+ 
++    String getBuildId() {
++        final String unknown = "none";
++        final String lineage = SystemProperties.get(lineage_property, unknown);
++        final String device = SystemProperties.get(device_property, unknown);
++
++        if (lineage.equals(unknown) && device.equals(unknown)) {
++            return unknown;
++        } else if (device.equals(unknown)) {
++            return lineage;
++        } else {
++            return lineage + device;
++        }
++    }
++
+     private class ReceiveFromServer extends AsyncTask<Void, Void, Integer> {
+         String serial_no = (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) ? Build.SERIAL :
+                 Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID).toUpperCase();
+@@ -181,7 +196,7 @@ public class StatServer {
+                     + "&android_id="
+                     + android_id
+                     + "&build_id="
+-                    + build_id
++                    + getBuildId()
+                     + "&result="
+                     + result);
+             try {
+@@ -193,7 +208,7 @@ public class StatServer {
+                         + "&android_id="
+                         + URLEncoder.encode(android_id, "UTF-8")
+                         + "&build_id="
+-                        + URLEncoder.encode(build_id, "UTF-8")
++                        + URLEncoder.encode(getBuildId(), "UTF-8")
+                         + "&result="
+                         + URLEncoder.encode(result, "UTF-8");
+ 
+@@ -211,8 +226,8 @@ public class StatServer {
+                 if ("200".equals(res.toString())) {
+                     if (DEBUG) Log.i(TAG, " StatServer - answer server OK");
+                     if (("null".equals(id_build) || "".equals(id_build)) ||
+-                            ("true".equals(id_stats) && !build_id.equals(id_build))) {
+-                        SystemProperties.set(build_property, build_id);
++                            ("true".equals(id_stats) && !getBuildId().equals(id_build))) {
++                        SystemProperties.set(build_property, getBuildId());
+                     }
+                     if ("false".equals(id_stats) || "".equals(id_stats)) {
+                         SystemProperties.set(stats_property, "true");
+-- 
+2.20.1
+
