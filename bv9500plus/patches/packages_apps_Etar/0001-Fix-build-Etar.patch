@@ -1,0 +1,40 @@
+From 0af4a2a5088f55cd4fdc65d253eaa7fa84751ec4 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 3 Dec 2021 18:48:44 +0300
+Subject: [PATCH] Fix build Etar
+
+Change-Id: I957ada56ceea128d506933750f2032993ea511b2
+---
+ src/com/android/calendar/event/EditEventHelper.java | 2 +-
+ src/com/android/calendar/event/EditEventView.java   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/com/android/calendar/event/EditEventHelper.java b/src/com/android/calendar/event/EditEventHelper.java
+index 9559190d..c107c43b 100644
+--- a/src/com/android/calendar/event/EditEventHelper.java
++++ b/src/com/android/calendar/event/EditEventHelper.java
+@@ -735,7 +735,7 @@ public class EditEventHelper {
+             long[] recurrences;
+             try {
+                 com.android.calendarcommon2.Time time = new com.android.calendarcommon2.Time();
+-                time.set(dtstart.toMillis(false));
++                time.set(dtstart.toMillis());
+                 recurrences = recurProc.expand(time, recurSet, startTimeMillis, endTimeMillis);
+             } catch (DateException de) {
+                 throw new RuntimeException(de);
+diff --git a/src/com/android/calendar/event/EditEventView.java b/src/com/android/calendar/event/EditEventView.java
+index 2a0a903b..6f8e5950 100644
+--- a/src/com/android/calendar/event/EditEventView.java
++++ b/src/com/android/calendar/event/EditEventView.java
+@@ -836,7 +836,7 @@ public class EditEventView implements View.OnClickListener, DialogInterface.OnCa
+ 
+         if (mEventRecurrence.startDate == null) {
+             com.android.calendarcommon2.Time startDate = new com.android.calendarcommon2.Time();
+-            startDate.set(mStartTime.toMillis(false));
++            startDate.set(mStartTime.toMillis());
+             mEventRecurrence.startDate = startDate;
+         }
+ 
+-- 
+2.20.1
+
