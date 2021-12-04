@@ -1,0 +1,43 @@
+From 477b5ae5559fde40f0c4905407f52f7d7c7da803 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 4 Dec 2021 23:01:12 +0300
+Subject: [PATCH] Preference for disable fullscreen call [2/2]
+
+Change-Id: I7d5e4cc51406e0c964bf05fe204cb3f88f2e9d1b
+---
+ .../NotificationInterruptStateProviderImpl.java       | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
+index 433d5e19ed6b..b43edac84a2f 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
+@@ -25,6 +25,7 @@ import android.hardware.display.AmbientDisplayConfiguration;
+ import android.os.Handler;
+ import android.os.PowerManager;
+ import android.os.RemoteException;
++import android.os.SystemProperties;
+ import android.os.UserHandle;
+ import android.provider.Settings;
+ import android.service.dreams.IDreamManager;
+@@ -175,9 +176,15 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
+      */
+     @Override
+     public boolean shouldLaunchFullScreenIntentWhenAdded(NotificationEntry entry) {
+-        return entry.getSbn().getNotification().fullScreenIntent != null
++        String packageName = entry.getSbn().getPackageName();
++        String propFullScreen = SystemProperties.get("persist.fullscreen.incall", "false");
++        boolean isInCall = "com.android.dialer".equals(packageName);
++        boolean fullScreenProp = "true".equals(propFullScreen);
++
++        return (entry.getSbn().getNotification().fullScreenIntent != null
+                 && (!shouldHeadsUp(entry)
+-                || mStatusBarStateController.getState() == StatusBarState.KEYGUARD);
++                || mStatusBarStateController.getState() == StatusBarState.KEYGUARD))
++                || (isInCall && fullScreenProp);
+     }
+ 
+     private boolean shouldHeadsUpWhenAwake(NotificationEntry entry) {
+-- 
+2.20.1
+

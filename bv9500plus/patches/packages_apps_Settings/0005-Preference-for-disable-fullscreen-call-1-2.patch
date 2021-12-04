@@ -1,0 +1,143 @@
+From e1d0a3d0ca369ef3235671712f8d756f50c18f66 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 4 Dec 2021 23:02:11 +0300
+Subject: [PATCH] Preference for disable fullscreen call [1/2]
+
+Change-Id: Ia01becd00a03702d4d4523a3dd405caea6e6bad5
+---
+ res/values-ru/strings.xml                     |  1 +
+ res/values/strings.xml                        |  3 +
+ res/xml/display_settings.xml                  |  4 ++
+ src/com/android/settings/DisplaySettings.java |  2 +
+ .../FullScreenInCallPreferenceController.java | 58 +++++++++++++++++++
+ 5 files changed, 68 insertions(+)
+ create mode 100644 src/com/android/settings/display/FullScreenInCallPreferenceController.java
+
+diff --git a/res/values-ru/strings.xml b/res/values-ru/strings.xml
+index b9b12ad867..489845e4d5 100644
+--- a/res/values-ru/strings.xml
++++ b/res/values-ru/strings.xml
+@@ -1468,6 +1468,7 @@
+     <string name="screensaver_settings_button" msgid="6159236558934930238">"Настройки"</string>
+     <string name="automatic_brightness" msgid="4599827881929079513">"Автонастройка"</string>
+     <string name="lift_to_wake_title" msgid="8994218158737714046">"Активация в вертикальном положении"</string>
++    <string name="full_screen_incall_title">"Полноэкранный вызов"</string>
+     <string name="ambient_display_screen_title" msgid="8615947016991429325">"Автоматич. включение экрана"</string>
+     <string name="ambient_display_category_triggers" msgid="1216640141609270011">"Когда включать экран"</string>
+     <string name="doze_title" msgid="1523090408230862316">"Включать экран при получении уведомлений"</string>
+diff --git a/res/values/strings.xml b/res/values/strings.xml
+index 7673853487..798df0884d 100644
+--- a/res/values/strings.xml
++++ b/res/values/strings.xml
+@@ -3237,6 +3237,9 @@
+     <!-- [CHAR LIMIT=40] Display settings screen, setting option name to change whether the device wakes up when a lift gesture is detected. -->
+     <string name="lift_to_wake_title">Lift to wake</string>
+ 
++    <!-- [CHAR LIMIT=40] Display settings screen, setting option name to change always fullscreen incall ui. -->
++    <string name="full_screen_incall_title">Fullscreen incall UI</string>
++
+     <!-- [CHAR LIMIT=30] Title of the preference that opens the Ambient display settings screen. -->
+     <string name="ambient_display_screen_title">Ambient display</string>
+ 
+diff --git a/res/xml/display_settings.xml b/res/xml/display_settings.xml
+index 6d58bbe40b..f959d773a5 100644
+--- a/res/xml/display_settings.xml
++++ b/res/xml/display_settings.xml
+@@ -163,6 +163,10 @@
+             android:title="@string/tap_to_wake"
+             android:summary="@string/tap_to_wake_summary"/>
+ 
++        <SwitchPreference
++            android:key="full_screen_incall"
++            android:title="@string/full_screen_incall_title"/>
++
+         <ListPreference
+             android:key="theme"
+             android:title="@string/device_theme"
+diff --git a/src/com/android/settings/DisplaySettings.java b/src/com/android/settings/DisplaySettings.java
+index 9a62412704..bef7670f6b 100644
+--- a/src/com/android/settings/DisplaySettings.java
++++ b/src/com/android/settings/DisplaySettings.java
+@@ -23,6 +23,7 @@ import android.os.Bundle;
+ import com.android.settings.dashboard.DashboardFragment;
+ import com.android.settings.display.BrightnessLevelPreferenceController;
+ import com.android.settings.display.CameraGesturePreferenceController;
++import com.android.settings.display.FullScreenInCallPreferenceController;
+ import com.android.settings.display.LiftToWakePreferenceController;
+ import com.android.settings.display.ScreenSaverPreferenceController;
+ import com.android.settings.display.ShowOperatorNamePreferenceController;
+@@ -76,6 +77,7 @@ public class DisplaySettings extends DashboardFragment {
+         final List<AbstractPreferenceController> controllers = new ArrayList<>();
+         controllers.add(new CameraGesturePreferenceController(context));
+         controllers.add(new LiftToWakePreferenceController(context));
++        controllers.add(new FullScreenInCallPreferenceController(context));
+         controllers.add(new ScreenSaverPreferenceController(context));
+         controllers.add(new TapToWakePreferenceController(context));
+         controllers.add(new VrDisplayPreferenceController(context));
+diff --git a/src/com/android/settings/display/FullScreenInCallPreferenceController.java b/src/com/android/settings/display/FullScreenInCallPreferenceController.java
+new file mode 100644
+index 0000000000..ac16a3739e
+--- /dev/null
++++ b/src/com/android/settings/display/FullScreenInCallPreferenceController.java
+@@ -0,0 +1,58 @@
++/*
++ * Copyright (C) 2016 The Android Open Source Project
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
++ * except in compliance with the License. You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software distributed under the
++ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
++ * KIND, either express or implied. See the License for the specific language governing
++ * permissions and limitations under the License.
++ */
++package com.android.settings.display;
++
++import android.content.Context;
++import android.os.SystemProperties;
++import android.provider.Settings;
++
++import androidx.preference.Preference;
++import androidx.preference.SwitchPreference;
++
++import com.android.settings.core.PreferenceControllerMixin;
++import com.android.settingslib.core.AbstractPreferenceController;
++
++public class FullScreenInCallPreferenceController extends AbstractPreferenceController implements
++        PreferenceControllerMixin, Preference.OnPreferenceChangeListener {
++
++    private static final String KEY_FULL_SCREEN_INCALL = "full_screen_incall";
++    private static final String PROP_FULL_SCREEN_INCALL = "persist.fullscreen.incall";
++
++    public FullScreenInCallPreferenceController(Context context) {
++        super(context);
++    }
++
++    @Override
++    public boolean isAvailable() {
++        return true;
++    }
++
++    @Override
++    public String getPreferenceKey() {
++        return KEY_FULL_SCREEN_INCALL;
++    }
++
++    @Override
++    public boolean onPreferenceChange(Preference preference, Object newValue) {
++        boolean value = (Boolean) newValue;
++        SystemProperties.set(PROP_FULL_SCREEN_INCALL, value ? "true" : "false");
++        return true;
++    }
++
++    @Override
++    public void updateState(Preference preference) {
++        String value = SystemProperties.get(PROP_FULL_SCREEN_INCALL, "false");
++        ((SwitchPreference) preference).setChecked("true".equals(value));
++    }
++}
+-- 
+2.20.1
+

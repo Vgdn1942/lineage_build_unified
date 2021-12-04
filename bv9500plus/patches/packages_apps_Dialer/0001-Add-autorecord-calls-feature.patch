@@ -5,8 +5,8 @@ Subject: [PATCH] Add autorecord calls feature
 
 Change-Id: I23c2e905229665c57dd31fbcab3ae688a7b24560
 ---
- .../dialer/app/res/values-ru/cm_strings.xml   |  1 +
-# .../dialer/app/res/values/cm_strings.xml      |  2 ++
+# .../dialer/app/res/values-ru/cm_strings.xml   |  1 +
+ .../dialer/app/res/values/cm_strings.xml      |  2 ++
  .../dialer/app/res/xml/sound_settings.xml     |  5 ++++
  .../android/incallui/CallButtonPresenter.java | 27 +++++++++++++++++--
  4 files changed, 33 insertions(+), 2 deletions(-)
