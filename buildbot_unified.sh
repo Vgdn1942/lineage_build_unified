@@ -68,8 +68,8 @@ repopick -t twelve-monet
 repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
 repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0"
 repopick 317574 -f # ThemePicker: Grant missing wallpaper permissions
-repopick 317602 # Keyguard: don't use large clock on landscape
 repopick 318747 # Trebuchet: fix all app search overlap
+repopick 319098 # [TMP] Revert "Trebuchet: Don't show move layer when editing isn't allowed"
 
 cd frameworks/native
 git revert 340882c --no-edit # Plumb attribution tag to Sensor Service
