@@ -1,7 +1,6 @@
 #!/bin/bash
 echo ""
 echo "LineageOS 19.x Unified Buildbot"
-echo "ATTENTION: this script syncs repo on each run"
 echo "Executing in 5 seconds - CTRL-C to exit"
 echo ""
 sleep 5
@@ -21,11 +20,19 @@ then
     exit 1
 fi
 
+NOSYNC=false
 PERSONAL=false
-if [ ${!#} == "personal" ]
-then
-    PERSONAL=true
-fi
+for var in "${@:2}"
+do
+    if [ ${var} == "nosync" ]
+    then
+        NOSYNC=true
+    fi
+    if [ ${var} == "personal" ]
+    then
+        PERSONAL=true
+    fi
+done
 
 # Abort early on error
 set -eE
@@ -44,42 +51,63 @@ WITH_SU=false
 BUILD_OUTPUT=~/GSI_treble_build/build-output
 export OUT_DIR_COMMON_BASE=~/gsi_out
 
-echo "Preparing local manifests"
-#repo init -u git://github.com/AndyCGYan/android.git -b lineage-19.0
-mkdir -p .repo/local_manifests
-cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
-cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
-rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
-rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
-rm -rf ./device/phh/treble/miravision
-echo ""
+prep_build() {
+    echo "Preparing local manifests"
+    #repo init -u git://github.com/AndyCGYan/android.git -b lineage-19.0
+    mkdir -p .repo/local_manifests
+    cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
+    cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
+    rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
+    #rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
+    rm -rf ./device/phh/treble/miravision
+    echo ""
 
-echo "Syncing repos"
-repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
-echo ""
+    echo "Syncing repos"
+    repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
+    echo ""
 
-echo "Setting up build environment"
-source build/envsetup.sh &> /dev/null
-mkdir -p $BUILD_OUTPUT
-echo ""
+    echo "Setting up build environment"
+    source build/envsetup.sh &> /dev/null
+    mkdir -p $BUILD_OUTPUT
+    echo ""
 
-repopick -t twelve-buttons
-repopick -t twelve-monet
-repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
-repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0"
-repopick 317574 -f # ThemePicker: Grant missing wallpaper permissions
-repopick 318747 # Trebuchet: fix all app search overlap
-repopick 319098 # [TMP] Revert "Trebuchet: Don't show move layer when editing isn't allowed"
+    repopick -t android-12.0.0_r16
+    repopick -t twelve-monet
+    repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
+    repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0+NOT+317685"
+    repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318387"
+    repopick 318971 # Move Seedvault to /system_ext partition
 
-cd frameworks/native
-git revert 340882c --no-edit # Plumb attribution tag to Sensor Service
-cd ../..
+    cd frameworks/native
+    git revert 340882c --no-edit # Plumb attribution tag to Sensor Service
+    cd ../..
+}
 
 gms_patches() {
     NOW=$PWD
     cd vendor/partner_gms
     git clean -fdx; git reset --hard
     for patch in $NOW/lineage_build_unified/bv9500plus/gms_patches/*.patch; do
+        if git apply --check $patch; then
+            git am $patch
+        elif patch -f -p1 --dry-run < $patch > /dev/null; then
+            #This will fail
+            git am $patch || true
+            patch -f -p1 < $patch
+            git add -u
+            git am --continue
+        else
+            echo "Failed applying $patch"
+        fi
+    done
+    cd ../..
+}
+
+overlay_patches() {
+    NOW=$PWD
+    cd vendor/hardware_overlay
+    git clean -fdx; git reset --hard
+    for patch in $NOW/lineage_build_unified/bv9500plus/overlay_patches/*.patch; do
         if git apply --check $patch; then
             git am $patch
         elif patch -f -p1 --dry-run < $patch > /dev/null; then
@@ -123,7 +151,7 @@ finalize_treble() {
     cd device/phh/treble
     git clean -fdx
     bash generate.sh lineage
-    rm treble_a*.mk
+    rm lineage_treble_a*.mk
     cd ../../..
     tar -xf ./lineage_build_unified/bv9500plus/miravision.tar.gz -C ./device/phh/treble/
 }
@@ -135,38 +163,51 @@ build_device() {
 
 build_treble() {
     case "${1}" in
-        #("32B") TARGET=treble_arm_bvS;;
         ("A64B") TARGET=treble_a64_bvS;;
+        ("A64BG") TARGET=treble_a64_bgS;;
         ("64B") TARGET=treble_arm64_bvS;;
+        ("64BG") TARGET=treble_arm64_bgS;;
         ("bv9500plus") TARGET=bv9500plus;;
         (*) echo "Invalid target - exiting"; exit 1;;
     esac
     IMAGE_NAME=lineage-19.0-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")
-    lunch ${TARGET}-userdebug
+    lunch lineage_${TARGET}-userdebug
     make installclean
     make -j$(nproc --all) systemimage
+    #make -j4 systemimage
     mv $OUT/system.img $BUILD_OUTPUT/${IMAGE_NAME}.img
     xz -c $BUILD_OUTPUT/$IMAGE_NAME.img -T$(nproc --all) > $BUILD_OUTPUT/$IMAGE_NAME.img.xz
     #make vndk-test-sepolicy
 }
 
-echo "Applying patches"
-prep_${MODE}
-apply_patches patches_platform
-apply_patches patches_${MODE}
-apply_patches_personal bv9500plus/patches
-gms_patches
-if ${PERSONAL}
+if ${NOSYNC}
 then
-    apply_patches patches_platform_personal
-    apply_patches patches_${MODE}_personal
+    echo "ATTENTION: syncing/patching skipped!"
+    echo ""
+    echo "Setting up build environment"
+    source build/envsetup.sh &> /dev/null
+    echo ""
+else
+    prep_build
+    echo "Applying patches"
+    prep_${MODE}
+    apply_patches patches_platform
+    apply_patches patches_${MODE}
+    apply_patches_personal bv9500plus/patches
+    gms_patches
+    overlay_patches
+    if ${PERSONAL}
+    then
+        apply_patches patches_platform_personal
+        apply_patches patches_${MODE}_personal
+    fi
+    finalize_${MODE}
+    echo ""
 fi
-finalize_${MODE}
-echo ""
 
 for var in "${@:2}"
 do
-    if [ ${var} == "personal" ]
+    if [ ${var} == "nosync" ] || [ ${var} == "personal" ]
     then
         continue
     fi

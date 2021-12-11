@@ -1,0 +1,339 @@
+From d66f659f4a96fe2636236acfe63c52451a107a5e Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 10 Dec 2021 23:16:42 +0300
+Subject: [PATCH] Add BV9800
+
+Change-Id: I87d127b3b044962c8803c543de4fc2696ea2d2df
+---
+ Blackview/BV9500Plus/res/values/config.xml    |   4 -
+ Blackview/BV9800Pro/Android.mk                |   8 ++
+ Blackview/BV9800Pro/AndroidManifest.xml       |  10 ++
+ Blackview/BV9800Pro/res/values/config.xml     | 109 +++++++++++++++
+ Blackview/BV9800Pro/res/xml/power_profile.xml | 131 ++++++++++++++++++
+ overlay.mk                                    |   1 +
+ 6 files changed, 259 insertions(+), 4 deletions(-)
+ create mode 100644 Blackview/BV9800Pro/Android.mk
+ create mode 100644 Blackview/BV9800Pro/AndroidManifest.xml
+ create mode 100644 Blackview/BV9800Pro/res/values/config.xml
+ create mode 100644 Blackview/BV9800Pro/res/xml/power_profile.xml
+
+diff --git a/Blackview/BV9500Plus/res/values/config.xml b/Blackview/BV9500Plus/res/values/config.xml
+index 08c600c..6928495 100644
+--- a/Blackview/BV9500Plus/res/values/config.xml
++++ b/Blackview/BV9500Plus/res/values/config.xml
+@@ -21,8 +21,6 @@
+         <item>mobile_preempt,29,0,9,60000,true</item>
+     </string-array>
+     <integer-array name="config_autoBrightnessLevels">
+-        <item>8</item>
+-        <item>32</item>
+         <item>128</item>
+         <item>256</item>
+         <item>384</item>
+@@ -42,8 +40,6 @@
+         <item>18432</item>
+     </integer-array>
+     <integer-array name="config_autoBrightnessLcdBacklightValues">
+-        <item>2</item>
+-        <item>4</item>
+         <item>8</item>
+         <item>64</item>
+         <item>98</item>
+diff --git a/Blackview/BV9800Pro/Android.mk b/Blackview/BV9800Pro/Android.mk
+new file mode 100644
+index 0000000..ec28c35
+--- /dev/null
++++ b/Blackview/BV9800Pro/Android.mk
+@@ -0,0 +1,8 @@
++LOCAL_PATH := $(call my-dir)
++include $(CLEAR_VARS)
++LOCAL_MODULE_TAGS := optional
++LOCAL_PACKAGE_NAME := treble-overlay-blackview-bv9800pro
++LOCAL_MODULE_PATH := $(TARGET_OUT_PRODUCT)/overlay
++LOCAL_IS_RUNTIME_RESOURCE_OVERLAY := true
++LOCAL_PRIVATE_PLATFORM_APIS := true
++include $(BUILD_PACKAGE)
+diff --git a/Blackview/BV9800Pro/AndroidManifest.xml b/Blackview/BV9800Pro/AndroidManifest.xml
+new file mode 100644
+index 0000000..807affa
+--- /dev/null
++++ b/Blackview/BV9800Pro/AndroidManifest.xml
+@@ -0,0 +1,10 @@
++<manifest xmlns:android="http://schemas.android.com/apk/res/android"
++        package="me.phh.treble.overlay.blackview.bv9800pro"
++        android:versionCode="1"
++        android:versionName="1.0">
++        <overlay android:targetPackage="android"
++                android:requiredSystemPropertyName="ro.vendor.build.fingerprint"
++                android:requiredSystemPropertyValue="+Blackview/BV9800Pro*"
++		android:priority="410"
++		android:isStatic="true" />
++</manifest>
+diff --git a/Blackview/BV9800Pro/res/values/config.xml b/Blackview/BV9800Pro/res/values/config.xml
+new file mode 100644
+index 0000000..ff0b2c9
+--- /dev/null
++++ b/Blackview/BV9800Pro/res/values/config.xml
+@@ -0,0 +1,109 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <string-array name="networkAttributes">
++        <item>wifi,1,1,1,-1,true</item>
++        <item>mobile,0,0,0,-1,true</item>
++        <item>mobile_mms,2,0,2,60000,true</item>
++        <item>mobile_supl,3,0,2,60000,true</item>
++        <item>mobile_dun,4,0,2,60000,true</item>
++        <item>mobile_hipri,5,0,3,60000,true</item>
++        <item>mobile_fota,10,0,2,60000,true</item>
++        <item>mobile_ims,11,0,-1,-1,true</item>
++        <item>mobile_cbs,12,0,2,60000,true</item>
++        <item>wifi_p2p,13,1,0,-1,true</item>
++        <item>mobile_ia,14,0,2,-1,true</item>
++        <item>mobile_emergency,15,0,2,-1,true</item>
++        <item>mobile_wap,21,0,3,60000,true</item>
++        <item>mobile_xcap,25,0,3,60000,true</item>
++        <item>mobile_rcs,26,0,3,60000,true</item>
++        <item>mobile_bip,27,0,3,60000,true</item>
++        <item>mobile_vsim,28,0,-1,60000,true</item>
++        <item>mobile_preempt,29,0,9,60000,true</item>
++    </string-array>
++    <integer-array name="config_autoBrightnessLevels">
++        <item>128</item>
++        <item>256</item>
++        <item>384</item>
++        <item>512</item>
++        <item>640</item>
++        <item>768</item>
++        <item>896</item>
++        <item>1024</item>
++        <item>2048</item>
++        <item>4096</item>
++        <item>6144</item>
++        <item>8192</item>
++        <item>10240</item>
++        <item>12288</item>
++        <item>14336</item>
++        <item>16384</item>
++        <item>18432</item>
++    </integer-array>
++    <integer-array name="config_autoBrightnessLcdBacklightValues">
++        <item>8</item>
++        <item>64</item>
++        <item>98</item>
++        <item>104</item>
++        <item>110</item>
++        <item>116</item>
++        <item>122</item>
++        <item>128</item>
++        <item>134</item>
++        <item>182</item>
++        <item>255</item>
++        <item>255</item>
++        <item>255</item>
++        <item>255</item>
++        <item>255</item>
++        <item>255</item>
++        <item>255</item>
++        <item>255</item>
++    </integer-array>
++    <string-array name="config_tether_usb_regexs">
++        <item>rndis\\d</item>
++    </string-array>
++    <string-array name="config_tether_wifi_regexs">
++        <item>ap\\d</item>
++    </string-array>
++    <string-array name="config_tether_bluetooth_regexs">
++        <item>bt-pan</item>
++        <item>bt-dun</item>
++    </string-array>
++    <string-array name="config_defaultPinnerServiceFiles">
++        <item>/system/framework/arm/boot-mediatek-framework.vdex</item>
++        <item>/system/lib/libjavacrypto.so</item>
++        <item>/system/lib/libhidltransport.so</item>
++        <item>/system/framework/arm/boot-core-libart.oat</item>
++        <item>/system/framework/arm/boot-conscrypt.oat</item>
++        <item>/system/framework/arm/boot-core-libart.vdex</item>
++        <item>/system/framework/arm/boot-ext.vdex</item>
++        <item>/system/framework/arm/boot.vdex</item>
++        <item>/system/framework/arm/boot-framework.vdex</item>
++    </string-array>
++    <string-array name="config_ephemeralResolverPackage">
++        <item>com.google.android.gms</item>
++    </string-array>
++    <bool name="config_hotswapCapable">true</bool>
++    <bool name="config_device_volte_available">true</bool>
++    <bool name="config_device_vt_available">true</bool>
++    <bool name="config_device_wfc_ims_available">true</bool>
++    <bool name="config_dynamic_bind_ims">true</bool>
++    <bool name="config_setColorTransformAccelerated">true</bool>
++    <bool name="config_automatic_brightness_available">true</bool>
++    <bool name="config_suspendWhenScreenOffDueToProximity">true</bool>
++    <bool name="config_wifi_dual_band_support">true</bool>
++    <bool name="config_wifi_background_scan_support">true</bool>
++    <bool name="config_useDevInputEventForAudioJack">true</bool>
++    <bool name="config_switch_phone_on_voice_reg_state_change">false</bool>
++    <bool name="skip_restoring_network_selection">true</bool>
++    <bool name="config_showNavigationBar">true</bool>
++    <bool name="config_enableNetworkLocationOverlay">true</bool>
++    <bool name="config_enableFusedLocationOverlay">true</bool>
++    <bool name="config_fillMainBuiltInDisplayCutout">true</bool>
++    <bool name="config_wifi_connected_mac_randomization_supported">true</bool>
++    <bool name="config_wifi_p2p_mac_randomization_supported">true</bool>
++    <integer name="config_screenBrightnessSettingMinimum">2</integer>
++    <integer name="config_autoBrightnessBrighteningLightDebounce">2000</integer>
++    <integer name="config_autoBrightnessDarkeningLightDebounce">3000</integer>
++    <string name="config_ims_package">com.mediatek.ims</string>
++</resources>
+diff --git a/Blackview/BV9800Pro/res/xml/power_profile.xml b/Blackview/BV9800Pro/res/xml/power_profile.xml
+new file mode 100644
+index 0000000..557b298
+--- /dev/null
++++ b/Blackview/BV9800Pro/res/xml/power_profile.xml
+@@ -0,0 +1,131 @@
++<?xml version="1.0" encoding="utf-8"?>
++<device name="Android">
++    <item name="ambient.on">0.1</item>
++    <item name="screen.on">102</item>
++    <item name="screen.full">134</item>
++    <item name="bluetooth.active">46</item>
++    <item name="bluetooth.on">5</item>
++    <item name="wifi.on">3</item>
++    <item name="wifi.active">465</item>
++    <item name="wifi.scan">62</item>
++    <item name="audio">24</item>
++    <item name="video">295</item>
++    <item name="camera.flashlight">200</item>
++    <item name="camera.avg">600</item>
++    <item name="gps.on">24</item>
++    <item name="radio.active">640</item>
++    <item name="radio.scanning">110</item>
++    <array name="radio.on">
++        <value>5</value>
++        <value>5</value>
++    </array>
++    <array name="cpu.clusters.cores">
++        <value>4</value>
++        <value>4</value>
++    </array>
++    <array name="cpu.speeds.cluster0">
++        <value>1989000</value>
++        <value>1924000</value>
++        <value>1846000</value>
++        <value>1781000</value>
++        <value>1716000</value>
++        <value>1677000</value>
++        <value>1625000</value>
++        <value>1586000</value>
++        <value>1508000</value>
++        <value>1417000</value>
++        <value>1326000</value>
++        <value>1248000</value>
++        <value>1131000</value>
++        <value>1014000</value>
++        <value>910000</value>
++        <value>793000</value>
++    </array>
++    <array name="cpu.speeds.cluster1">
++        <value>2002000</value>
++        <value>1976000</value>
++        <value>1937000</value>
++        <value>1911000</value>
++        <value>1859000</value>
++        <value>1807000</value>
++        <value>1742000</value>
++        <value>1690000</value>
++        <value>1586000</value>
++        <value>1456000</value>
++        <value>1287000</value>
++        <value>1170000</value>
++        <value>1040000</value>
++        <value>910000</value>
++        <value>715000</value>
++        <value>520000</value>
++    </array>
++    <array name="cpu.active.cluster0">
++        <value>420</value>
++        <value>400</value>
++        <value>380</value>
++        <value>360</value>
++        <value>340</value>
++        <value>320</value>
++        <value>300</value>
++        <value>280</value>
++        <value>260</value>
++        <value>240</value>
++        <value>220</value>
++        <value>200</value>
++        <value>180</value>
++        <value>160</value>
++        <value>140</value>
++        <value>120</value>
++    </array>
++    <array name="cpu.active.cluster1">
++        <value>420</value>
++        <value>400</value>
++        <value>380</value>
++        <value>360</value>
++        <value>340</value>
++        <value>320</value>
++        <value>300</value>
++        <value>280</value>
++        <value>260</value>
++        <value>240</value>
++        <value>220</value>
++        <value>200</value>
++        <value>180</value>
++        <value>160</value>
++        <value>140</value>
++        <value>120</value>
++    </array>
++    <item name="cpu.idle">3</item>
++    <array name="memory.bandwidths">
++        <value>22.7</value>
++    </array>
++    <item name="battery.capacity">6580</item>
++    <item name="wifi.controller.idle">3</item>
++    <item name="wifi.controller.rx">200</item>
++    <item name="wifi.controller.tx">200</item>
++    <array name="wifi.controller.tx_levels" />
++    <item name="wifi.controller.voltage">3.3</item>
++    <array name="wifi.batchedscan">
++        <value>.0002</value>
++        <value>.002</value>
++        <value>.02</value>
++        <value>.2</value>
++        <value>2</value>
++    </array>
++    <item name="modem.controller.sleep">0</item>
++    <item name="modem.controller.idle">0</item>
++    <item name="modem.controller.rx">0</item>
++    <array name="modem.controller.tx">
++        <value>0</value>
++        <value>0</value>
++        <value>0</value>
++        <value>0</value>
++        <value>0</value>
++    </array>
++    <item name="modem.controller.voltage">0</item>
++    <array name="gps.signalqualitybased">
++        <value>0</value>
++        <value>0</value>
++    </array>
++    <item name="gps.voltage">0</item>
++</device>
+\ No newline at end of file
+diff --git a/overlay.mk b/overlay.mk
+index bedf749..de62a7f 100755
+--- a/overlay.mk
++++ b/overlay.mk
+@@ -15,6 +15,7 @@ PRODUCT_PACKAGES += \
+ 	treble-overlay-asus-zenfonemaxshot \
+ 	treble-overlay-blackview-bv6900 \
+ 	treble-overlay-blackview-bv9500plus \
++	treble-overlay-blackview-bv9800pro \
+ 	treble-overlay-bq-jeice \
+ 	treble-overlay-caf-ims \
+ 	treble-overlay-devinputjack \
+-- 
+2.20.1
+

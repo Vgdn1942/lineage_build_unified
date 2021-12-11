@@ -5,7 +5,7 @@ Subject: [PATCH] Camera button support
 
 Change-Id: Ieca2673cbe34340b0b314ff9140bbbbc2f5cb3bd
 ---
- .../policy/PhoneFallbackEventHandler.java     | 13 ---
+ .../policy/PhoneFallbackEventHandler.java     | 12 ---
  .../server/policy/PhoneWindowManager.java     | 81 +++++++++++++++++++
  2 files changed, 81 insertions(+), 13 deletions(-)
 
@@ -13,13 +13,12 @@ diff --git a/core/java/com/android/internal/policy/PhoneFallbackEventHandler.jav
 index b321ac08912b..03e7c56c7ba4 100644
 --- a/core/java/com/android/internal/policy/PhoneFallbackEventHandler.java
 +++ b/core/java/com/android/internal/policy/PhoneFallbackEventHandler.java
-@@ -145,19 +145,6 @@ public class PhoneFallbackEventHandler implements FallbackEventHandler {
+@@ -144,18 +144,6 @@ public class PhoneFallbackEventHandler implements FallbackEventHandler {
                      dispatcher.startTracking(event, this);
                  } else if (event.isLongPress() && dispatcher.isTracking(event)) {
                      dispatcher.performedLongPress(event);
 -                    if (isUserSetupComplete()) {
 -                        mView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
--                        sendCloseSystemWindows();
 -                        // Broadcast an intent that the Camera button was longpressed
 -                        Intent intent = new Intent(Intent.ACTION_CAMERA_BUTTON, null);
 -                        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);

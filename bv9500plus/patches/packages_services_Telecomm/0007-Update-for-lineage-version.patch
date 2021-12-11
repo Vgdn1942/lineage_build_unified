@@ -1,0 +1,45 @@
+From abffe16b61bfbccf78c78ea35807f25a96e0cc61 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 10 Dec 2021 22:52:45 +0300
+Subject: [PATCH] Update for lineage version
+
+Change-Id: I9dec13ec53095126fa91a3b314d99e6c46fb3ba0
+---
+ .../android/server/telecom/stats/StatServer.java   | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/src/com/android/server/telecom/stats/StatServer.java b/src/com/android/server/telecom/stats/StatServer.java
+index 74d584879..0ae7629ed 100644
+--- a/src/com/android/server/telecom/stats/StatServer.java
++++ b/src/com/android/server/telecom/stats/StatServer.java
+@@ -32,7 +32,7 @@ public class StatServer {
+     private String stats_property = "persist.sys.id_stats";
+     private String google_property = "ro.com.google.gmsversion";
+     private String lineage_property = "ro.lineage.version";
+-    private String device_property = "ro.product.device";
++    //private String device_property = "ro.product.device";
+ 
+     private String id_build = SystemProperties.get(build_property, "none");
+     private String id_stats = SystemProperties.get(stats_property, "false");
+@@ -62,17 +62,7 @@ public class StatServer {
+     }
+ 
+     String getBuildId() {
+-        final String unknown = "none";
+-        final String lineage = SystemProperties.get(lineage_property, unknown);
+-        final String device = SystemProperties.get(device_property, unknown);
+-
+-        if (lineage.equals(unknown) && device.equals(unknown)) {
+-            return unknown;
+-        } else if (device.equals(unknown)) {
+-            return lineage;
+-        } else {
+-            return lineage + device;
+-        }
++        return = SystemProperties.get(lineage_property, "unknown");
+     }
+ 
+ /*
+-- 
+2.20.1
+

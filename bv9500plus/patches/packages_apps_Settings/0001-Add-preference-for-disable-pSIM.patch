@@ -49,9 +49,9 @@ index e99129a347..3022a8356d 100644
 +    <string name="active_sim_one">"Только первая"</string>
 +    <string name="active_sim_two">"Только вторая"</string>
 +    <string name="active_sim_none">"Обе отключены"</string>
-     <string name="bluetooth_sim_card_access_notification_title" msgid="5217037846900908318">"Запрос на доступ к SIM-карте"</string>
-     <string name="bluetooth_sim_card_access_notification_content" msgid="6759306429895300286">"Устройство запрашивает доступ к вашей SIM-карте. Нажмите, чтобы узнать больше."</string>
-     <string name="bluetooth_sim_card_access_dialog_title" msgid="4486768729352090174">"Предоставить доступ к SIM-карте?"</string>
+     <string name="previous_page_content_description" msgid="6438292457923282991">"Назад"</string>
+     <string name="next_page_content_description" msgid="1641835099813416294">"Далее"</string>
+     <string name="colors_viewpager_content_description" msgid="2591751086138259565">"Предпросмотр цвета"</string>
 diff --git a/res/values/arrays.xml b/res/values/arrays.xml
 index 7d6745cb75..bee381143c 100644
 --- a/res/values/arrays.xml
@@ -93,9 +93,9 @@ index df409dbe64..8c7d1e18e8 100644
 +    <string name="active_sim_two">Only the second</string>
 +    <string name="active_sim_none">Both disabled</string>
 +
-     <!-- Bluetooth sim card permission alert for notification title [CHAR LIMIT=none] -->
-     <string name="bluetooth_sim_card_access_notification_title">SIM card access request</string>
-     <!-- Bluetooth sim card permission alert for notification content [CHAR LIMIT=none] -->
+     <!-- Content description of the previous button to bring user to the previous preview page. -->
+     <string name="previous_page_content_description">Previous</string>
+ 
 diff --git a/res/xml/network_and_internet.xml b/res/xml/network_and_internet.xml
 index 7b6b67c93f..42f0ac0d35 100644
 --- a/res/xml/network_and_internet.xml

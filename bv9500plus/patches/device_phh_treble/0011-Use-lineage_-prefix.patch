@@ -1,0 +1,44 @@
+From 2b1311839dc211aeeeed04bc7364d7f940ca303e Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Thu, 9 Dec 2021 23:57:51 +0300
+Subject: [PATCH] Use lineage_ prefix
+
+Change-Id: Ie4d29bf89f1ed3ddbc8f224d5307f000556ff5cf
+---
+ bv9500plus.mk => lineage_bv9500plus.mk | 2 +-
+ generate.sh | 2 +-
+ 2 file changed, 2 insertion(+), 2 deletion(-)
+ rename bv9500plus.mk => lineage_bv9500plus.mk (94%)
+
+diff --git a/bv9500plus.mk b/lineage_bv9500plus.mk
+similarity index 94%
+rename from bv9500plus.mk
+rename to lineage_bv9500plus.mk
+index 5a11660..a8523b6 100644
+--- a/bv9500plus.mk
++++ b/lineage_bv9500plus.mk
+@@ -9,7 +9,7 @@ $(call inherit-product, device/phh/treble/lineage.mk)
+ MTK_PLATFORM_FOLDER := mt6771
+ $(call inherit-product, device/mediatek/common/target.mk)
+ 
+-PRODUCT_NAME := bv9500plus
++PRODUCT_NAME := lineage_bv9500plus
+ PRODUCT_DEVICE := bv9500plus
+ PRODUCT_BRAND := Blackview
+ PRODUCT_SYSTEM_BRAND := Blackview
+diff --git a/generate.sh b/generate.sh
+index 144b872..daf9787 100644
+--- a/generate.sh
++++ b/generate.sh
+@@ -14,7 +14,7 @@ fi
+ 
+ echo 'PRODUCT_MAKEFILES := \' > AndroidProducts.mk
+ 
+-echo -e '\t$(LOCAL_DIR)/bv9500plus.mk \' >> AndroidProducts.mk
++echo -e '\t$(LOCAL_DIR)/lineage_bv9500plus.mk \' >> AndroidProducts.mk
+ 
+ for part in a ab;do
+ 	for apps in vanilla gapps foss gapps-go;do
+-- 
+2.20.1
+

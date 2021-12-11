@@ -6,6 +6,6 @@
 		remote="davish" revision="d589a97c7aa34964c06077a6cc20a66234d5b16d" />
     -->
 	<remote name="gitlab" fetch="https://gitlab.com/" />
-	<project path="vendor/partner_gms" name="davi.sh/gms-android-12" remote="gitlab" revision="master" />
+	<project name="davi.sh/gms-android-12" path="vendor/partner_gms" remote="gitlab" revision="master" />
 </manifest>
 

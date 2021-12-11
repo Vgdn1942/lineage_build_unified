@@ -35,7 +35,7 @@ index 3cd42a77ab..af7f1237c3 100644
 +                mContext.getString(R.string.unknown)).equals(mContext.getString(R.string.unknown))) {
 +            return SystemProperties.get(KEY_LINEAGE_VERSION_PROP);
 +        } else {
-+            return SystemProperties.get(KEY_LINEAGE_VERSION_PROP) + SystemProperties.get(KEY_DEVICE_VERSION_PROP);
++            return /* SystemProperties.get(KEY_LINEAGE_VERSION_PROP) + */ SystemProperties.get(KEY_DEVICE_VERSION_PROP);
 +        }
      }
  
