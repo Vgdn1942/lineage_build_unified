@@ -1,0 +1,25 @@
+From bbd0e3cf6f6fa8a126c186a27407684ab546d49d Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 11 Dec 2021 23:02:15 +0300
+Subject: [PATCH] Add new permission for telecom
+
+Change-Id: I80ca58d98eba3797f86e9efda2c05f9f7f9898d1
+---
+ data/etc/privapp-permissions-platform.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/data/etc/privapp-permissions-platform.xml b/data/etc/privapp-permissions-platform.xml
+index 813b7995fe89..6c8e42d62075 100644
+--- a/data/etc/privapp-permissions-platform.xml
++++ b/data/etc/privapp-permissions-platform.xml
+@@ -277,6 +277,7 @@ applications that come with the platform
+         <permission name="android.permission.MANAGE_ROLE_HOLDERS"/>
+         <permission name="android.permission.MODIFY_AUDIO_ROUTING" />
+         <permission name="android.permission.MODIFY_PHONE_STATE"/>
++        <permission name="android.permission.READ_PRIVILEGED_PHONE_STATE"/>
+         <permission name="android.permission.STOP_APP_SWITCHES"/>
+         <permission name="android.permission.SUBSTITUTE_NOTIFICATION_APP_NAME"/>
+     </privapp-permissions>
+-- 
+2.20.1
+

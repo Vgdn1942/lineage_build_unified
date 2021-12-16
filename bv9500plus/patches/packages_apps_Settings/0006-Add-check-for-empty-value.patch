@@ -1,0 +1,27 @@
+From fdb4eea47abad4120dab9042457774205e99476b Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 15 Dec 2021 20:03:04 +0300
+Subject: [PATCH] Add check for empty value
+
+Change-Id: Icbb421172c9fd5496b25270a5d792071bd9b8f62
+---
+ src/com/android/settings/SettingsOnBoot.java | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/settings/SettingsOnBoot.java b/src/com/android/settings/SettingsOnBoot.java
+index e83d4d0ce3..93cf757645 100644
+--- a/src/com/android/settings/SettingsOnBoot.java
++++ b/src/com/android/settings/SettingsOnBoot.java
+@@ -37,7 +37,8 @@ public class SettingsOnBoot extends BroadcastReceiver {
+         if (tm == null) {
+             return;
+         }
+-        final String strValue = SystemProperties.get(ACTIVE_SIM_MODE_PROPERTY);
++        String strValue = SystemProperties.get(ACTIVE_SIM_MODE_PROPERTY);
++        strValue = strValue.equals("") ? "0" : strValue;
+         final int intValue = Integer.valueOf(strValue);
+         switch (intValue) {
+             case 0:
+-- 
+2.20.1
+

@@ -1,0 +1,23 @@
+From 6015bf1dd8f6afce5285af89c93d2e181db995db Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 15 Dec 2021 20:05:12 +0300
+Subject: [PATCH] More lepton contexts
+
+Change-Id: I2f746c345cebab937562f30de3371ef230fba7c2
+---
+ sepolicy/service_contexts | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sepolicy/service_contexts b/sepolicy/service_contexts
+index 405fcfb..5673443 100644
+--- a/sepolicy/service_contexts
++++ b/sepolicy/service_contexts
+@@ -11,3 +11,5 @@ mtkIms                                    u:object_r:radio_service:s0
+ 
+ # Lepton
+ LeptonCameraService                     u:object_r:lepton_service:s0
++ThermalCameraService                    u:object_r:lepton_service:s0
++flir.lepton_camera_service              u:object_r:lepton_service:s0
+-- 
+2.20.1
+

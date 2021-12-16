@@ -1,0 +1,23 @@
+From 9462ef9e40069d6ce15024b88221a75098193c69 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 12 Dec 2021 11:02:59 +0300
+Subject: [PATCH] Disable MICROTRUST_TEE_SUPPORT
+
+Change-Id: Ia8d2240b8b7081103008ebc5e4ec40a7a9547b77
+---
+ mt6771/ProjectConfig.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mt6771/ProjectConfig.mk b/mt6771/ProjectConfig.mk
+index ba735ec..f5b0f20 100644
+--- a/mt6771/ProjectConfig.mk
++++ b/mt6771/ProjectConfig.mk
+@@ -11,4 +11,4 @@ MTK_AUDIO_ALAC_SUPPORT = yes
+ MTK_AUDIO_APE_SUPPORT = yes
+ MTK_SWIP_WMAPRO = no
+ MTK_THERMAL_PA_VIA_ATCMD = yes
+-MICROTRUST_TEE_SUPPORT = yes
++MICROTRUST_TEE_SUPPORT = no
+-- 
+2.20.1
+

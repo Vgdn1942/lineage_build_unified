@@ -1,0 +1,78 @@
+From 75d769565e172258fa8b2809be309d47f416258e Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 15 Dec 2021 12:55:24 +0300
+Subject: [PATCH] Add sepolicy for lepton
+
+Change-Id: I0e8ed80e42a6255362490596b6247df4ad2d2826
+---
+ sepolicy/file_contexts    |  5 +++++
+ sepolicy/lepton.te        | 31 +++++++++++++++++++++++++++++++
+ sepolicy/service_contexts |  4 ++++
+ 3 files changed, 40 insertions(+)
+ create mode 100644 sepolicy/lepton.te
+
+diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
+index da7d6be..88090bb 100644
+--- a/sepolicy/file_contexts
++++ b/sepolicy/file_contexts
+@@ -19,3 +19,8 @@
+ /dev/smcinvoke u:object_r:smcinvoke_device:s0
+ 
+ /dev/fm(/.*)?   u:object_r:fm_device:s0
++
++/dev/lepton(/.*)?               u:object_r:lepton_device:s0
++/system/bin/leptonClient        u:object_r:lepton_exec:s0
++/system/bin/leptonServer        u:object_r:lepton_exec:s0
++
+diff --git a/sepolicy/lepton.te b/sepolicy/lepton.te
+new file mode 100644
+index 0000000..0f8bccd
+--- /dev/null
++++ b/sepolicy/lepton.te
+@@ -0,0 +1,31 @@
++type lepton_device, dev_type;
++type lepton, domain, binderservicedomain, coredomain;
++type lepton_exec, exec_type, system_file_type, file_type;
++type lepton_service, service_manager_type;
++
++init_daemon_domain(lepton);
++add_service(lepton,lepton_service);
++binder_use(lepton);
++
++allow lepton init:unix_stream_socket {connectto};
++allow lepton lepton_device:chr_file {ioctl read write open};
++allow lepton lepton_device:dir {read write add_name open};
++allow lepton lepton_device:file {read write create open};
++allow lepton media_rw_data_file:dir {read write add_name search open};
++allow lepton media_rw_data_file:file {read write create getattr setattr open};
++allow lepton mnt_user_file:dir {search};
++allow lepton mnt_user_file:lnk_file {read write};
++allow lepton property_socket:sock_file {write};
++allow lepton sdcardfs:dir {write add_name search};
++allow lepton sdcardfs:file {read write create getattr open};
++allow lepton storage_file:lnk_file {read write};
++allow lepton sysfs_leds:dir {search};
++allow lepton system_data_file:dir {write create add_name};
++allow lepton system_data_file:file {read open};
++allow lepton system_file:file {execute_no_trans};
++allow lepton tmpfs:lnk_file {read};
++
++allow platform_app lepton_service:service_manager {find};
++allow untrusted_app lepton_service:service_manager {find};
++allow untrusted_app_all lepton_service:service_manager {find};
++
+diff --git a/sepolicy/service_contexts b/sepolicy/service_contexts
+index 7680633..fcaff03 100644
+--- a/sepolicy/service_contexts
++++ b/sepolicy/service_contexts
+@@ -8,3 +8,7 @@ irit                                                 u:object_r:radio_service:s0
+ # MTK IMS
+ mwis                                    u:object_r:radio_service:s0
+ mtkIms                                    u:object_r:radio_service:s0
++
++# Lepton
++LeptonCameraService                     u:object_r:lepton_service:s0
++
+-- 
+2.20.1
+

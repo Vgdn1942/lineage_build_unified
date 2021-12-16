@@ -1,0 +1,31 @@
+From ab9db32794542f3d08803d3d008a2813b807be86 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 15 Dec 2021 11:56:07 +0300
+Subject: [PATCH] Temporary fix for view status/navigate bars
+
+Change-Id: Ib3a21673b4bdad8dda4f8bd4deed1ac92764c0a3
+---
+ .../src/com/android/systemui/ScreenDecorations.java        | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/ScreenDecorations.java b/packages/SystemUI/src/com/android/systemui/ScreenDecorations.java
+index e9c565377530..a821e02600ca 100644
+--- a/packages/SystemUI/src/com/android/systemui/ScreenDecorations.java
++++ b/packages/SystemUI/src/com/android/systemui/ScreenDecorations.java
+@@ -312,8 +312,11 @@ public class ScreenDecorations extends SystemUI implements Tunable {
+             }
+             // Overlays have been created, send the dots to the controller
+             //TODO: need a better way to do this
+-            mDotViewController.initialize(
+-                    mTopLeftDot, mTopRightDot, mBottomLeftDot, mBottomRightDot);
++            if (mTopLeftDot != null && mTopRightDot != null && mBottomLeftDot != null &&
++                    mBottomRightDot != null) {
++                mDotViewController.initialize(
++                        mTopLeftDot, mTopRightDot, mBottomLeftDot, mBottomRightDot);
++            }
+         } else {
+             removeAllOverlays();
+         }
+-- 
+2.20.1
+
