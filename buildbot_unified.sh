@@ -46,9 +46,10 @@ echo\
 
 START=`date +%s`
 BUILD_DATE="$(date +%Y%m%d)"
-WITHOUT_CHECK_API=true
-WITH_SU=false
 BUILD_OUTPUT=~/GSI_treble_build/build-output
+
+export WITHOUT_CHECK_API=true
+export WITH_SU=false
 export OUT_DIR_COMMON_BASE=~/gsi_out
 
 prep_build() {
