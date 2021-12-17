@@ -1,0 +1,64 @@
+From 6f4a56b81e2e3dae2923c373aed5dea125be9a86 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 17 Dec 2021 22:32:56 +0300
+Subject: [PATCH] Replace lineage version on actual device
+
+Change-Id: I9cbc15c997e2dbbd30ea2237501b114f249d8f86
+---
+ init/vendor_init.cpp | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/init/vendor_init.cpp b/init/vendor_init.cpp
+index 9f5fa635b..d12e56233 100644
+--- a/init/vendor_init.cpp
++++ b/init/vendor_init.cpp
+@@ -49,9 +49,22 @@ void property_override(char const prop[], char const value[], bool add = true)
+     }
+ }
+ 
++std::string replaceString(std::string subject, const std::string& search,
++                          const std::string& replace)
++{
++    size_t pos = 0;
++    while ((pos = subject.find(search, pos)) != std::string::npos) {
++         subject.replace(pos, search.length(), replace);
++         pos += replace.length();
++    }
++    return subject;
++}
++
+ void vendor_load_properties()
+ {
+     const std::string board = GetProperty("ro.product.board", "");
++    const std::string version = GetProperty("ro.lineage.version", "");
++    const std::string device = GetProperty("ro.lineage.device", "");
+ 
+     // fingerprint
+     if (board.find("s62v71c2k_jk_tee") == 0) {
+@@ -284,6 +297,23 @@ void vendor_load_properties()
+         property_override("ro.build.version.security_patch", "2020-06-05");
+         //property_override("ro.lineage.build.vendor_security_patch", "2020-06-05");
+     }
++    // lineage version
++    if ((board.find("s62v71c2k_jk_tee") == 0) || (board.find("s62v71c2k_jk_eea") == 0)) {
++        property_override("ro.lineage.version", replaceString(version, device, "bv9500plus").c_str());
++        property_override("ro.modversion", replaceString(version, device, "bv9500plus").c_str());
++        property_override("ro.lineage.display.version", replaceString(version, device, "bv9500plus").c_str());
++    } else if (board.find("k57pv1_dm_64") == 0) {
++        property_override("ro.lineage.version", replaceString(version, device, "bv6900ru").c_str());
++        property_override("ro.modversion", replaceString(version, device, "bv6900ru").c_str());
++        property_override("ro.lineage.display.version", replaceString(version, device, "bv6900ru").c_str());
++    } else if (board.find("s65v71c2k_jk_p_eea") == 0) {
++        property_override("ro.lineage.version", replaceString(version, device, "bv9800pro").c_str());
++        property_override("ro.modversion", replaceString(version, device, "bv9800pro").c_str());
++        property_override("ro.lineage.display.version", replaceString(version, device, "bv9800pro").c_str());
++    }
++    //if (board.find("s65v71c2k_jk_p_eea") == 0) {
++    //    property_override("persist.sys.phh.no_vendor_overlay", "true");
++    //}
+     property_override("ro.build.tags", "release-keys");
+     property_override("ro.boot.vbmeta.device_state", "locked");
+     property_override("ro.boot.verifiedbootstate", "green");
+-- 
+2.20.1
+

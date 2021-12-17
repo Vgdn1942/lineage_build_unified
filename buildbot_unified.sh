@@ -72,7 +72,6 @@ prep_build() {
     mkdir -p $BUILD_OUTPUT
     echo ""
 
-    repopick -t android-12.0.0_r16
     repopick -t twelve-monet
     repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0+NOT+317685"
