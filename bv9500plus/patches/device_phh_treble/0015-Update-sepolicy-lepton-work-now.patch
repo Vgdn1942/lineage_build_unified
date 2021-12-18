@@ -1,18 +1,18 @@
-From 4eb6d90bd242afe3f5a735e05f57a6b5b4b91793 Mon Sep 17 00:00:00 2001
+From 2d520559e26310a90f4c4d2fda31132169fa828c Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
-Date: Thu, 16 Dec 2021 23:41:14 +0300
+Date: Fri, 17 Dec 2021 23:39:32 +0300
 Subject: [PATCH] Update sepolicy, lepton work now
 
-Change-Id: I94b16301af5f503eb8720adbef432d804955b326
+Change-Id: I7ed9e46d1048053e8172afcf6e541813a3bdeab5
 ---
- sepolicy/lepton.te | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ sepolicy/lepton.te | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/sepolicy/lepton.te b/sepolicy/lepton.te
-index 852540f..e119efd 100644
+index 6843810..e119efd 100644
 --- a/sepolicy/lepton.te
 +++ b/sepolicy/lepton.te
-@@ -24,7 +24,14 @@ allow lepton system_data_file:dir {write create add_name};
+@@ -24,8 +24,14 @@ allow lepton system_data_file:dir {write create add_name};
  allow lepton system_data_file:file {read open};
  allow lepton system_file:file {execute_no_trans};
  allow lepton tmpfs:lnk_file {read};
@@ -26,9 +26,8 @@ index 852540f..e119efd 100644
  
  allow platform_app lepton_service:service_manager {find};
  allow untrusted_app lepton_service:service_manager {find};
--allow untrusted_app_all lepton_service:service_manager {find};
-\ No newline at end of file
-+allow untrusted_app_all lepton_service:service_manager {find};
+ allow untrusted_app_all lepton_service:service_manager {find};
+-
 -- 
 2.20.1
 
