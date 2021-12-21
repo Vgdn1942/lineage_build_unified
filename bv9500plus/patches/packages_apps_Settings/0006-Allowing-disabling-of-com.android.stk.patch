@@ -1,0 +1,26 @@
+From 64118eeafe8e51d830dc844a781c638b97d9cef9 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 18 Dec 2021 21:54:58 +0300
+Subject: [PATCH] Allowing disabling of com.android.stk
+
+Change-Id: If4ba266ea52e30665674287edd17343b0eea3782
+---
+ .../applications/appinfo/AppButtonsPreferenceController.java    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/com/android/settings/applications/appinfo/AppButtonsPreferenceController.java b/src/com/android/settings/applications/appinfo/AppButtonsPreferenceController.java
+index 1b270d63b4..66dc4f22f2 100644
+--- a/src/com/android/settings/applications/appinfo/AppButtonsPreferenceController.java
++++ b/src/com/android/settings/applications/appinfo/AppButtonsPreferenceController.java
+@@ -587,7 +587,7 @@ public class AppButtonsPreferenceController extends BasePreferenceController imp
+         // by not allowing disabling of apps signed with the
+         // system cert and any launcher app in the system.
+         if (mHomePackages.contains(mAppEntry.info.packageName)
+-                || isSystemPackage(mActivity.getResources(), mPm, mPackageInfo)) {
++                || (isSystemPackage(mActivity.getResources(), mPm, mPackageInfo) && !"com.android.stk".equals(mAppEntry.info.packageName))) {
+             // Disable button for core system applications.
+             mButtonsPref.setButton2Text(R.string.disable_text)
+                     .setButton2Icon(R.drawable.ic_settings_disable);
+-- 
+2.20.1
+
