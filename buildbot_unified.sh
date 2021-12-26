@@ -59,7 +59,12 @@ prep_build() {
     cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
     cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
     rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
-    #rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0009-HOME-deserves-to-wake-up-devices-just-as-well-as-bac.patch # Conflict twelve-camera-button
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0024-Revert-Switch-long-press-power-behavior-in-AOSP.patch
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0020-SystemUI-Expose-legacy-Wi-Fi-and-cellular-data-QS-ti.patch
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0021-SystemUI-Allow-Wi-Fi-cell-tiles-to-co-exist-with-pro.patch # Temporary
+    cp -r ./lineage_build_unified/bv9500plus/lineage_patches_unified/0013-Make-rounded-corners-padding-overridable-with-persis.patch ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/
     rm -rf ./device/phh/treble/miravision
     echo ""
 
@@ -73,6 +78,12 @@ prep_build() {
     echo ""
 
     repopick -t twelve-monet
+    repopick -t twelve-firewall-backup
+    repopick -t restricted-networking-mode
+    repopick -t twelve-FlipFlap
+    repopick -t twelve-buttons
+    repopick -t twelve-camera-button
+#    repopick -t twelve-swap-volume-buttons
     repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0+NOT+317685"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318387"

@@ -1,0 +1,215 @@
+From 5a1de932ad6480d52adf76d70d9f9de319892417 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Tue, 21 Dec 2021 20:21:43 +0300
+Subject: [PATCH] Add sepolicy for leptonServer
+
+Change-Id: Ibb2209913bccbcf5f3bd502ecf3e8cbcecf9592f
+---
+ prebuilts/api/26.0/private/service_contexts | 3 +++
+ prebuilts/api/27.0/private/service_contexts | 3 +++
+ prebuilts/api/28.0/private/service_contexts | 3 +++
+ prebuilts/api/29.0/private/service_contexts | 3 +++
+ prebuilts/api/30.0/private/service_contexts | 3 +++
+ prebuilts/api/31.0/private/service_contexts | 3 +++
+ private/service_contexts                    | 3 +++
+ 7 files changed, 21 insertions(+)
+
+diff --git a/prebuilts/api/26.0/private/service_contexts b/prebuilts/api/26.0/private/service_contexts
+index ff97d662f..d651ba17b 100644
+--- a/prebuilts/api/26.0/private/service_contexts
++++ b/prebuilts/api/26.0/private/service_contexts
+@@ -48,6 +48,7 @@ dumpstate                                 u:object_r:dumpstate_service:s0
+ econtroller                               u:object_r:radio_service:s0
+ ethernet                                  u:object_r:ethernet_service:s0
+ fingerprint                               u:object_r:fingerprint_service:s0
++flir.lepton_camera_service                u:object_r:lepton_service:s0
+ font                                      u:object_r:font_service:s0
+ android.hardware.fingerprint.IFingerprintDaemon u:object_r:fingerprintd_service:s0
+ gfxinfo                                   u:object_r:gfxinfo_service:s0
+@@ -73,6 +74,7 @@ isms                                      u:object_r:radio_service:s0
+ isub                                      u:object_r:radio_service:s0
+ jobscheduler                              u:object_r:jobscheduler_service:s0
+ launcherapps                              u:object_r:launcherapps_service:s0
++LeptonCameraService                       u:object_r:lepton_service:s0
+ location                                  u:object_r:location_service:s0
+ lock_settings                             u:object_r:lock_settings_service:s0
+ media.aaudio                              u:object_r:audioserver_service:s0
+@@ -150,6 +152,7 @@ telecom                                   u:object_r:telecom_service:s0
+ telephony.registry                        u:object_r:registry_service:s0
+ textclassification                        u:object_r:textclassification_service:s0
+ textservices                              u:object_r:textservices_service:s0
++ThermalCameraService                      u:object_r:lepton_service:s0
+ trust                                     u:object_r:trust_service:s0
+ tv_input                                  u:object_r:tv_input_service:s0
+ uimode                                    u:object_r:uimode_service:s0
+diff --git a/prebuilts/api/27.0/private/service_contexts b/prebuilts/api/27.0/private/service_contexts
+index a82243ffb..697f0e476 100644
+--- a/prebuilts/api/27.0/private/service_contexts
++++ b/prebuilts/api/27.0/private/service_contexts
+@@ -49,6 +49,7 @@ dumpstate                                 u:object_r:dumpstate_service:s0
+ econtroller                               u:object_r:radio_service:s0
+ ethernet                                  u:object_r:ethernet_service:s0
+ fingerprint                               u:object_r:fingerprint_service:s0
++flir.lepton_camera_service                u:object_r:lepton_service:s0
+ font                                      u:object_r:font_service:s0
+ android.hardware.fingerprint.IFingerprintDaemon u:object_r:fingerprintd_service:s0
+ gfxinfo                                   u:object_r:gfxinfo_service:s0
+@@ -74,6 +75,7 @@ isms                                      u:object_r:radio_service:s0
+ isub                                      u:object_r:radio_service:s0
+ jobscheduler                              u:object_r:jobscheduler_service:s0
+ launcherapps                              u:object_r:launcherapps_service:s0
++LeptonCameraService                       u:object_r:lepton_service:s0
+ location                                  u:object_r:location_service:s0
+ lock_settings                             u:object_r:lock_settings_service:s0
+ media.aaudio                              u:object_r:audioserver_service:s0
+@@ -150,6 +152,7 @@ telephony.registry                        u:object_r:registry_service:s0
+ textclassification                        u:object_r:textclassification_service:s0
+ textservices                              u:object_r:textservices_service:s0
+ timezone                                  u:object_r:timezone_service:s0
++ThermalCameraService                      u:object_r:lepton_service:s0
+ thermalservice                            u:object_r:thermal_service:s0
+ trust                                     u:object_r:trust_service:s0
+ tv_input                                  u:object_r:tv_input_service:s0
+diff --git a/prebuilts/api/28.0/private/service_contexts b/prebuilts/api/28.0/private/service_contexts
+index 5ec45a23e..5a218a3f1 100644
+--- a/prebuilts/api/28.0/private/service_contexts
++++ b/prebuilts/api/28.0/private/service_contexts
+@@ -53,6 +53,7 @@ euicc_card_controller                     u:object_r:radio_service:s0
+ lowpan                                    u:object_r:lowpan_service:s0
+ ethernet                                  u:object_r:ethernet_service:s0
+ fingerprint                               u:object_r:fingerprint_service:s0
++flir.lepton_camera_service                u:object_r:lepton_service:s0
+ font                                      u:object_r:font_service:s0
+ android.hardware.fingerprint.IFingerprintDaemon u:object_r:fingerprintd_service:s0
+ gfxinfo                                   u:object_r:gfxinfo_service:s0
+@@ -78,6 +79,7 @@ isms                                      u:object_r:radio_service:s0
+ isub                                      u:object_r:radio_service:s0
+ jobscheduler                              u:object_r:jobscheduler_service:s0
+ launcherapps                              u:object_r:launcherapps_service:s0
++LeptonCameraService                       u:object_r:lepton_service:s0
+ location                                  u:object_r:location_service:s0
+ lock_settings                             u:object_r:lock_settings_service:s0
+ media.aaudio                              u:object_r:audioserver_service:s0
+@@ -162,6 +164,7 @@ telephony.registry                        u:object_r:registry_service:s0
+ textclassification                        u:object_r:textclassification_service:s0
+ textservices                              u:object_r:textservices_service:s0
+ timezone                                  u:object_r:timezone_service:s0
++ThermalCameraService                      u:object_r:lepton_service:s0
+ thermalservice                            u:object_r:thermal_service:s0
+ trust                                     u:object_r:trust_service:s0
+ tv_input                                  u:object_r:tv_input_service:s0
+diff --git a/prebuilts/api/29.0/private/service_contexts b/prebuilts/api/29.0/private/service_contexts
+index 96d553bf4..078661b69 100644
+--- a/prebuilts/api/29.0/private/service_contexts
++++ b/prebuilts/api/29.0/private/service_contexts
+@@ -68,6 +68,7 @@ lowpan                                    u:object_r:lowpan_service:s0
+ ethernet                                  u:object_r:ethernet_service:s0
+ face                                      u:object_r:face_service:s0
+ fingerprint                               u:object_r:fingerprint_service:s0
++flir.lepton_camera_service                u:object_r:lepton_service:s0
+ font                                      u:object_r:font_service:s0
+ android.hardware.fingerprint.IFingerprintDaemon u:object_r:fingerprintd_service:s0
+ gfxinfo                                   u:object_r:gfxinfo_service:s0
+@@ -99,6 +100,7 @@ isms                                      u:object_r:radio_service:s0
+ isub                                      u:object_r:radio_service:s0
+ jobscheduler                              u:object_r:jobscheduler_service:s0
+ launcherapps                              u:object_r:launcherapps_service:s0
++LeptonCameraService                       u:object_r:lepton_service:s0
+ location                                  u:object_r:location_service:s0
+ lock_settings                             u:object_r:lock_settings_service:s0
+ looper_stats                              u:object_r:looper_stats_service:s0
+@@ -194,6 +196,7 @@ textclassification                        u:object_r:textclassification_service:
+ textservices                              u:object_r:textservices_service:s0
+ time_detector                             u:object_r:timedetector_service:s0
+ timezone                                  u:object_r:timezone_service:s0
++ThermalCameraService                      u:object_r:lepton_service:s0
+ thermalservice                            u:object_r:thermal_service:s0
+ trust                                     u:object_r:trust_service:s0
+ tv_input                                  u:object_r:tv_input_service:s0
+diff --git a/prebuilts/api/30.0/private/service_contexts b/prebuilts/api/30.0/private/service_contexts
+index 5c6f1a476..a1209495c 100644
+--- a/prebuilts/api/30.0/private/service_contexts
++++ b/prebuilts/api/30.0/private/service_contexts
+@@ -86,6 +86,7 @@ ethernet                                  u:object_r:ethernet_service:s0
+ face                                      u:object_r:face_service:s0
+ file_integrity                            u:object_r:file_integrity_service:s0
+ fingerprint                               u:object_r:fingerprint_service:s0
++flir.lepton_camera_service                u:object_r:lepton_service:s0
+ font                                      u:object_r:font_service:s0
+ android.hardware.fingerprint.IFingerprintDaemon u:object_r:fingerprintd_service:s0
+ gfxinfo                                   u:object_r:gfxinfo_service:s0
+@@ -118,6 +119,7 @@ isms                                      u:object_r:radio_service:s0
+ isub                                      u:object_r:radio_service:s0
+ jobscheduler                              u:object_r:jobscheduler_service:s0
+ launcherapps                              u:object_r:launcherapps_service:s0
++LeptonCameraService                       u:object_r:lepton_service:s0
+ lights                                    u:object_r:light_service:s0
+ location                                  u:object_r:location_service:s0
+ lock_settings                             u:object_r:lock_settings_service:s0
+@@ -220,6 +222,7 @@ textservices                              u:object_r:textservices_service:s0
+ time_detector                             u:object_r:timedetector_service:s0
+ time_zone_detector                        u:object_r:timezonedetector_service:s0
+ timezone                                  u:object_r:timezone_service:s0
++ThermalCameraService                      u:object_r:lepton_service:s0
+ thermalservice                            u:object_r:thermal_service:s0
+ trust                                     u:object_r:trust_service:s0
+ tv_input                                  u:object_r:tv_input_service:s0
+diff --git a/prebuilts/api/31.0/private/service_contexts b/prebuilts/api/31.0/private/service_contexts
+index 3fd342b9b..c454b4ffd 100644
+--- a/prebuilts/api/31.0/private/service_contexts
++++ b/prebuilts/api/31.0/private/service_contexts
+@@ -116,6 +116,7 @@ ethernet                                  u:object_r:ethernet_service:s0
+ face                                      u:object_r:face_service:s0
+ file_integrity                            u:object_r:file_integrity_service:s0
+ fingerprint                               u:object_r:fingerprint_service:s0
++flir.lepton_camera_service                u:object_r:lepton_service:s0
+ font                                      u:object_r:font_service:s0
+ android.hardware.fingerprint.IFingerprintDaemon u:object_r:fingerprintd_service:s0
+ game                                      u:object_r:game_service:s0
+@@ -151,6 +152,7 @@ isub                                      u:object_r:radio_service:s0
+ jobscheduler                              u:object_r:jobscheduler_service:s0
+ launcherapps                              u:object_r:launcherapps_service:s0
+ legacy_permission                         u:object_r:legacy_permission_service:s0
++LeptonCameraService                       u:object_r:lepton_service:s0
+ lights                                    u:object_r:light_service:s0
+ location                                  u:object_r:location_service:s0
+ location_time_zone_manager                u:object_r:location_time_zone_manager_service:s0
+@@ -274,6 +276,7 @@ texttospeech                              u:object_r:texttospeech_service:s0
+ time_detector                             u:object_r:timedetector_service:s0
+ time_zone_detector                        u:object_r:timezonedetector_service:s0
+ timezone                                  u:object_r:timezone_service:s0
++ThermalCameraService                      u:object_r:lepton_service:s0
+ thermalservice                            u:object_r:thermal_service:s0
+ tracing.proxy                             u:object_r:tracingproxy_service:s0
+ translation                              u:object_r:translation_service:s0
+diff --git a/private/service_contexts b/private/service_contexts
+index 3fd342b9b..c454b4ffd 100644
+--- a/private/service_contexts
++++ b/private/service_contexts
+@@ -116,6 +116,7 @@ ethernet                                  u:object_r:ethernet_service:s0
+ face                                      u:object_r:face_service:s0
+ file_integrity                            u:object_r:file_integrity_service:s0
+ fingerprint                               u:object_r:fingerprint_service:s0
++flir.lepton_camera_service                u:object_r:lepton_service:s0
+ font                                      u:object_r:font_service:s0
+ android.hardware.fingerprint.IFingerprintDaemon u:object_r:fingerprintd_service:s0
+ game                                      u:object_r:game_service:s0
+@@ -151,6 +152,7 @@ isub                                      u:object_r:radio_service:s0
+ jobscheduler                              u:object_r:jobscheduler_service:s0
+ launcherapps                              u:object_r:launcherapps_service:s0
+ legacy_permission                         u:object_r:legacy_permission_service:s0
++LeptonCameraService                       u:object_r:lepton_service:s0
+ lights                                    u:object_r:light_service:s0
+ location                                  u:object_r:location_service:s0
+ location_time_zone_manager                u:object_r:location_time_zone_manager_service:s0
+@@ -274,6 +276,7 @@ texttospeech                              u:object_r:texttospeech_service:s0
+ time_detector                             u:object_r:timedetector_service:s0
+ time_zone_detector                        u:object_r:timezonedetector_service:s0
+ timezone                                  u:object_r:timezone_service:s0
++ThermalCameraService                      u:object_r:lepton_service:s0
+ thermalservice                            u:object_r:thermal_service:s0
+ tracing.proxy                             u:object_r:tracingproxy_service:s0
+ translation                              u:object_r:translation_service:s0
+-- 
+2.20.1
+

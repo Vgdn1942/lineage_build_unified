@@ -1,0 +1,28 @@
+From d8d01a794ff39f7d37a1f3fbcbccbe839a21128c Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 26 Dec 2021 00:19:21 +0300
+Subject: [PATCH] Fix patch 0013
+
+---
+ ...Make-rounded-corners-padding-overridable-with-persis.patch | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/patches_treble_phh/platform_frameworks_base/0013-Make-rounded-corners-padding-overridable-with-persis.patch b/patches_treble_phh/platform_frameworks_base/0013-Make-rounded-corners-padding-overridable-with-persis.patch
+index 0773b2d..3938e71 100644
+--- a/patches_treble_phh/platform_frameworks_base/0013-Make-rounded-corners-padding-overridable-with-persis.patch
++++ b/patches_treble_phh/platform_frameworks_base/0013-Make-rounded-corners-padding-overridable-with-persis.patch
+@@ -49,9 +49,9 @@ index 788665269edb..f9c6ebbd26e3 100644
+  import android.util.Pair;
+  import android.util.TypedValue;
+ @@ -196,8 +197,10 @@ public class KeyguardStatusBarView extends RelativeLayout implements
++                 R.dimen.ongoing_appops_dot_min_padding);
++         mCutoutSideNudge = getResources().getDimensionPixelSize(
+                  R.dimen.display_cutout_margin_consumption);
+-         mShowPercentAvailable = getContext().getResources().getBoolean(
+-                 com.android.internal.R.bool.config_battery_percentage_setting_available);
+ -        mRoundedCornerPadding = res.getDimensionPixelSize(
+ -                R.dimen.rounded_corner_content_padding);
+ +        mRoundedCornerPadding = SystemProperties.getInt("persist.sys.phh.rounded_corners_padding", -1);
+-- 
+2.20.1
+
