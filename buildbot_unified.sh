@@ -64,7 +64,8 @@ prep_build() {
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0020-SystemUI-Expose-legacy-Wi-Fi-and-cellular-data-QS-ti.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0021-SystemUI-Allow-Wi-Fi-cell-tiles-to-co-exist-with-pro.patch # Temporary
-    cp -r ./lineage_build_unified/bv9500plus/lineage_patches_unified/0013-Make-rounded-corners-padding-overridable-with-persis.patch ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/
+    cp -r ./lineage_build_unified/bv9500plus/lineage_patches_unified/0013-Make-rounded-corners-padding-overridable-with-persis.patch \
+        ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/
     rm -rf ./device/phh/treble/miravision
     echo ""
 
@@ -86,7 +87,7 @@ prep_build() {
 #    repopick -t twelve-swap-volume-buttons
     repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0+NOT+317685"
-    repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318387"
+    repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318387+NOT+318747"
     repopick 318971 # Move Seedvault to /system_ext partition
 
     cd frameworks/native

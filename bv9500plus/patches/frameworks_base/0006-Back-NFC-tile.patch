@@ -1,0 +1,26 @@
+From a6413ef5a165fbd8d0281d2e2c2001952d54d861 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 26 Dec 2021 12:32:45 +0300
+Subject: [PATCH] Back NFC tile
+
+Change-Id: I559ee4b897ee6b1824c4e21babd7d4790bac5a46
+---
+ packages/SystemUI/res/values/config.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
+index e4e178b29afa..5e7ad2e5f578 100644
+--- a/packages/SystemUI/res/values/config.xml
++++ b/packages/SystemUI/res/values/config.xml
+@@ -107,7 +107,7 @@
+ 
+     <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
+     <string name="quick_settings_tiles_stock" translatable="false">
+-        internet,wifi,cell,bt,flashlight,dnd,alarm,airplane,controls,wallet,rotation,battery,cast,screenrecord,mictoggle,cameratoggle,location,hotspot,inversion,saver,dark,work,night,reverse,reduce_brightness,ambient_display,aod,caffeine,heads_up,sync,usb_tether
++        internet,wifi,cell,bt,flashlight,dnd,alarm,airplane,controls,nfc,wallet,rotation,battery,cast,screenrecord,mictoggle,cameratoggle,location,hotspot,inversion,saver,dark,work,night,reverse,reduce_brightness,ambient_display,aod,caffeine,heads_up,sync,usb_tether
+     </string>
+ 
+     <!-- The tiles to display in QuickSettings -->
+-- 
+2.20.1
+
