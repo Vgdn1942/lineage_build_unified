@@ -54,13 +54,15 @@ export OUT_DIR_COMMON_BASE=~/gsi_out
 
 prep_build() {
     echo "Preparing local manifests"
-    #repo init -u git://github.com/AndyCGYan/android.git -b lineage-19.0
+    #repo init -u https://github.com/Vgdn1942/android.git -b lineage-19.0
     mkdir -p .repo/local_manifests
     cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
     cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
     rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0006-Support-samsung-Pie-and-Q-light-hal.patch
     rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0009-HOME-deserves-to-wake-up-devices-just-as-well-as-bac.patch # Conflict twelve-camera-button
     rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0024-Revert-Switch-long-press-power-behavior-in-AOSP.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_packages_apps_Bluetooth/0001-On-Samsung-devices-we-need-to-tell-Audio-HAL-if-we-r.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0020-SystemUI-Expose-legacy-Wi-Fi-and-cellular-data-QS-ti.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0021-SystemUI-Allow-Wi-Fi-cell-tiles-to-co-exist-with-pro.patch # Temporary
@@ -78,17 +80,20 @@ prep_build() {
     mkdir -p $BUILD_OUTPUT
     echo ""
 
-    repopick -t twelve-monet
-    repopick -t twelve-firewall-backup
-    repopick -t restricted-networking-mode
+    repopick -t twelve-touchscreen-gestures
     repopick -t twelve-FlipFlap
     repopick -t twelve-buttons
     repopick -t twelve-camera-button
-#    repopick -t twelve-swap-volume-buttons
-    repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
+    repopick -t twelve-navbar-runtime-toggle
+    repopick -t twelve-lights
+    repopick -t twelve-statusbar-brightness-and-qs-slider
+    #repopick -t twelve-proximity-check
+    #repopick -t twelve-powermenu
+    #repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0+NOT+317685"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318387+NOT+318747"
-    repopick 318971 # Move Seedvault to /system_ext partition
+    repopick 318283 # overlay: core: Remove accent color overrides
+    repopick 317788 # overlay: Enable monet
 
     cd frameworks/native
     git revert 340882c --no-edit # Plumb attribution tag to Sensor Service

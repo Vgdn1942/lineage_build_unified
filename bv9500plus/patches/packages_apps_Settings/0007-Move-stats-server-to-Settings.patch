@@ -377,7 +377,7 @@ index 0000000000..74d459125e
 +    private static final String TAG = "stats_StatServer";
 +    private static final boolean DEBUG = false;
 +
-+    private String server_name = "https://vgdn1942.ru";
++    private String server_name = "http://130.61.237.104";
 +    //private String server_name = "http://vgdn1942.h1n.ru";
 +    //private String server_name = "http://l257728y.beget.tech";
 +    private String server_select = "stats.php?action=select";
