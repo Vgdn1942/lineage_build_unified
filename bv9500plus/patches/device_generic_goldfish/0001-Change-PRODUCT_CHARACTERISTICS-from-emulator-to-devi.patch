@@ -1,0 +1,26 @@
+From 0ce0c0da03f58629f6e6018f433cb972b523e6d5 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 8 Jan 2022 22:58:43 +0300
+Subject: [PATCH] Change PRODUCT_CHARACTERISTICS from 'emulator' to 'device'
+
+Change-Id: I0265a89443848cbb62f52446c6f82c7a1e0b8c88
+---
+ 64bitonly/product/emulator64_vendor.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/64bitonly/product/emulator64_vendor.mk b/64bitonly/product/emulator64_vendor.mk
+index f258266c..f5cea64f 100644
+--- a/64bitonly/product/emulator64_vendor.mk
++++ b/64bitonly/product/emulator64_vendor.mk
+@@ -28,7 +28,7 @@ PRODUCT_PACKAGES += \
+ 
+ DEVICE_PACKAGE_OVERLAYS := device/generic/goldfish/overlay
+ 
+-PRODUCT_CHARACTERISTICS := emulator
++PRODUCT_CHARACTERISTICS := device
+ 
+ PRODUCT_FULL_TREBLE_OVERRIDE := true
+ 
+-- 
+2.20.1
+
