@@ -1,0 +1,46 @@
+From 323ad3a5aca8c9c5c88ec29d7c8ba42cc73ac10b Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 8 Jan 2022 22:25:40 +0300
+Subject: [PATCH] More log from network capabilities
+
+Change-Id: I2c49c505923dcdbe17a77a9dfc6cf0fe7f5c83a2
+---
+ src/com/android/settings/SettingsInitialize.java | 5 +++++
+ src/com/android/settings/SettingsOnBoot.java     | 5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/src/com/android/settings/SettingsInitialize.java b/src/com/android/settings/SettingsInitialize.java
+index 84be936c00..033b16e8b5 100644
+--- a/src/com/android/settings/SettingsInitialize.java
++++ b/src/com/android/settings/SettingsInitialize.java
+@@ -142,6 +142,11 @@ public class SettingsInitialize extends BroadcastReceiver {
+                 Log.i("vgdn1942", "Network " + network + " is available!");
+             }
+ 
++            @Override
++            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
++                Log.i("vgdn1942", "Received info about network " + network + ", got " + networkCapabilities);
++            }
++
+             @Override
+             public void onLost(Network network) {
+                 Log.i("vgdn1942", "Network " + network + " is lost!");
+diff --git a/src/com/android/settings/SettingsOnBoot.java b/src/com/android/settings/SettingsOnBoot.java
+index 6703b3ee4f..15c19e352b 100644
+--- a/src/com/android/settings/SettingsOnBoot.java
++++ b/src/com/android/settings/SettingsOnBoot.java
+@@ -82,6 +82,11 @@ public class SettingsOnBoot extends BroadcastReceiver {
+                 Log.i("vgdn1942", "Network " + network + " is available!");
+             }
+ 
++            @Override
++            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
++                Log.i("vgdn1942", "Received info about network " + network + ", got " + networkCapabilities);
++            }
++
+             @Override
+             public void onLost(Network network) {
+                 Log.i("vgdn1942", "Network " + network + " is lost!");
+-- 
+2.20.1
+

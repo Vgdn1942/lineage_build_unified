@@ -66,6 +66,7 @@ prep_build() {
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0006-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0020-SystemUI-Expose-legacy-Wi-Fi-and-cellular-data-QS-ti.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0021-SystemUI-Allow-Wi-Fi-cell-tiles-to-co-exist-with-pro.patch # Temporary
+    rm -f ./lineage_patches_unified/patches_platform/packages_apps_Settings/9999-TEMP-Settings-Hack-in-LiveDisplay-entrypoint.patch
     cp -r ./lineage_build_unified/bv9500plus/lineage_patches_unified/0013-Make-rounded-corners-padding-overridable-with-persis.patch \
         ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/
     rm -rf ./device/phh/treble/miravision
