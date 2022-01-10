@@ -1996,11 +1996,11 @@ index d4f5f09..7028454 100644
  
 +    <!-- Minimum battery level to allow dreaming when not powered.
 +         Use -1 to disable this safety feature. -->
-+    <integer name="config_dreamsBatteryLevelMinimumWhenNotPowered">-1</integer>
++    <integer name="config_dreamsBatteryLevelMinimumWhenNotPowered">0</integer>
 +    <!-- If the battery level drops by this percentage and the user activity timeout
 +         has expired, then assume the device is receiving insufficient current to charge
 +         effectively and terminate the dream.  Use -1 to disable this safety feature.  -->
-+    <integer name="config_dreamsBatteryLevelDrainCutoff">-1</integer>
++    <integer name="config_dreamsBatteryLevelDrainCutoff">0</integer>
  
      <!-- Screen Wake Keys
           Determines whether the specified key groups can be used to wake up the device. -->

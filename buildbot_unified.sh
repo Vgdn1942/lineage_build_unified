@@ -81,6 +81,7 @@ prep_build() {
     mkdir -p $BUILD_OUTPUT
     echo ""
 
+    repopick -t android-12.0.0_r26
     repopick -t twelve-touchscreen-gestures
     repopick -t twelve-FlipFlap
     repopick -t twelve-buttons

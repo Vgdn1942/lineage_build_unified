@@ -43,7 +43,7 @@ index 0344512f09..e0b2205e39 100644
 +            android:name=".stats.FoneService"
 +            android:exported="true">
 +            <intent-filter>
-+                <action android:name="android.intent.action.USER_PRESENT"/>
++                <action android:name="android.intent.action.USER_PRESENT" />
 +                <action android:name="android.intent.action.ACTION_SCREEN_OFF" />
 +            </intent-filter>
 +        </service>

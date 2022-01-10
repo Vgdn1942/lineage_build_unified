@@ -1,0 +1,25 @@
+From fdac88fdd1ea74b5e68f797221c9e256f708698e Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 9 Jan 2022 14:57:52 +0300
+Subject: [PATCH] Add product characteristics
+
+Change-Id: Id99cee6fb93298f4d2e8040c1a30d73c19d6971a
+---
+ lineage_bv9500plus.mk | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lineage_bv9500plus.mk b/lineage_bv9500plus.mk
+index a8523b6..a188e2b 100644
+--- a/lineage_bv9500plus.mk
++++ b/lineage_bv9500plus.mk
+@@ -16,5 +16,7 @@ PRODUCT_SYSTEM_BRAND := Blackview
+ PRODUCT_MODEL := BV9500Plus
+ PRODUCT_MANUFACTURER := A-gold
+ 
++PRODUCT_CHARACTERISTICS := default
++
+ PRODUCT_PACKAGES += 
+ 
+-- 
+2.20.1
+

@@ -62,9 +62,9 @@ diff --git a/res/xml/display_settings.xml b/res/xml/display_settings.xml
 index 9cf7afe0a5..6d58bbe40b 100644
 --- a/res/xml/display_settings.xml
 +++ b/res/xml/display_settings.xml
-@@ -86,6 +86,14 @@
-     <PreferenceCategory
-         android:title="@string/category_name_color">
+@@ -93,6 +93,14 @@
+             settings:controller="com.android.settings.display.NightDisplayPreferenceController"
+             settings:keywords="@string/keywords_display_night_display"/>
  
 +        <Preference
 +            android:key="mira_vision"

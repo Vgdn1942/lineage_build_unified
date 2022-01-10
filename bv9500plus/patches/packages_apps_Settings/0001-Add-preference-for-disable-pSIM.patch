@@ -28,7 +28,7 @@ index c474c894ba..1d2ab4068c 100644
 +        <receiver android:name=".SettingsOnBoot"
 +            android:exported="true">
 +            <intent-filter>
-+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
++                <action android:name="android.intent.action.BOOT_COMPLETED" />
 +            </intent-filter>
 +        </receiver>
 +
