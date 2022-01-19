@@ -1,0 +1,108 @@
+From c3153df79dac2ccb4557cbd0c6e374c710fdaab2 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 19 Jan 2022 19:38:21 +0300
+Subject: [PATCH] Add disable OEM unlock switch on boot
+
+Change-Id: I9cacb678b0fd383accf8448b6c2433690e3cbb52
+---
+ .../android/settings/SettingsInitialize.java    | 17 +++++++++++++++++
+ src/com/android/settings/SettingsOnBoot.java    | 16 ++++++++++++++++
+ 2 files changed, 33 insertions(+)
+
+diff --git a/src/com/android/settings/SettingsInitialize.java b/src/com/android/settings/SettingsInitialize.java
+index e6019d0a33..b2471deec2 100644
+--- a/src/com/android/settings/SettingsInitialize.java
++++ b/src/com/android/settings/SettingsInitialize.java
+@@ -36,8 +36,11 @@ import android.net.ConnectivityManager;
+ import android.net.Network;
+ import android.net.NetworkCapabilities;
+ import android.net.NetworkRequest;
++import android.os.SystemProperties;
+ import android.os.UserHandle;
+ import android.os.UserManager;
++import android.service.oemlock.OemLockManager;
++import android.text.TextUtils;
+ import android.util.Log;
+ 
+ import androidx.annotation.VisibleForTesting;
+@@ -59,6 +62,9 @@ public class SettingsInitialize extends BroadcastReceiver {
+     private static final String PRIMARY_PROFILE_SETTING =
+             "com.android.settings.PRIMARY_PROFILE_CONTROLLED";
+     private static final String WEBVIEW_IMPLEMENTATION_ACTIVITY = ".WebViewImplementation";
++    private static final String OEM_UNLOCK_SUPPORTED_KEY = "ro.oem_unlock_supported";
++    private static final String UNSUPPORTED = "-9999";
++    private static final String SUPPORTED = "1";
+ 
+     @Override
+     public void onReceive(Context context, Intent broadcast) {
+@@ -67,6 +73,12 @@ public class SettingsInitialize extends BroadcastReceiver {
+         final PackageManager pm = context.getPackageManager();
+         final ConnectivityManager cm = (ConnectivityManager)
+                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
++        if (TextUtils.equals(SystemProperties.get(OEM_UNLOCK_SUPPORTED_KEY, UNSUPPORTED),
++                SUPPORTED)) {
++            final OemLockManager olm = (OemLockManager)
++                context.getSystemService(Context.OEM_LOCK_SERVICE);
++            setOemUnlockSetting(olm);
++        }
+         addCapabilitiesIMS(context, cm);
+         managedProfileSetup(context, pm, broadcast, userInfo);
+         webviewSettingSetup(context, pm, userInfo);
+@@ -160,6 +172,11 @@ public class SettingsInitialize extends BroadcastReceiver {
+         cm.requestNetwork(networkRequest, networkCallback);
+     }
+ 
++    private void setOemUnlockSetting(OemLockManager olm) {
++            olm.setOemUnlockAllowedByUser(false);
++            Log.i("vgdn1942", "setOemUnlockAllowedByUser(false)");
++    }
++
+     // Refresh settings shortcuts to have correct intent flags
+     @VisibleForTesting
+     void refreshExistingShortcuts(Context context) {
+diff --git a/src/com/android/settings/SettingsOnBoot.java b/src/com/android/settings/SettingsOnBoot.java
+index 0856dff966..cd6f9bf013 100644
+--- a/src/com/android/settings/SettingsOnBoot.java
++++ b/src/com/android/settings/SettingsOnBoot.java
+@@ -25,17 +25,28 @@ import android.net.NetworkCapabilities;
+ import android.net.NetworkRequest;
+ import android.os.Build;
+ import android.os.SystemProperties;
++import android.service.oemlock.OemLockManager;
+ import android.telephony.TelephonyManager;
++import android.text.TextUtils;
+ import android.util.Log;
+ 
+ public class SettingsOnBoot extends BroadcastReceiver {
+     private static final String ACTIVE_SIM_MODE_PROPERTY = "persist.sim.activesim";
++    private static final String OEM_UNLOCK_SUPPORTED_KEY = "ro.oem_unlock_supported";
++    private static final String UNSUPPORTED = "-9999";
++    private static final String SUPPORTED = "1";
+ 
+     @Override
+     public void onReceive(Context context, Intent broadcast) {
+         final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+         final ConnectivityManager cm = (ConnectivityManager)
+                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
++        if (TextUtils.equals(SystemProperties.get(OEM_UNLOCK_SUPPORTED_KEY, UNSUPPORTED),
++                SUPPORTED)) {
++            final OemLockManager olm = (OemLockManager)
++                context.getSystemService(Context.OEM_LOCK_SERVICE);
++            setOemUnlockSetting(olm);
++        }
+         activeSimSettingSetup(context, tm);
+         addCapabilitiesIMS(context, cm);
+     }
+@@ -99,4 +110,9 @@ public class SettingsOnBoot extends BroadcastReceiver {
+         };
+         cm.requestNetwork(networkRequest, networkCallback);
+     }
++
++    private void setOemUnlockSetting(OemLockManager olm) {
++            olm.setOemUnlockAllowedByUser(false);
++            Log.i("vgdn1942", "setOemUnlockAllowedByUser(false)");
++    }
+ }
+-- 
+2.20.1
+

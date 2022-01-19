@@ -1,0 +1,37 @@
+From 161ef29a8cd73930f306a19d6df95f73d218ed20 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 15 Jan 2022 17:39:58 +0300
+Subject: [PATCH 2/2] Enable VoLTE in config
+
+Change-Id: Id0b95a0789f4e1a31936752e4a7067cc2997b3b0
+---
+ .../frameworks/base/core/res/res/values/config.xml  | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/overlay/frameworks/base/core/res/res/values/config.xml b/overlay/frameworks/base/core/res/res/values/config.xml
+index a64e54e..ca479d8 100644
+--- a/overlay/frameworks/base/core/res/res/values/config.xml
++++ b/overlay/frameworks/base/core/res/res/values/config.xml
+@@ -33,6 +33,19 @@
+ 
+     <bool name="config_cellBroadcastAppLinks">true</bool>
+ 
++    <!-- Flag indicating whether the IMS service can be turned off. If false then
++        the service will not be turned-off completely (the ImsManager.turnOffIms() will
++        be disabled) but individual Features can be disabled using ImsConfig.setFeatureValue() -->
++    <bool name="imsServiceAllowTurnOff">false</bool>
++
++    <!-- Flag specifying whether VoLTE is available on device -->
++    <bool name="config_device_volte_available">true</bool>
++
++    <!-- Flag specifying whether VoLTE should be available for carrier: independent of
++         carrier provisioning. If false: hard disabled. If true: then depends on carrier
++         provisioning, availability etc -->
++    <bool name="config_carrier_volte_available">true</bool>
++
+     <!-- True if the firmware supports connected MAC randomization -->
+     <bool name="config_wifi_connected_mac_randomization_supported">true</bool>
+ 
+-- 
+2.20.1
+

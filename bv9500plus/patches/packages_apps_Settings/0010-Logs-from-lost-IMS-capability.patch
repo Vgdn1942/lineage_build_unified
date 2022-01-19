@@ -1,0 +1,46 @@
+From b195cd9fcc595eb526ef396b90cd4e3e5be1fa2e Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 15 Jan 2022 22:02:07 +0300
+Subject: [PATCH] Logs from lost IMS capability
+
+Change-Id: Ib189038e7956273af8f84467b5ecb27dc2e15724
+---
+ src/com/android/settings/SettingsInitialize.java | 5 +++++
+ src/com/android/settings/SettingsOnBoot.java     | 5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/src/com/android/settings/SettingsInitialize.java b/src/com/android/settings/SettingsInitialize.java
+index 033b16e8b5..e6019d0a33 100644
+--- a/src/com/android/settings/SettingsInitialize.java
++++ b/src/com/android/settings/SettingsInitialize.java
+@@ -145,6 +145,11 @@ public class SettingsInitialize extends BroadcastReceiver {
+             @Override
+             public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+                 Log.i("vgdn1942", "Received info about network " + network + ", got " + networkCapabilities);
++                if (networkCapabilities != null) {
++                    if (!networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_IMS)) {
++                        Log.i("vgdn1942", "NetworkCapabilities.NET_CAPABILITY_IMS is lost,  got " + networkCapabilities);
++                    }
++                }
+             }
+ 
+             @Override
+diff --git a/src/com/android/settings/SettingsOnBoot.java b/src/com/android/settings/SettingsOnBoot.java
+index 15c19e352b..0856dff966 100644
+--- a/src/com/android/settings/SettingsOnBoot.java
++++ b/src/com/android/settings/SettingsOnBoot.java
+@@ -85,6 +85,11 @@ public class SettingsOnBoot extends BroadcastReceiver {
+             @Override
+             public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+                 Log.i("vgdn1942", "Received info about network " + network + ", got " + networkCapabilities);
++                if (networkCapabilities != null) {
++                    if (!networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_IMS)) {
++                        Log.i("vgdn1942", "NetworkCapabilities.NET_CAPABILITY_IMS is lost,  got " + networkCapabilities);
++                    }
++                }
+             }
+ 
+             @Override
+-- 
+2.20.1
+

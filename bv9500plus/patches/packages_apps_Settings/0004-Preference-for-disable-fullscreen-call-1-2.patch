@@ -43,9 +43,9 @@ diff --git a/res/xml/display_settings.xml b/res/xml/display_settings.xml
 index 6d58bbe40b..f959d773a5 100644
 --- a/res/xml/display_settings.xml
 +++ b/res/xml/display_settings.xml
-@@ -163,6 +163,10 @@
-             android:title="@string/tap_to_wake"
-             android:summary="@string/tap_to_wake_summary"/>
+@@ -188,6 +188,10 @@
+             android:summary="@string/wake_when_plugged_or_unplugged_summary"
+             android:defaultValue="@*android:bool/config_unplugTurnsOnScreen" />
  
 +        <SwitchPreference
 +            android:key="full_screen_incall"
