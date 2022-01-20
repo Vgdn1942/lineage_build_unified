@@ -1,0 +1,27 @@
+From f501600e6a0d47a8760edbfd1568c7df94ff52a2 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Thu, 20 Jan 2022 14:57:32 +0300
+Subject: [PATCH] Enable ADB root on user build
+
+Change-Id: I58db67894b8d84b62a58238d09073fd59374e4b0
+---
+ .../settings/development/AdbRootPreferenceController.java      | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/com/android/settings/development/AdbRootPreferenceController.java b/src/com/android/settings/development/AdbRootPreferenceController.java
+index c75a810497..7e48e3cc7d 100644
+--- a/src/com/android/settings/development/AdbRootPreferenceController.java
++++ b/src/com/android/settings/development/AdbRootPreferenceController.java
+@@ -51,7 +51,8 @@ public class AdbRootPreferenceController extends DeveloperOptionsPreferenceContr
+ 
+     @Override
+     public boolean isAvailable() {
+-        return Build.IS_DEBUGGABLE;
++        //return Build.IS_DEBUGGABLE;
++        return true;
+     }
+ 
+     @Override
+-- 
+2.20.1
+

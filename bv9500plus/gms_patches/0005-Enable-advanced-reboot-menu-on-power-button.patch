@@ -1,0 +1,25 @@
+From fc3343557e6db7f12601cf5b1befa4a47255d9fb Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Thu, 20 Jan 2022 14:56:05 +0300
+Subject: [PATCH] Enable advanced reboot menu on power button
+
+---
+ overlay/GmsConfigOverlayCommon/res/values/config.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/overlay/GmsConfigOverlayCommon/res/values/config.xml b/overlay/GmsConfigOverlayCommon/res/values/config.xml
+index 517cbb0..9a28504 100644
+--- a/overlay/GmsConfigOverlayCommon/res/values/config.xml
++++ b/overlay/GmsConfigOverlayCommon/res/values/config.xml
+@@ -175,7 +175,7 @@
+     <!-- Whether the setting to change long press on power behaviour from default to assistant (5)
+          is available in Settings.
+      -->
+-    <bool name="config_longPressOnPowerForAssistantSettingAvailable">false</bool>
++    <bool name="config_longPressOnPowerForAssistantSettingAvailable">true</bool>
+ 
+     <!-- Control the behavior when the user presses the power and volume up buttons together.
+             0 - Nothing
+-- 
+2.20.1
+
