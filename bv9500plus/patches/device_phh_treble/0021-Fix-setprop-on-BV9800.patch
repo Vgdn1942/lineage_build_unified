@@ -1,0 +1,32 @@
+From 5b6a5ea2118337166d6e3e8818853ee2741efd4c Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 22 Jan 2022 18:16:47 +0300
+Subject: [PATCH] Fix setprop on BV9800
+
+Change-Id: I4a3a066d055151894b8f6b0215ff4328fde27d90
+---
+ rw-system.sh | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/rw-system.sh b/rw-system.sh
+index b2f10fd..f9b252f 100644
+--- a/rw-system.sh
++++ b/rw-system.sh
+@@ -766,9 +766,11 @@ if [ -f /system/phh/secure ] || [ -f /metadata/phh/secure ];then
+     copyprop ro.product.manufacturer ro.vendor.product.manufacturer
+     copyprop ro.system.product.manufacturer ro.product.vendor.manufacturer
+     copyprop ro.product.manufacturer ro.product.vendor.manufacturer
+-    (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
+-        [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
+-    done
++    if ! getprop ro.vendor.build.fingerprint | grep -q -e Blackview/BV9800_EEA; then
++        (getprop ro.vendor.build.security_patch; getprop ro.keymaster.xxx.security_patch) |sort |tail -n 1 |while read v;do
++            [ -n "$v" ] && resetprop_phh ro.build.version.security_patch "$v"
++        done
++    fi
+ 
+     resetprop_phh ro.build.tags release-keys
+     resetprop_phh ro.boot.vbmeta.device_state locked
+-- 
+2.20.1
+

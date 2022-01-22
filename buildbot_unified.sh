@@ -131,6 +131,9 @@ prep_build() {
     repopick 321337 # Deprioritize important developer notifications
     repopick 321338 # Allow disabling important developer notifications
     repopick 321339 # Allow disabling USB notifications
+    repopick -t twelve-qs-tiles
+    repopick -t twelve-data-restriction
+    repopick -t restricted-networking-mode
 
     cd frameworks/native
     git revert 340882c --no-edit # Plumb attribution tag to Sensor Service
