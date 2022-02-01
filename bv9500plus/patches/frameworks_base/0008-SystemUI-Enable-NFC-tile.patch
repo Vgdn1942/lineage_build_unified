@@ -1,0 +1,124 @@
+From e51d14a763622225ea7e5e0ecb5117cfa5a2a747 Mon Sep 17 00:00:00 2001
+From: Tim Schumacher <timschumi@gmx.de>
+Date: Mon, 9 Sep 2019 00:07:04 +0200
+Subject: [PATCH] SystemUI: Enable NFC tile
+
+Author: Thecrazyskull <anaskarbila@gmail.com>
+Date:   Tue Jan 17 10:56:39 2017 -0600
+
+    SystemUI: Enable NFC tile
+
+    Change-Id: Ib21f927d336fcb5e460552786828b79551b235fa
+
+Author: inthewaves <inthewaves@pm.me>
+Date:   Sun Sep 20 14:59:10 2020 -0700
+
+    have NfcTile get an NfcAdapter directly
+
+    This changes the NfcTile to not be dependent on an NfcManager giving the
+    NfcTile an NfcAdapter.
+
+    The problem with NfcTile is that the NfcService doesn't start until the
+    device is unlocked after a reboot, but NfcTile can be created and have
+    its state updated before the device is unlocked.
+
+    The state of NfcTile depends on an NfcAdapter. The tile gets an
+    NfcAdapter from a call to NfcAdapter#getDefaultAdapter, which gets an
+    adapter from an NfcManager via Context#getSystemService, and NfcManager
+    tries to get an adapter in its constructor via NfcAdapter#getNfcAdapter.
+
+    If this is done before unlock, NfcService isn't started, so the
+    constructor of NfcManager fails to get an adapter, opting to just store
+    null. This means that the NfcManager that's _cached_ by the NfcTile's
+    application context holds a null NfcAdapter, so subsequent calls in
+    NfcTile to get the NfcAdapter will keep returning null.
+
+    We can just have NfcTile get the NfcAdapter directly via
+    NfcAdapter#getNfcAdapter instead of relying on an NfcManager to call the
+    same method for us to get its default adapter. We just have to make sure
+    we use the application context for NfcAdapter#getNfcAdapter, as per the
+    doc comments for getNfcAdapter. This means that there's no longer an
+    NfcManager associated with the NfcTile's application context.
+
+    It doesn't look like NfcManager does anything special with the
+    NfcAdapter anyway. It seems to just be some middle man for NfcAdapters:
+    * The NfcAdapter field in NfcManager is final, and it doesn't do
+    anything else with it besides have a getter method for returning it. The
+    NfcManager seems to be a way to force third-party apps that want to get
+    an NfcAdapter to use the application context.
+    * NfcAdapter#getNfcAdapter manages the caching of NfcAdapters by
+    application context in a static HashMap. NfcManager doesn't manage
+    caching; it just calls NfcAdapter#getNfcAdapter.
+
+    Change-Id: Ifafc666568a001a60baf7c8c16782dca1ee4d011
+
+Author: Michael W <baddaemon87@gmail.com>
+Date:   Fri Jan 15 00:03:02 2021 +0100
+
+    NfcTile: Don't create an error when editing tiles
+
+    Repro:
+    * Make sure no NfcTile is in your expanded QS (not tested what happens if
+      it's there)
+    * Hit the Edit-button:
+
+    Error in handleSetListeningInternal
+    java.lang.IllegalArgumentException: Receiver not registered: com.android.systemui.qs.tiles.NfcTile$1@7c00b87
+            at android.app.LoadedApk.forgetReceiverDispatcher(LoadedApk.java:1434)
+            at android.app.ContextImpl.unregisterReceiver(ContextImpl.java:1543)
+            at android.content.ContextWrapper.unregisterReceiver(ContextWrapper.java:664)
+            at com.android.systemui.qs.tiles.NfcTile.handleSetListening(NfcTile.java:64)
+            at com.android.systemui.qs.tileimpl.QSTileImpl.handleSetListeningInternal(QSTileImpl.java:371)
+            at com.android.systemui.qs.tileimpl.QSTileImpl.access$700(QSTileImpl.java:80)
+            at com.android.systemui.qs.tileimpl.QSTileImpl$H.handleMessage(QSTileImpl.java:496)
+            at android.os.Handler.dispatchMessage(Handler.java:107)
+            at android.os.Looper.loop(Looper.java:214)
+            at android.os.HandlerThread.run(HandlerThread.java:67)
+
+    * Only register or unregister the receiver if we actually need to change
+      registered-state
+    * Same code is in AirPlaneModeToggle.java, presumably was also added to
+      prevent unnecessary registering/unregistering
+
+    Change-Id: I6cd8f9bffccb68596b736cc0a3a38e9c12b9c489
+
+Change-Id: Ia06b923ee15e91a9c84a806d4c69755478df2063
+---
+ packages/SystemUI/res/values/config.xml                        | 2 +-
+ .../SystemUI/src/com/android/systemui/qs/tiles/NfcTile.java    | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/packages/SystemUI/res/values/config.xml b/packages/SystemUI/res/values/config.xml
+index dbbb54f7ad6e..fb2c375c1f4e 100644
+--- a/packages/SystemUI/res/values/config.xml
++++ b/packages/SystemUI/res/values/config.xml
+@@ -107,7 +107,7 @@
+ 
+     <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
+     <string name="quick_settings_tiles_stock" translatable="false">
+-        internet,wifi,cell,bt,flashlight,dnd,alarm,airplane,controls,wallet,rotation,battery,cast,screenrecord,mictoggle,cameratoggle,location,hotspot,inversion,saver,dark,work,night,reverse,reduce_brightness,ambient_display,aod,caffeine,heads_up,reading_mode,sync,powershare,usb_tether
++        internet,wifi,cell,bt,flashlight,dnd,alarm,airplane,nfc,controls,wallet,rotation,battery,cast,screenrecord,mictoggle,cameratoggle,location,hotspot,inversion,saver,dark,work,night,reverse,reduce_brightness,ambient_display,aod,caffeine,heads_up,reading_mode,sync,powershare,usb_tether
+     </string>
+ 
+     <!-- The tiles to display in QuickSettings -->
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/tiles/NfcTile.java b/packages/SystemUI/src/com/android/systemui/qs/tiles/NfcTile.java
+index cd2e27a41f1e..077432d32de8 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/tiles/NfcTile.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/tiles/NfcTile.java
+@@ -84,6 +84,7 @@ public BooleanState newTileState() {
+     @Override
+     public void handleSetListening(boolean listening) {
+         super.handleSetListening(listening);
++        if (mListening == listening) return;
+         mListening = listening;
+         if (mListening) {
+             mBroadcastDispatcher.registerReceiver(mNfcReceiver,
+@@ -159,7 +160,7 @@ protected String composeChangeAnnouncement() {
+     private NfcAdapter getAdapter() {
+         if (mAdapter == null) {
+             try {
+-                mAdapter = NfcAdapter.getDefaultAdapter(mContext);
++                mAdapter = NfcAdapter.getNfcAdapter(mContext.getApplicationContext());
+             } catch (UnsupportedOperationException e) {
+                 mAdapter = null;
+             }

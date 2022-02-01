@@ -61,15 +61,10 @@ prep_build() {
     cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
     cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
     rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
-    #rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0006-Support-samsung-Pie-and-Q-light-hal.patch
-    #rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0009-HOME-deserves-to-wake-up-devices-just-as-well-as-bac.patch # Conflict twelve-camera-button
-    #rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0024-Revert-Switch-long-press-power-behavior-in-AOSP.patch
-    #rm -f ./lineage_patches_unified/patches_treble_phh/platform_packages_apps_Bluetooth/0001-On-Samsung-devices-we-need-to-tell-Audio-HAL-if-we-r.patch
     rm -f ./lineage_patches_unified/patches_platform/packages_apps_LineageParts/9999-TEMP-LineageParts-Fix-DisplayColor-dialog.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0007-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
-    #rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0020-SystemUI-Expose-legacy-Wi-Fi-and-cellular-data-QS-ti.patch
-    #rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0021-SystemUI-Allow-Wi-Fi-cell-tiles-to-co-exist-with-pro.patch # Temporary
-    #rm -f ./lineage_patches_unified/patches_platform/packages_apps_Settings/9999-TEMP-Settings-Hack-in-LiveDisplay-entrypoint.patch
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0018-SystemUI-Remove-nav-bar-background-in-QS-customizer.patch
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0020-SystemUI-Fix-QS-status-font-weight-mismatch-in-dark-.patch
     rm -rf ./packages/overlays/Lineage/customizations/NavigationBarNoHint # fix bootloop after add lockscreen
 
     rm -rf ./device/phh/treble/miravision
@@ -90,24 +85,7 @@ prep_build() {
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318747"
     repopick -t twelve-burnin
     repopick -t twelve-FlipFlap
-    #repopick -t twelve-buttons
-    repopick 320854 # sdk: Move app killed toast message to main application thread
-    repopick 320839 # PhoneWindowManager: add LineageButtons volumekey hook
-    repopick 320840 # Long-press power while display is off for torch
-    repopick 320841 # Reimplement hardware keys custom rebinding
-    repopick 320842 # Reimplement device hardware wake keys support
-    repopick 320843 # PhoneWindowManager: Tap volume buttons to answer call
-    repopick 320844 # PhoneWindowManager: Implement press home to answer call
-    repopick 320845 # fw/b: Allow customisation of navbar app switch long press action
-    repopick 320846 # PhoneWindowManager: Allow torch and track skip during ambient display
-    repopick 320847 # fw/b torch: Let long press power turn torch off when screen is on.
-    repopick 317412 # SystemUI: add FloatingRotationButton for hw-key devices
-    repopick 320848 # Implement edge long swipe gesture [1/3]
-    repopick 320849 # PhoneWindowManager: Add support for back key long press customization
-    repopick 320850 # PhoneWindowManager: Forward port long press back to kill app
-    repopick 320851 # Use custom flag for edge long swipe gesture
-    repopick 320853 # Don't pass repeated back key events to app if custom action is set up
-    repopick 321274 # SystemUI: don't show FRB when IME is visible
+    repopick -t twelve-buttons
     repopick -t twelve-fingerprint
     repopick -t twelve-volume-panel-location
     repopick -t twelve-swap-volume-buttons
@@ -131,17 +109,20 @@ prep_build() {
     repopick 321337 # Deprioritize important developer notifications
     repopick 321338 # Allow disabling important developer notifications
     repopick 321339 # Allow disabling USB notifications
-    repopick -t twelve-qs-tiles
+    #repopick -t twelve-qs-tiles
+    repopick 322472 # get outer NFC preference to listen for changes
     repopick -t twelve-data-restriction
     repopick -t restricted-networking-mode
+    repopick 322554 # Fix concurrency issue with BatteryUsageStats
+    repopick 322555 # Include saved battery history chunks into BatteryUsageStats parcel
 
     cd frameworks/native
-    git revert 340882c --no-edit # Plumb attribution tag to Sensor Service
+    git revert 340882c64b5944a62b122bbb24f95645c5a0c465 --no-edit # Plumb attribution tag to Sensor Service
     cd ../..
 
     # fix bootloop after add lockscreen
     cd frameworks/base
-    git revert 3d2dc3f --no-edit # SystemUI: Implement hide gestural navigation hint bar [1/5]
+    git revert 3d2dc3fd4d9f222259ea0fde745e20524a05e0d0 --no-edit # SystemUI: Implement hide gestural navigation hint bar [1/5]
     cd ../..
 }
 

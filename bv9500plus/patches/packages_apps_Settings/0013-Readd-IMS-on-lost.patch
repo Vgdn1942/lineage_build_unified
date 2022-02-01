@@ -1,0 +1,215 @@
+From f7ea1ce27a8a8e80f9b8c6505dd3a3a2c36fd54f Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 28 Jan 2022 09:04:14 +0300
+Subject: [PATCH] Readd IMS on lost
+
+Change-Id: I9adcaf741749e1027d7d9b9d34eb2d330e910ef2
+---
+ .../android/settings/SettingsInitialize.java  | 61 ++++++++++---------
+ src/com/android/settings/SettingsOnBoot.java  | 60 +++++++++---------
+ 2 files changed, 62 insertions(+), 59 deletions(-)
+
+diff --git a/src/com/android/settings/SettingsInitialize.java b/src/com/android/settings/SettingsInitialize.java
+index b2471deec2..80bf624415 100644
+--- a/src/com/android/settings/SettingsInitialize.java
++++ b/src/com/android/settings/SettingsInitialize.java
+@@ -58,7 +58,7 @@ import java.util.List;
+  * webview setting for non-admin users, and updates the intent flags for any existing shortcuts.
+  */
+ public class SettingsInitialize extends BroadcastReceiver {
+-    private static final String TAG = "Settings";
++    private static final String TAG = "SettingsInitialize";
+     private static final String PRIMARY_PROFILE_SETTING =
+             "com.android.settings.PRIMARY_PROFILE_CONTROLLED";
+     private static final String WEBVIEW_IMPLEMENTATION_ACTIVITY = ".WebViewImplementation";
+@@ -66,6 +66,9 @@ public class SettingsInitialize extends BroadcastReceiver {
+     private static final String UNSUPPORTED = "-9999";
+     private static final String SUPPORTED = "1";
+ 
++    private NetworkRequest networkRequest;
++    private ConnectivityManager.NetworkCallback networkCallback;
++
+     @Override
+     public void onReceive(Context context, Intent broadcast) {
+         final UserManager um = (UserManager) context.getSystemService(Context.USER_SERVICE);
+@@ -73,13 +76,36 @@ public class SettingsInitialize extends BroadcastReceiver {
+         final PackageManager pm = context.getPackageManager();
+         final ConnectivityManager cm = (ConnectivityManager)
+                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
++        networkRequest = new NetworkRequest.Builder()
++                .addCapability(NetworkCapabilities.NET_CAPABILITY_IMS)
++                .build();
++        networkCallback = new ConnectivityManager.NetworkCallback() {
++            @Override
++            public void onAvailable(Network network) {
++                Log.i(TAG, "Network " + network + " is available!");
++            }
++            @Override
++            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
++                Log.i(TAG, "Received info about network " + network + ", got " + networkCapabilities);
++                if (networkCapabilities != null) {
++                    if (!networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_IMS)) {
++                        Log.i(TAG, "NetworkCapabilities.NET_CAPABILITY_IMS is lost,  got " + networkCapabilities);
++                        addCapabilitiesIMS(cm);
++                    }
++                }
++            }
++            @Override
++            public void onLost(Network network) {
++                Log.i(TAG, "Network " + network + " is lost!");
++            }
++        };
+         if (TextUtils.equals(SystemProperties.get(OEM_UNLOCK_SUPPORTED_KEY, UNSUPPORTED),
+                 SUPPORTED)) {
+             final OemLockManager olm = (OemLockManager)
+                 context.getSystemService(Context.OEM_LOCK_SERVICE);
+             setOemUnlockSetting(olm);
+         }
+-        addCapabilitiesIMS(context, cm);
++        addCapabilitiesIMS(cm);
+         managedProfileSetup(context, pm, broadcast, userInfo);
+         webviewSettingSetup(context, pm, userInfo);
+         ThreadUtils.postOnBackgroundThread(() -> refreshExistingShortcuts(context));
+@@ -143,38 +169,13 @@ public class SettingsInitialize extends BroadcastReceiver {
+                 PackageManager.DONT_KILL_APP);
+     }
+ 
+-    private void addCapabilitiesIMS(Context context, ConnectivityManager cm) {
+-        NetworkRequest networkRequest = new NetworkRequest.Builder()
+-                .addCapability(NetworkCapabilities.NET_CAPABILITY_IMS)
+-                .build();
+-        final ConnectivityManager.NetworkCallback networkCallback =
+-                new ConnectivityManager.NetworkCallback() {
+-            @Override
+-            public void onAvailable(Network network) {
+-                Log.i("vgdn1942", "Network " + network + " is available!");
+-            }
+-
+-            @Override
+-            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+-                Log.i("vgdn1942", "Received info about network " + network + ", got " + networkCapabilities);
+-                if (networkCapabilities != null) {
+-                    if (!networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_IMS)) {
+-                        Log.i("vgdn1942", "NetworkCapabilities.NET_CAPABILITY_IMS is lost,  got " + networkCapabilities);
+-                    }
+-                }
+-            }
+-
+-            @Override
+-            public void onLost(Network network) {
+-                Log.i("vgdn1942", "Network " + network + " is lost!");
+-            }
+-        };
++    private void addCapabilitiesIMS(ConnectivityManager cm) {
+         cm.requestNetwork(networkRequest, networkCallback);
+     }
+ 
+     private void setOemUnlockSetting(OemLockManager olm) {
+-            olm.setOemUnlockAllowedByUser(false);
+-            Log.i("vgdn1942", "setOemUnlockAllowedByUser(false)");
++        olm.setOemUnlockAllowedByUser(false);
++        Log.i(TAG, "setOemUnlockAllowedByUser(false)");
+     }
+ 
+     // Refresh settings shortcuts to have correct intent flags
+diff --git a/src/com/android/settings/SettingsOnBoot.java b/src/com/android/settings/SettingsOnBoot.java
+index cd6f9bf013..88dc4ab123 100644
+--- a/src/com/android/settings/SettingsOnBoot.java
++++ b/src/com/android/settings/SettingsOnBoot.java
+@@ -31,16 +31,43 @@ import android.text.TextUtils;
+ import android.util.Log;
+ 
+ public class SettingsOnBoot extends BroadcastReceiver {
++    private static final String TAG = "SettingsOnBoot";
+     private static final String ACTIVE_SIM_MODE_PROPERTY = "persist.sim.activesim";
+     private static final String OEM_UNLOCK_SUPPORTED_KEY = "ro.oem_unlock_supported";
+     private static final String UNSUPPORTED = "-9999";
+     private static final String SUPPORTED = "1";
+ 
++    private NetworkRequest networkRequest;
++    private ConnectivityManager.NetworkCallback networkCallback;
++
+     @Override
+     public void onReceive(Context context, Intent broadcast) {
+         final TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+         final ConnectivityManager cm = (ConnectivityManager)
+                 context.getSystemService(Context.CONNECTIVITY_SERVICE);
++        networkRequest = new NetworkRequest.Builder()
++                .addCapability(NetworkCapabilities.NET_CAPABILITY_IMS)
++                .build();
++        networkCallback = new ConnectivityManager.NetworkCallback() {
++            @Override
++            public void onAvailable(Network network) {
++                Log.i(TAG, "Network " + network + " is available!");
++            }
++            @Override
++            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
++                Log.i(TAG, "Received info about network " + network + ", got " + networkCapabilities);
++                if (networkCapabilities != null) {
++                    if (!networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_IMS)) {
++                        Log.i(TAG, "NetworkCapabilities.NET_CAPABILITY_IMS is lost,  got " + networkCapabilities);
++                        addCapabilitiesIMS(cm);
++                    }
++                }
++            }
++            @Override
++            public void onLost(Network network) {
++                Log.i(TAG, "Network " + network + " is lost!");
++            }
++        };
+         if (TextUtils.equals(SystemProperties.get(OEM_UNLOCK_SUPPORTED_KEY, UNSUPPORTED),
+                 SUPPORTED)) {
+             final OemLockManager olm = (OemLockManager)
+@@ -48,7 +75,7 @@ public class SettingsOnBoot extends BroadcastReceiver {
+             setOemUnlockSetting(olm);
+         }
+         activeSimSettingSetup(context, tm);
+-        addCapabilitiesIMS(context, cm);
++        addCapabilitiesIMS(cm);
+     }
+ 
+     private void activeSimSettingSetup(Context context, TelephonyManager tm) {
+@@ -82,37 +109,12 @@ public class SettingsOnBoot extends BroadcastReceiver {
+         }
+     }
+ 
+-    private void addCapabilitiesIMS(Context context, ConnectivityManager cm) {
+-        NetworkRequest networkRequest = new NetworkRequest.Builder()
+-                .addCapability(NetworkCapabilities.NET_CAPABILITY_IMS)
+-                .build();
+-        final ConnectivityManager.NetworkCallback networkCallback =
+-                new ConnectivityManager.NetworkCallback() {
+-            @Override
+-            public void onAvailable(Network network) {
+-                Log.i("vgdn1942", "Network " + network + " is available!");
+-            }
+-
+-            @Override
+-            public void onCapabilitiesChanged(Network network, NetworkCapabilities networkCapabilities) {
+-                Log.i("vgdn1942", "Received info about network " + network + ", got " + networkCapabilities);
+-                if (networkCapabilities != null) {
+-                    if (!networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_IMS)) {
+-                        Log.i("vgdn1942", "NetworkCapabilities.NET_CAPABILITY_IMS is lost,  got " + networkCapabilities);
+-                    }
+-                }
+-            }
+-
+-            @Override
+-            public void onLost(Network network) {
+-                Log.i("vgdn1942", "Network " + network + " is lost!");
+-            }
+-        };
++    private void addCapabilitiesIMS(ConnectivityManager cm) {
+         cm.requestNetwork(networkRequest, networkCallback);
+     }
+ 
+     private void setOemUnlockSetting(OemLockManager olm) {
+-            olm.setOemUnlockAllowedByUser(false);
+-            Log.i("vgdn1942", "setOemUnlockAllowedByUser(false)");
++        olm.setOemUnlockAllowedByUser(false);
++        Log.i(TAG, "setOemUnlockAllowedByUser(false)");
+     }
+ }
+-- 
+2.20.1
+

@@ -1,0 +1,31 @@
+From dabddf89629f482e53085e2c74b7c6d28d04ce8a Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sun, 23 Jan 2022 21:10:00 +0300
+Subject: [PATCH] Show 4G icon instead of LTE icon
+
+Change-Id: I674f558f40da456591b22f8f6dde4522f437dd9b
+---
+ .../packages/apps/CarrierConfig/res/xml/vendor.xml    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 overlay/packages/apps/CarrierConfig/res/xml/vendor.xml
+
+diff --git a/overlay/packages/apps/CarrierConfig/res/xml/vendor.xml b/overlay/packages/apps/CarrierConfig/res/xml/vendor.xml
+new file mode 100644
+index 0000000..1d606cb
+--- /dev/null
++++ b/overlay/packages/apps/CarrierConfig/res/xml/vendor.xml
+@@ -0,0 +1,11 @@
++<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
++<!-- This is a place for vendor-specific config values. The format and
++     filtering rules are the same as those in carrier_config*.xml files. This
++     file is read after any specific config file from the assets folder, so it
++     must use explicit filters for MCC ad MNC if that is desired. -->
++<carrier_config_list>
++    <carrier_config>
++        <!-- Show 4G icon instead of LTE icon -->
++        <boolean name="show_4g_for_lte_data_icon_bool" value="true"/>
++    </carrier_config>
++</carrier_config_list>
+-- 
+2.20.1
+
