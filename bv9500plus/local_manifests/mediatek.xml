@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
   <!-- Mediatek repos -->
-  <project path="device/mediatek/common" name="PixelExperience/device_mediatek_common" remote="github" revision="eleven" />
-  <project path="device/mediatek/sepolicy_vndr" name="PixelExperience/device_mediatek_sepolicy_vndr" remote="github" revision="eleven" />
-  <project path="vendor/mediatek/ims" name="PixelExperience/vendor_mediatek_ims" remote="github" revision="eleven" />
-  <project path="vendor/mediatek/interfaces" name="PixelExperience/vendor_mediatek_interfaces" remote="github" revision="eleven" />
-  <project path="vendor/mediatek/opensource" name="PixelExperience/vendor_mediatek-opensource" remote="github" revision="eleven" />
+  <project path="device/mediatek/common" name="PixelExperience/device_mediatek_common" remote="github" revision="twelve" />
+  <project path="device/mediatek/sepolicy_vndr" name="PixelExperience/device_mediatek_sepolicy_vndr" remote="github" revision="twelve" />
+  <project path="vendor/mediatek/ims" name="PixelExperience/vendor_mediatek_ims" remote="github" revision="twelve" />
+  <project path="vendor/mediatek/interfaces" name="PixelExperience/vendor_mediatek_interfaces" remote="github" revision="twelve" />
+  <project path="vendor/mediatek/opensource" name="PixelExperience/vendor_mediatek-opensource" remote="github" revision="twelve" />
 </manifest>
