@@ -11,11 +11,10 @@ Change-Id: Ibd747e96335851462792f554cf09aaa4222554ed
  hal/lepton_camera/lib64/liblepton_module.so   | Bin 69096 -> 0 bytes
  hal/lepton_camera/lib64/libleptoncamera.so    | Bin 69176 -> 63912 bytes
  .../base/core/res/res/values/config.xml       |   7 +++++++
- rw-system.sh                                  |   6 +++---
  sepolicy/file_contexts                        |   2 --
  sepolicy/lepton.te                            |  16 ++++++++++++++++
  sepolicy/service_contexts                     |   5 -----
- 10 files changed, 26 insertions(+), 10 deletions(-)
+ 9 files changed, 23 insertions(+), 7 deletions(-)
  delete mode 100755 hal/lepton_camera/bin/leptonClient
  delete mode 100644 hal/lepton_camera/lib/liblepton_module.so
  delete mode 100644 hal/lepton_camera/lib64/liblepton_module.so
@@ -2004,37 +2003,6 @@ index d4f5f09..7028454 100644
  
      <!-- Screen Wake Keys
           Determines whether the specified key groups can be used to wake up the device. -->
-diff --git a/rw-system.sh b/rw-system.sh
-index e67b3ae..e768c37 100644
---- a/rw-system.sh
-+++ b/rw-system.sh
-@@ -275,7 +275,7 @@ changeKeylayout() {
-     fi
- 
-     if getprop ro.vendor.build.fingerprint | grep -iq -e motorola/liber; then
--      
-+
-         cp /system/phh/empty /mnt/phh/keylayout/uinput_nav.kl
-         chmod 0644 /mnt/phh/keylayout/uinput_nav.kl
-         changed=true
-@@ -420,7 +420,7 @@ if getprop ro.build.overlay.deviceid |grep -q -e CPH1859 -e CPH1861 -e RMX1811 -
-     setprop persist.sys.qcom-brightness "$(cat /sys/class/leds/lcd-backlight/max_brightness)"
- fi
- 
--if getprop ro.build.overlay.deviceid |grep -iq -e RMX2020 -e RMX2027 -e RMX2040 -e RMX2193 -e RMX2191;then	
-+if getprop ro.build.overlay.deviceid |grep -iq -e RMX2020 -e RMX2027 -e RMX2040 -e RMX2193 -e RMX2191;then
-     setprop persist.sys.qcom-brightness 2047
-     setprop persist.sys.overlay.devinputjack true
-     setprop persist.sys.phh.fingerprint.nocleanup true
-@@ -966,7 +966,7 @@ if getprop ro.build.overlay.deviceid |grep -qiE -e '^RMX' -e '^CPH';then
-     setprop persist.sys.phh.fod.bbk true
- fi
- 
--if getprop ro.build.overlay.deviceid |grep -iq -e RMX1941 -e RMX1945 -e RMX1943 -e RMX1942;then	
-+if getprop ro.build.overlay.deviceid |grep -iq -e RMX1941 -e RMX1945 -e RMX1943 -e RMX1942;then
-     setprop persist.sys.qcom-brightness "$(cat /sys/class/leds/lcd-backlight/max_brightness)"
-     setprop persist.sys.phh.mainkeys 0
- fi
 diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
 index 76ad47a..328e375 100644
 --- a/sepolicy/file_contexts
