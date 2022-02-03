@@ -61,6 +61,10 @@ prep_build() {
     cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
     cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
     rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0006-Support-samsung-Pie-and-Q-light-hal.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0028-Once-we-integrate-Samsung-Power-hal-in-libpowermanag.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_native/0012-powermanager-Add-support-Samsung-miscpower-HAL.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_native/0013-Fix-loading-power-hidl-v1.0.patch
     rm -f ./lineage_patches_unified/patches_platform/packages_apps_LineageParts/9999-TEMP-LineageParts-Fix-DisplayColor-dialog.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0007-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0018-SystemUI-Remove-nav-bar-background-in-QS-customizer.patch
@@ -109,9 +113,8 @@ prep_build() {
     repopick 321337 # Deprioritize important developer notifications
     repopick 321338 # Allow disabling important developer notifications
     repopick 321339 # Allow disabling USB notifications
-    #repopick -t twelve-qs-tiles
-    repopick 322472 # get outer NFC preference to listen for changes
-    repopick -t twelve-data-restriction
+    repopick -t twelve-qs-tiles
+    #repopick -t twelve-data-restriction
     repopick -t restricted-networking-mode
     repopick 322554 # Fix concurrency issue with BatteryUsageStats
     repopick 322555 # Include saved battery history chunks into BatteryUsageStats parcel
