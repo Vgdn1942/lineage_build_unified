@@ -1,0 +1,44 @@
+From 1c1a8f71d8a69c7e10d2cf5652edfd65f53238d0 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Tue, 1 Feb 2022 17:08:09 +0300
+Subject: [PATCH] Add bv9500plus RU [2/2]
+
+Change-Id: Ieb04cb56285fa59c6e001afd60b705cc956b1cce
+---
+ rw-system.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/rw-system.sh b/rw-system.sh
+index f9b252f..a59d991 100644
+--- a/rw-system.sh
++++ b/rw-system.sh
+@@ -61,7 +61,7 @@ fi
+ 
+ setprop sys.usb.ffs.aio_compat true
+ 
+-if getprop ro.vendor.build.fingerprint | grep -q -e Blackview/BV9500Plus -e Blackview/BV9800Pro;then
++if getprop ro.vendor.build.fingerprint | grep -q -e Blackview/BV9500Plus -e Blackview/BV9500plus -e Blackview/BV9800Pro;then
+     setprop persist.adb.nonblocking_ffs true
+ else
+     setprop persist.adb.nonblocking_ffs false
+@@ -269,7 +269,7 @@ changeKeylayout() {
+         changed=true
+     fi
+ 
+-    if getprop ro.vendor.build.fingerprint | grep -q -e Blackview/BV9500Plus -e Blackview/BV9800Pro;then
++    if getprop ro.vendor.build.fingerprint | grep -q -e Blackview/BV9500Plus -e Blackview/BV9500plus -e Blackview/BV9800Pro;then
+         cp /system/phh/bv9500plus-mtk-kpd.kl /mnt/phh/keylayout/mtk-kpd.kl
+         chmod 0644 /mnt/phh/keylayout/mtk-kpd.kl
+         changed=true
+@@ -508,7 +508,7 @@ for f in /vendor/lib/mtk-ril.so /vendor/lib64/mtk-ril.so /vendor/lib/libmtk-ril.
+     setprop persist.sys.radio.ussd.fix true
+ done
+ 
+-if getprop ro.vendor.build.fingerprint | grep -iq -e Blackview/BV9500Plus -e Blackview/BV9500Plus_EEA; then
++if getprop ro.vendor.build.fingerprint | grep -iq -e Blackview/BV9500Plus -e Blackview/BV9500plus; then
+     for f in /vendor/ueventd.rc /vendor/bin/hw/android.hardware.light@2.0-service-mediatek \
+             /vendor/etc/init/android.hardware.light@2.0-service-mediatek.rc; do
+         [ ! -f $f ] && continue
+-- 
+2.20.1
+
