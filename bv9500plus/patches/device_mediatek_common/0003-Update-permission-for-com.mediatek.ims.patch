@@ -1,0 +1,26 @@
+From f8cfec17229765f50d5cd9e6628e2145143e085c Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 4 Feb 2022 19:20:17 +0300
+Subject: [PATCH] Update permission for com.mediatek.ims
+
+Change-Id: Idce3c6c493d01a4fe197780c334088f7fa837b7c
+---
+ common/permissions/privapp-permissions-mediatek.xml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/common/permissions/privapp-permissions-mediatek.xml b/common/permissions/privapp-permissions-mediatek.xml
+index 790fce3..fb26b08 100644
+--- a/common/permissions/privapp-permissions-mediatek.xml
++++ b/common/permissions/privapp-permissions-mediatek.xml
+@@ -31,6 +31,8 @@ applications that come with the platform
+         <permission name="android.permission.PACKET_KEEPALIVE_OFFLOAD"/>
+         <permission name="android.permission.CHANGE_WIFI_STATE"/>
+         <permission name="android.permission.NETWORK_SIGNAL_STRENGTH_WAKEUP"/>
++        <permission name="android.permission.MODIFY_PHONE_STATE"/>
++        <permission name="android.permission.UPDATE_DEVICE_STATS"/>
+     </privapp-permissions>
+ 
+     <privapp-permissions package="com.mediatek.simprocessor">
+-- 
+2.20.1
+

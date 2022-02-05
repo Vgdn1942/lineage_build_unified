@@ -61,7 +61,9 @@ prep_build() {
     cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
     cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
     rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0002-Relax-requirement-for-visible-flag-to-sdcards.patch
     rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0006-Support-samsung-Pie-and-Q-light-hal.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0019-SystemUI-Use-AVCProfileMain-for-screen-recorder.patch
     rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0028-Once-we-integrate-Samsung-Power-hal-in-libpowermanag.patch
     rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_native/0012-powermanager-Add-support-Samsung-miscpower-HAL.patch
     rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_native/0013-Fix-loading-power-hidl-v1.0.patch
@@ -116,6 +118,10 @@ prep_build() {
     repopick -t twelve-qs-tiles
     #repopick -t twelve-data-restriction
     repopick -t restricted-networking-mode
+    #repopick -t twelve-ultralegacy-devices
+    repopick 318097 # art: Conditionally remove version check for memfd_create()
+    repopick 321934 # SurfaceFlinger: Don't cleanup resources from previous frame
+    repopick 318458 # SystemUI: Use AVCProfileMain for screen recorder
     repopick 322554 # Fix concurrency issue with BatteryUsageStats
     repopick 322555 # Include saved battery history chunks into BatteryUsageStats parcel
 

@@ -1,0 +1,42 @@
+From 262b8aa3242e4bc605c98ac3cc762354e29bd1fc Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Sat, 5 Feb 2022 21:17:53 +0300
+Subject: [PATCH] Add mediatek staff
+
+Change-Id: I083ecac4c628af93fc9cc77caf9b2670b41a98bf
+---
+ bv9500plus/BoardConfig.mk | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/bv9500plus/BoardConfig.mk b/bv9500plus/BoardConfig.mk
+index 98fb820..eb1543f 100644
+--- a/bv9500plus/BoardConfig.mk
++++ b/bv9500plus/BoardConfig.mk
+@@ -14,7 +14,22 @@ TARGET_SCREEN_WIDTH := 1080
+ # Charger images
+ BOARD_HEALTHD_CUSTOM_CHARGER_RES := device/phh/treble/charger/images
+ 
+-TARGET_PROVIDES_MTK_PROPRIETARY := true
+-TARGET_BOARD_PLATFORM := mt6771
++# FM Radio
+ BOARD_HAVE_SLSI_FM := true
+ 
++# Audio
++USE_CUSTOM_AUDIO_POLICY := 1
++
++# Board
++TARGET_BOARD_PLATFORM := mt6771
++
++# MTK Rules
++MTK_HARDWARE := true
++BOARD_GLOBAL_CLFAGS += -DMTK_HARDWARE
++TARGET_PROVIDES_MTK_PROPRIETARY := true
++TARGET_PROVIDES_MEDIATEK_IMS_STACK := true
++TARGET_PROVIDES_MTK_OSS_CONNECTIVITY := true
++
++# MTK Soong
++include device/mediatek/common/build/core/soong_config.mk
++
+-- 
+2.20.1
+
