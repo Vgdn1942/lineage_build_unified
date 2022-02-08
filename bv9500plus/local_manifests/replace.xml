@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <project name="LineageOS/android_external_bash" path="external/bash" remote="github" revision="lineage-19.0" />
+  <project name="LineageOS/android_external_nano" path="external/nano" remote="github" revision="lineage-19.0" />
+  <project name="LineageOS/android_external_vim" path="external/vim" remote="github" revision="lineage-19.0" />
+  <remove-project name="platform/system/netd" />
+  <project name="LineageOS/android_system_netd" path="system/netd" remote="github" revision="lineage-19.0" />
+  <remove-project name="platform/frameworks/libs/net" />
+  <project name="LineageOS/android_frameworks_libs_net" path="frameworks/libs/net" remote="github" revision="lineage-19.0" />
+  <!--
+  <remove-project name="platform/system/bpf" />
+  <project name="LineageOS/android_system_bpf" path="system/bpf" remote="github" revision="lineage-19.0" />
+  -->
+</manifest>

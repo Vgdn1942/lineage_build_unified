@@ -116,14 +116,14 @@ prep_build() {
     repopick 321338 # Allow disabling important developer notifications
     repopick 321339 # Allow disabling USB notifications
     repopick -t twelve-qs-tiles
-    #repopick -t twelve-data-restriction
     repopick -t restricted-networking-mode
     #repopick -t twelve-ultralegacy-devices
-    repopick 318097 # art: Conditionally remove version check for memfd_create()
-    repopick 321934 # SurfaceFlinger: Don't cleanup resources from previous frame
-    repopick 318458 # SystemUI: Use AVCProfileMain for screen recorder
+    repopick -t twelve-bash
+    repopick -Q "status:open+topic:twelve-ultralegacy-devices+NOT+320591"
     repopick 322554 # Fix concurrency issue with BatteryUsageStats
     repopick 322555 # Include saved battery history chunks into BatteryUsageStats parcel
+    #repopick -t twelve-data-restriction
+    repopick -Q "status:open+topic:twelve-data-restriction+NOT+322482"
 
     cd frameworks/native
     git revert 340882c64b5944a62b122bbb24f95645c5a0c465 --no-edit # Plumb attribution tag to Sensor Service
