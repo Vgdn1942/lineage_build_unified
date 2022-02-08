@@ -124,6 +124,7 @@ prep_build() {
     repopick 322555 # Include saved battery history chunks into BatteryUsageStats parcel
     #repopick -t twelve-data-restriction
     repopick -Q "status:open+topic:twelve-data-restriction+NOT+322482"
+    repopick -f 322478 # Expose getActiveNetworkForUid to system API
 
     cd frameworks/native
     git revert 340882c64b5944a62b122bbb24f95645c5a0c465 --no-edit # Plumb attribution tag to Sensor Service
