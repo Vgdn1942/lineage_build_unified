@@ -60,18 +60,11 @@ prep_build() {
     mkdir -p .repo/local_manifests
     cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
     cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
-    rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch
-    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0002-Relax-requirement-for-visible-flag-to-sdcards.patch
-    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0006-Support-samsung-Pie-and-Q-light-hal.patch
-    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0019-SystemUI-Use-AVCProfileMain-for-screen-recorder.patch
-    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0028-Once-we-integrate-Samsung-Power-hal-in-libpowermanag.patch
-    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_native/0012-powermanager-Add-support-Samsung-miscpower-HAL.patch
-    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_native/0013-Fix-loading-power-hidl-v1.0.patch
-    rm -f ./lineage_patches_unified/patches_platform/packages_apps_LineageParts/9999-TEMP-LineageParts-Fix-DisplayColor-dialog.patch
+    rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch # Back vendor_init
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0019-SystemUI-Use-AVCProfileMain-for-screen-recorder.patch # twelve-ultralegacy-devices
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0007-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
-    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0018-SystemUI-Remove-nav-bar-background-in-QS-customizer.patch
-    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0020-SystemUI-Fix-QS-status-font-weight-mismatch-in-dark-.patch
     rm -rf ./packages/overlays/Lineage/customizations/NavigationBarNoHint # fix bootloop after add lockscreen
+    rm -rf ./lineage_patches_unified/patches_treble_phh/platform_system_core/0002-first-stage-If-Vboot2-fails-fall-back-to-Vboot1.patch
 
     rm -rf ./device/phh/treble/miravision
     echo ""
@@ -90,7 +83,6 @@ prep_build() {
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318747"
     repopick -t twelve-burnin
-    repopick -t twelve-FlipFlap
     repopick -t twelve-buttons
     repopick -t twelve-fingerprint
     repopick -t twelve-volume-panel-location
@@ -99,32 +91,24 @@ prep_build() {
     repopick -t twelve-navbar-runtime-toggle
     repopick -t twelve-buttons-lights
     repopick -t twelve-keyboard-lights
-    repopick -t twelve-proximity-check
-    repopick 320923 # SystemUI: Add quick settings pull down with one finger
     repopick 321038 # Settings: Add back increasing ring feature (2/2)
-    repopick -t twelve-dt2s
-    repopick -t twelve-touchscreen-gestures
-    repopick -t twelve-lights
-    repopick -t twelve-visualizer
-    repopick -t twelve-ls-media-art
-    repopick -t twelve-long-screen
-    repopick -t twelve-wake-on-plug
     repopick -t twelve-statusbar-brightness-and-qs-slider
-    repopick -t twelve-notification-sound-timeout
     repopick -t twelve-powermenu
     repopick 321337 # Deprioritize important developer notifications
     repopick 321338 # Allow disabling important developer notifications
     repopick 321339 # Allow disabling USB notifications
     repopick -t twelve-qs-tiles
     repopick -t restricted-networking-mode
-    #repopick -t twelve-ultralegacy-devices
+    repopick -t twelve-ultralegacy-devices
     repopick -t twelve-bash
-    repopick -Q "status:open+topic:twelve-ultralegacy-devices+NOT+320591"
     repopick 322554 # Fix concurrency issue with BatteryUsageStats
     repopick 322555 # Include saved battery history chunks into BatteryUsageStats parcel
     #repopick -t twelve-data-restriction
     repopick -Q "status:open+topic:twelve-data-restriction+NOT+322482"
     repopick -f 322478 # Expose getActiveNetworkForUid to system API
+    repopick -f 239371 # SystemUI: Switch back to pre P mobile type icon style
+    repopick -t S_asb_2022-01
+    repopick -t twelve-miscaospfix
 
     cd frameworks/native
     git revert 340882c64b5944a62b122bbb24f95645c5a0c465 --no-edit # Plumb attribution tag to Sensor Service

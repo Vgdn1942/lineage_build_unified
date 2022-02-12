@@ -1,0 +1,26 @@
+From 601afb3b7774edb94c82ed9a37a12fd14210eb68 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Thu, 10 Feb 2022 08:59:35 +0300
+Subject: [PATCH] Disable support DSU
+
+Change-Id: Icdcdd6f4b942043705e025bdd3a395914c19bb0d
+---
+ src/com/android/settings/development/DSULoader.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/com/android/settings/development/DSULoader.java b/src/com/android/settings/development/DSULoader.java
+index d4fa0c6464..bc22ca9c11 100644
+--- a/src/com/android/settings/development/DSULoader.java
++++ b/src/com/android/settings/development/DSULoader.java
+@@ -289,7 +289,7 @@ public class DSULoader extends ListActivity {
+         }
+ 
+         boolean isSupported() {
+-            boolean supported = true;
++            boolean supported = false;
+             String cpu = getDeviceCpu();
+             if (!mCpuAbi.equals(cpu)) {
+                 Slog.i(TAG, mCpuAbi + " != " + cpu);
+-- 
+2.20.1
+
