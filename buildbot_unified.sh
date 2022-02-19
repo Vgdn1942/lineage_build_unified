@@ -60,6 +60,28 @@ prep_build() {
     mkdir -p .repo/local_manifests
     cp ./lineage_build_unified/local_manifests_${MODE}/*.xml .repo/local_manifests
     cp ./lineage_build_unified/bv9500plus/local_manifests/*.xml .repo/local_manifests
+
+    mkdir -p ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0004-Disable-FP-lockouts.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0009-Keyguard-UI-Fix-status-bar-quick-settings-margins-an.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0016-UI-Remove-privacy-dot-padding.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+
+    # test monet
+    mkdir -p ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    mkdir -p ./lineage_build_unified/bv9500plus/patches_andy_yan/packages_apps_Trebuchet
+    mkdir -p ./lineage_build_unified/bv9500plus/patches_andy_yan/vendor_lineage
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0001-Add-LineageMonetAccentOverlay.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0010-Revert-monet-Add-support-for-monet-cam16.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/packages_apps_Trebuchet/0001-Revert-Implement-LocalColorExtractor-using-monet-the.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/packages_apps_Trebuchet
+    cp ./lineage_patches_unified/patches_platform_personal/vendor_lineage/0003-Revert-overlay-Enable-monet.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/vendor_lineage
+
     rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch # Back vendor_init
     rm -f ./lineage_patches_unified/patches_treble_phh/platform_frameworks_base/0019-SystemUI-Use-AVCProfileMain-for-screen-recorder.patch # twelve-ultralegacy-devices
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0007-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
@@ -82,6 +104,10 @@ prep_build() {
     repopick -Q "status:open+project:LineageOS/android_packages_apps_AudioFX+branch:lineage-19.0"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Etar+branch:lineage-19.0"
     repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.0+NOT+317783+NOT+318747"
+    repopick -Q "status:open+project:LineageOS/android_packages_apps_Messaging+branch:lineage-19.0"
+    repopick -Q "status:open+project:LineageOS/android_packages_apps_Dialer+branch:lineage-19.0"
+    repopick -Q "status:open+project:LineageOS/android_packages_apps_DeskClock+branch:lineage-19.0"
+    #repopick -Q "status:open+project:LineageOS/android_packages_apps_Recorder+branch:lineage-19.0"
     repopick -t twelve-burnin
     repopick -t twelve-buttons
     repopick -t twelve-fingerprint
@@ -109,6 +135,8 @@ prep_build() {
     repopick -f 239371 # SystemUI: Switch back to pre P mobile type icon style
     repopick -t S_asb_2022-01
     repopick -t twelve-miscaospfix
+    #repopick -t twelve-legacy-camera
+    repopick -Q "status:open+topic:twelve-legacy-camera+NOT+320541+NOT+320542"
 
     cd frameworks/native
     git revert 340882c64b5944a62b122bbb24f95645c5a0c465 --no-edit # Plumb attribution tag to Sensor Service
@@ -209,7 +237,7 @@ build_treble() {
     esac
     IMAGE_NAME=lineage-19.0-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")
     lunch lineage_${TARGET}-userdebug
-    make installclean
+    make -j$(nproc --all) installclean
     make -j$(nproc --all) systemimage
     #make -j4 systemimage
     mv $OUT/system.img $BUILD_OUTPUT/${IMAGE_NAME}.img
@@ -231,6 +259,7 @@ else
     apply_patches patches_platform
     apply_patches patches_${MODE}
     apply_patches_personal bv9500plus/patches
+    apply_patches_personal bv9500plus/patches_andy_yan
     gms_patches
     overlay_patches
     if ${PERSONAL}
