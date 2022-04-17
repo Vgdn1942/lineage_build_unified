@@ -1,0 +1,31 @@
+From b2b9afc60e7d1d4e20daf2d696d5a6c09c86a13d Mon Sep 17 00:00:00 2001
+From: Vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 15 Apr 2022 17:19:23 +0300
+Subject: [PATCH] GAPPS variant
+
+Change-Id: I11894ffdff8a8b5af846ab922fa6134c17557484
+---
+ lineage_bv9500plus.mk | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/lineage_bv9500plus.mk b/lineage_bv9500plus.mk
+index e143c7b..a08880b 100644
+--- a/lineage_bv9500plus.mk
++++ b/lineage_bv9500plus.mk
+@@ -1,9 +1,12 @@
+-TARGET_GAPPS_ARCH := arm64
+ $(call inherit-product, device/phh/treble/base-pre.mk)
+ include build/make/target/product/aosp_arm64.mk
+ $(call inherit-product, device/phh/treble/base.mk)
+ 
++ifeq ($(WITH_GAPPS), true)
++TARGET_GAPPS_ARCH := arm64
+ $(call inherit-product, device/phh/treble/gapps.mk)
++endif
++
+ $(call inherit-product, device/phh/treble/lineage.mk)
+ 
+ MTK_PLATFORM_FOLDER := mt6771
+-- 
+2.25.1
+

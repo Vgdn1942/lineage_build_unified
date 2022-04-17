@@ -25,7 +25,7 @@ index 3014df2de..bf07530d8 100644
 +    ],
  }
  
- cc_defaults {
+ soong_config_module_type {
 -- 
 2.20.1
 

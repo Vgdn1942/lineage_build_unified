@@ -1,0 +1,45 @@
+From a42891dc6a2e263325280d06912b25e630498cdf Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 23 Mar 2022 20:35:20 +0300
+Subject: [PATCH] Comment-out CREATION_DATETIME tag. It freaks out some Huawei
+ and Mediatek TEEs
+
+Change-Id: I6f12a3289a4383789c8a1a7987271c9d98d07365
+---
+ keystore2/src/security_level.rs | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/keystore2/src/security_level.rs b/keystore2/src/security_level.rs
+index 1b2e348..048b862 100644
+--- a/keystore2/src/security_level.rs
++++ b/keystore2/src/security_level.rs
+@@ -57,8 +57,8 @@ use android_system_keystore2::aidl::android::system::keystore2::{
+     KeyMetadata::KeyMetadata, KeyParameters::KeyParameters, ResponseCode::ResponseCode,
+ };
+ use anyhow::{anyhow, Context, Result};
+-use std::convert::TryInto;
+-use std::time::SystemTime;
++//use std::convert::TryInto;
++//use std::time::SystemTime;
+ 
+ /// Implementation of the IKeystoreSecurityLevel Interface.
+ pub struct KeystoreSecurityLevel {
+@@ -396,6 +396,7 @@ impl KeystoreSecurityLevel {
+     ) -> Result<Vec<KeyParameter>> {
+         let mut result = params.to_vec();
+ 
++        /*
+         // Unconditionally add the CREATION_DATETIME tag and prevent callers from
+         // specifying it.
+         if params.iter().any(|kp| kp.tag == Tag::CREATION_DATETIME) {
+@@ -425,6 +426,7 @@ impl KeystoreSecurityLevel {
+                 ),
+             });
+         }
++        */
+ 
+         // If there is an attestation challenge we need to get an application id.
+         if params.iter().any(|kp| kp.tag == Tag::ATTESTATION_CHALLENGE) {
+-- 
+2.20.1
+

@@ -1,0 +1,26 @@
+From f78df72693de307135c230ef355289fc564ecca6 Mon Sep 17 00:00:00 2001
+From: vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 4 Mar 2022 14:16:06 +0300
+Subject: [PATCH] Use one overlay for BV9800 and BV9800Pro
+
+Change-Id: I73a0e46497bf50aa73bf4d80761d6dc79e4dd6e4
+---
+ Blackview/BV9800Pro/AndroidManifest.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Blackview/BV9800Pro/AndroidManifest.xml b/Blackview/BV9800Pro/AndroidManifest.xml
+index 807affa..4128d7f 100644
+--- a/Blackview/BV9800Pro/AndroidManifest.xml
++++ b/Blackview/BV9800Pro/AndroidManifest.xml
+@@ -4,7 +4,7 @@
+         android:versionName="1.0">
+         <overlay android:targetPackage="android"
+                 android:requiredSystemPropertyName="ro.vendor.build.fingerprint"
+-                android:requiredSystemPropertyValue="+Blackview/BV9800Pro*"
++                android:requiredSystemPropertyValue="+Blackview/BV9800*"
+ 		android:priority="410"
+ 		android:isStatic="true" />
+ </manifest>
+-- 
+2.20.1
+

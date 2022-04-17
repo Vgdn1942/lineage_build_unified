@@ -14,7 +14,7 @@ index b2471deec2..80bf624415 100644
 --- a/src/com/android/settings/SettingsInitialize.java
 +++ b/src/com/android/settings/SettingsInitialize.java
 @@ -58,7 +58,7 @@ import java.util.List;
-  * webview setting for non-admin users, and updates the intent flags for any existing shortcuts.
+  * enables DeepLinkHomepageActivity for large screen devices.
   */
  public class SettingsInitialize extends BroadcastReceiver {
 -    private static final String TAG = "Settings";

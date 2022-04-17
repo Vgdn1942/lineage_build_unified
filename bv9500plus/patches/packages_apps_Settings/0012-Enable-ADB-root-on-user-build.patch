@@ -16,8 +16,8 @@ index c75a810497..7e48e3cc7d 100644
  
      @Override
      public boolean isAvailable() {
--        return Build.IS_DEBUGGABLE;
-+        //return Build.IS_DEBUGGABLE;
+-        return mADBRootService.isSupported();
++        //return mADBRootService.isSupported();
 +        return true;
      }
  

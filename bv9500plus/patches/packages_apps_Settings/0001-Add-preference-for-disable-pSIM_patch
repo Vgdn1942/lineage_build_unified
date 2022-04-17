@@ -39,8 +39,8 @@ diff --git a/res/values-ru/strings.xml b/res/values-ru/strings.xml
 index e99129a347..3022a8356d 100644
 --- a/res/values-ru/strings.xml
 +++ b/res/values-ru/strings.xml
-@@ -5715,6 +5715,12 @@
-     <string name="sensor_toggle_description" msgid="8248823248606795411">"Для всех приложений и сервисов"</string>
+@@ -5745,6 +5745,12 @@
+     <string name="mic_toggle_description" msgid="484139688645092237">"Для приложений и сервисов. Даже если эта функция отключена, данные микрофона могут передаваться при звонке на номер экстренной службы."</string>
      <string name="game_settings_title" msgid="1028178627743422090">"Настройки игр"</string>
      <string name="game_settings_summary" msgid="2548056479103747555">"Включение ярлыков игровой панели и т. п."</string>
 +    <string name="active_sim_tittle">"Активные SIM-карты"</string>
@@ -326,10 +326,10 @@ diff --git a/src/com/android/settings/network/NetworkDashboardFragment.java b/sr
 index c53b4f652a..9df4b1c603 100644
 --- a/src/com/android/settings/network/NetworkDashboardFragment.java
 +++ b/src/com/android/settings/network/NetworkDashboardFragment.java
-@@ -142,6 +142,7 @@ public class NetworkDashboardFragment extends DashboardFragment implements
-         if (Utils.isProviderModelEnabled(context)) {
-             controllers.add(new NetworkProviderCallsSmsController(context, lifecycle));
+@@ -119,6 +119,7 @@ public class NetworkDashboardFragment extends DashboardFragment implements
          }
+         controllers.add(privateDnsPreferenceController);
+         controllers.add(new NetworkProviderCallsSmsController(context, lifecycle));
 +        controllers.add(new ActiveSimPreferenceController(context));
          return controllers;
      }
