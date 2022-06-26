@@ -1,7 +1,7 @@
-From 477b5ae5559fde40f0c4905407f52f7d7c7da803 Mon Sep 17 00:00:00 2001
+From 16cf8686d5fcd4d8ac4e5f45ed620c1f7c491af7 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 4 Dec 2021 23:01:12 +0300
-Subject: [PATCH] Preference for disable fullscreen call [2/2]
+Subject: [PATCH 5/9] Preference for disable fullscreen call [2/2]
 
 Change-Id: I7d5e4cc51406e0c964bf05fe204cb3f88f2e9d1b
 ---
@@ -9,10 +9,10 @@ Change-Id: I7d5e4cc51406e0c964bf05fe204cb3f88f2e9d1b
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
-index 433d5e19ed6b..b43edac84a2f 100644
+index aed24fde2155..ac71fc77843b 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
-@@ -25,6 +25,7 @@ import android.hardware.display.AmbientDisplayConfiguration;
+@@ -26,6 +26,7 @@ import android.os.Build;
  import android.os.Handler;
  import android.os.PowerManager;
  import android.os.RemoteException;
@@ -20,7 +20,7 @@ index 433d5e19ed6b..b43edac84a2f 100644
  import android.os.UserHandle;
  import android.provider.Settings;
  import android.service.dreams.IDreamManager;
-@@ -175,9 +176,15 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
+@@ -176,9 +177,15 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
       */
      @Override
      public boolean shouldLaunchFullScreenIntentWhenAdded(NotificationEntry entry) {
@@ -39,5 +39,5 @@ index 433d5e19ed6b..b43edac84a2f 100644
  
      private boolean shouldHeadsUpWhenAwake(NotificationEntry entry) {
 -- 
-2.20.1
+2.25.1
 

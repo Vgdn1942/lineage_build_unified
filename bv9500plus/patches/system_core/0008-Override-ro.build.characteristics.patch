@@ -1,7 +1,7 @@
-From b5a5c6bf396e2ebea4d0766f7d657ca1dbd6c390 Mon Sep 17 00:00:00 2001
+From 0b838af873e4ec916086c6e90f0d967d9e02dea9 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 8 Jan 2022 22:27:12 +0300
-Subject: [PATCH] Override ro.build.characteristics
+Subject: [PATCH 08/12] Override ro.build.characteristics
 
 Change-Id: I6a0b3c9ea20ed82c8d6cabd7d56715bbb17a65bb
 ---
@@ -21,5 +21,5 @@ index 01939d54d..d20d01cfc 100644
      property_override("debug.sf.latch_unsignaled", "0");
      property_override("vendor.debug.sf.latch_unsignaled", "0");
 -- 
-2.20.1
+2.25.1
 

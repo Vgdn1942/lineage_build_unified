@@ -1,18 +1,18 @@
-From b642b10cc0ae0ec21fb38649edc85a8d41068193 Mon Sep 17 00:00:00 2001
+From 3dadd86fde29825f579aa3758dcb1db1f9e6f904 Mon Sep 17 00:00:00 2001
 From: Vgdn1942 <vgdn1942@gmail.com>
 Date: Fri, 15 Apr 2022 16:47:43 +0300
-Subject: [PATCH] Cleanup overlay
+Subject: [PATCH 45/45] Cleanup overlay
 
 Change-Id: I934a3332b2116ec88c51f14ca393e49d2557f25e
 ---
- overlay.mk | 226 ----------------------------------------------------
- 1 file changed, 226 deletions(-)
+ overlay.mk | 228 ------------------------------------------------------
+ 1 file changed, 228 deletions(-)
 
 diff --git a/overlay.mk b/overlay.mk
-index e6258af..b4305a1 100755
+index e6258af..a53c811 100755
 --- a/overlay.mk
 +++ b/overlay.mk
-@@ -1,246 +1,20 @@
+@@ -1,249 +1,21 @@
  PRODUCT_PACKAGES += \
  	HardwareOverlayPicker \
 -	QtiAudio \
@@ -139,6 +139,8 @@ index e6258af..b4305a1 100755
 -	treble-overlay-realme-6i \
 -	treble-overlay-realme-c2 \
 -	treble-overlay-realme-c3 \
+-	treble-overlay-realme-gtneo3 \
+-	treble-overlay-realme-gtneo3-systemui \
 -	treble-overlay-realme-narzo10a \
 -	treble-overlay-realme-q3 \
 -	treble-overlay-realme-rmx2117 \
@@ -205,7 +207,7 @@ index e6258af..b4305a1 100755
 -	treble-overlay-telephony-sprd-ims \
 -	treble-overlay-teracube-2e \
 -	treble-overlay-teracube-v7101o \
-	treble-overlay-tethering \
+ 	treble-overlay-tethering \
 -	treble-overlay-umidigi-A3S \
 -	treble-overlay-umidigi-power \
 -	treble-overlay-unihertz-jelly2 \

@@ -1,7 +1,7 @@
-From cffcfee5c9fbc79f7641e2c1a0794f90b1b8ec24 Mon Sep 17 00:00:00 2001
+From f3d25986d1126e5336ec249e75e0368eeef375bd Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Thu, 18 Nov 2021 21:10:15 +0300
-Subject: [PATCH] Disable wake keys
+Subject: [PATCH 09/24] Disable wake keys
 
 Change-Id: I51cfd3e2d7b4a936fbe52eb7d05079ff80e037d6
 ---
@@ -9,7 +9,7 @@ Change-Id: I51cfd3e2d7b4a936fbe52eb7d05079ff80e037d6
  1 file changed, 38 insertions(+), 32 deletions(-)
 
 diff --git a/overlay/frameworks/base/core/res/res/values/config.xml b/overlay/frameworks/base/core/res/res/values/config.xml
-index 35f96d2..d4f5f09 100644
+index 21c0a1c..fa88b14 100644
 --- a/overlay/frameworks/base/core/res/res/values/config.xml
 +++ b/overlay/frameworks/base/core/res/res/values/config.xml
 @@ -1,44 +1,50 @@
@@ -96,5 +96,5 @@ index 35f96d2..d4f5f09 100644
      <string-array name="config_biometric_sensors" translatable="false" >
          <!-- ID0:Fingerprint:Strong -->
 -- 
-2.20.1
+2.25.1
 

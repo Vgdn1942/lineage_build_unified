@@ -1,7 +1,7 @@
-From 53c24c55afffaf248d3924cbe05b9875cc5c06a8 Mon Sep 17 00:00:00 2001
+From 39d843a00a7c2a25324362899db20fbf4a7ce6dc Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sun, 7 Nov 2021 18:53:12 +0300
-Subject: [PATCH] Add vendor_init code
+Subject: [PATCH 03/12] Add vendor_init code
 
 Change-Id: If720c7c5b99c9929637f7e45214d39864618017b
 ---
@@ -240,5 +240,5 @@ index d3fd5ffe2..5d074552a 100644
  }
 +
 -- 
-2.20.1
+2.25.1
 

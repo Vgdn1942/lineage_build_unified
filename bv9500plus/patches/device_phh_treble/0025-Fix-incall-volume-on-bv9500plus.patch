@@ -1,0 +1,232 @@
+From 3fe812fa581fc0dee2b7a86f80a01bf1a895283d Mon Sep 17 00:00:00 2001
+From: Vgdn1942 <vgdn1942@gmail.com>
+Date: Fri, 17 Jun 2022 09:30:38 +0300
+Subject: [PATCH] Fix incall volume on bv9500plus
+
+Change-Id: I3f3ae08f1e4530b030763fb27eb84bcf043e4453
+---
+ base.mk                        |   3 +
+ files/SpeechVol_AudioParam.xml | 163 +++++++++++++++++++++++++++++++++
+ rw-system.sh                   |   8 +-
+ 3 files changed, 171 insertions(+), 3 deletions(-)
+ create mode 100644 files/SpeechVol_AudioParam.xml
+
+diff --git a/base.mk b/base.mk
+index 45de4b8..f866255 100644
+--- a/base.mk
++++ b/base.mk
+@@ -153,6 +153,9 @@ SELINUX_IGNORE_NEVERALLOWS := true
+ PRODUCT_COPY_FILES += \
+ 	$(call find-copy-subdir-files,*,device/phh/treble/hal/lepton_camera,system)
+ 
++PRODUCT_COPY_FILES += \
++	device/phh/treble/files/SpeechVol_AudioParam.xml:system/phh/SpeechVol_AudioParam.xml
++
+ # Universal NoCutoutOverlay
+ PRODUCT_PACKAGES += \
+     NoCutoutOverlay
+diff --git a/files/SpeechVol_AudioParam.xml b/files/SpeechVol_AudioParam.xml
+new file mode 100644
+index 0000000..6b504f4
+--- /dev/null
++++ b/files/SpeechVol_AudioParam.xml
+@@ -0,0 +1,163 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<AudioParam version="1.0">
++  <ParamTree>
++    <Param path="NB,LPBK_RCV,GSM" param_id="0"/>
++    <Param path="NB,LPBK_HP,GSM" param_id="2"/>
++    <Param path="NB,LPBK_SPK,GSM" param_id="3"/>
++    <Param path="WB,LPBK_RCV,GSM" param_id="0"/>
++    <Param path="WB,LPBK_HP,GSM" param_id="2"/>
++    <Param path="WB,LPBK_SPK,GSM" param_id="3"/>
++    <Param path="SWB,LPBK_RCV,GSM" param_id="0"/>
++    <Param path="SWB,LPBK_HP,GSM" param_id="2"/>
++    <Param path="SWB,LPBK_SPK,GSM" param_id="3"/>
++    <Param path="NB,RCV,GSM" param_id="0"/>
++    <Param path="NB,HAC,GSM" param_id="1"/>
++    <Param path="NB,HS,GSM" param_id="2"/>
++    <Param path="NB,HP,GSM" param_id="2"/>
++    <Param path="NB,SPK,GSM" param_id="3"/>
++    <Param path="WB,RCV,GSM" param_id="0"/>
++    <Param path="WB,HAC,GSM" param_id="1"/>
++    <Param path="WB,HS,GSM" param_id="2"/>
++    <Param path="WB,HP,GSM" param_id="2"/>
++    <Param path="WB,SPK,GSM" param_id="3"/>
++    <Param path="SWB,RCV,GSM" param_id="0"/>
++    <Param path="SWB,HAC,GSM" param_id="1"/>
++    <Param path="SWB,HS,GSM" param_id="2"/>
++    <Param path="SWB,HP,GSM" param_id="2"/>
++    <Param path="SWB,SPK,GSM" param_id="3"/>
++    <Param path="NB,HS5POLE,GSM" param_id="4"/>
++    <Param path="WB,HS5POLE,GSM" param_id="4"/>
++    <Param path="SWB,HS5POLE,GSM" param_id="4"/>
++    <Param path="NB,HS5POLE_ANC,GSM" param_id="4"/>
++    <Param path="WB,HS5POLE_ANC,GSM" param_id="4"/>
++    <Param path="SWB,HS5POLE_ANC,GSM" param_id="4"/>
++    <Param path="NB,TTY,GSM" param_id="6"/>
++    <Param path="WB,TTY,GSM" param_id="6"/>
++    <Param path="SWB,TTY,GSM" param_id="6"/>
++    <Param path="NB,USB,GSM" param_id="2"/>
++    <Param path="WB,USB,GSM" param_id="2"/>
++    <Param path="SWB,USB,GSM" param_id="2"/>
++    <Param path="NB,RCV_SV,GSM" param_id="0"/>
++    <Param path="WB,RCV_SV,GSM" param_id="0"/>
++    <Param path="SWB,RCV_SV,GSM" param_id="0"/>
++    <Param path="NB,SPK_SV,GSM" param_id="3"/>
++    <Param path="WB,SPK_SV,GSM" param_id="3"/>
++    <Param path="SWB,SPK_SV,GSM" param_id="3"/>
++    <Param path="NB,LPBK_RCV,WCDMA" param_id="0"/>
++    <Param path="NB,LPBK_HP,WCDMA" param_id="2"/>
++    <Param path="NB,LPBK_SPK,WCDMA" param_id="3"/>
++    <Param path="WB,LPBK_RCV,WCDMA" param_id="0"/>
++    <Param path="WB,LPBK_HP,WCDMA" param_id="2"/>
++    <Param path="WB,LPBK_SPK,WCDMA" param_id="3"/>
++    <Param path="SWB,LPBK_RCV,WCDMA" param_id="0"/>
++    <Param path="SWB,LPBK_HP,WCDMA" param_id="2"/>
++    <Param path="SWB,LPBK_SPK,WCDMA" param_id="3"/>
++    <Param path="NB,RCV,WCDMA" param_id="0"/>
++    <Param path="NB,HAC,WCDMA" param_id="1"/>
++    <Param path="NB,HS,WCDMA" param_id="2"/>
++    <Param path="NB,HP,WCDMA" param_id="2"/>
++    <Param path="NB,SPK,WCDMA" param_id="3"/>
++    <Param path="WB,RCV,WCDMA" param_id="0"/>
++    <Param path="WB,HAC,WCDMA" param_id="1"/>
++    <Param path="WB,HS,WCDMA" param_id="2"/>
++    <Param path="WB,HP,WCDMA" param_id="2"/>
++    <Param path="WB,SPK,WCDMA" param_id="3"/>
++    <Param path="SWB,RCV,WCDMA" param_id="0"/>
++    <Param path="SWB,HAC,WCDMA" param_id="1"/>
++    <Param path="SWB,HS,WCDMA" param_id="2"/>
++    <Param path="SWB,HP,WCDMA" param_id="2"/>
++    <Param path="SWB,SPK,WCDMA" param_id="3"/>
++    <Param path="NB,HS5POLE,WCDMA" param_id="4"/>
++    <Param path="WB,HS5POLE,WCDMA" param_id="4"/>
++    <Param path="SWB,HS5POLE,WCDMA" param_id="4"/>
++    <Param path="NB,HS5POLE_ANC,WCDMA" param_id="4"/>
++    <Param path="WB,HS5POLE_ANC,WCDMA" param_id="4"/>
++    <Param path="SWB,HS5POLE_ANC,WCDMA" param_id="4"/>
++    <Param path="NB,TTY,WCDMA" param_id="5"/>
++    <Param path="WB,TTY,WCDMA" param_id="5"/>
++    <Param path="SWB,TTY,WCDMA" param_id="5"/>
++    <Param path="NB,USB,WCDMA" param_id="2"/>
++    <Param path="WB,USB,WCDMA" param_id="2"/>
++    <Param path="SWB,USB,WCDMA" param_id="2"/>
++    <Param path="NB,RCV_SV,WCDMA" param_id="0"/>
++    <Param path="WB,RCV_SV,WCDMA" param_id="0"/>
++    <Param path="SWB,RCV_SV,WCDMA" param_id="0"/>
++    <Param path="NB,SPK_SV,WCDMA" param_id="3"/>
++    <Param path="WB,SPK_SV,WCDMA" param_id="3"/>
++    <Param path="SWB,SPK_SV,WCDMA" param_id="3"/>
++    <Param path="NB,LPBK_RCV,VoLTE" param_id="0"/>
++    <Param path="NB,LPBK_HP,VoLTE" param_id="2"/>
++    <Param path="NB,LPBK_SPK,VoLTE" param_id="3"/>
++    <Param path="WB,LPBK_RCV,VoLTE" param_id="0"/>
++    <Param path="WB,LPBK_HP,VoLTE" param_id="2"/>
++    <Param path="WB,LPBK_SPK,VoLTE" param_id="3"/>
++    <Param path="SWB,LPBK_RCV,VoLTE" param_id="0"/>
++    <Param path="SWB,LPBK_HP,VoLTE" param_id="2"/>
++    <Param path="SWB,LPBK_SPK,VoLTE" param_id="3"/>
++    <Param path="NB,RCV,VoLTE" param_id="0"/>
++    <Param path="NB,HAC,VoLTE" param_id="1"/>
++    <Param path="NB,HS,VoLTE" param_id="2"/>
++    <Param path="NB,HP,VoLTE" param_id="2"/>
++    <Param path="NB,SPK,VoLTE" param_id="3"/>
++    <Param path="WB,RCV,VoLTE" param_id="0"/>
++    <Param path="WB,HAC,VoLTE" param_id="1"/>
++    <Param path="WB,HS,VoLTE" param_id="2"/>
++    <Param path="WB,HP,VoLTE" param_id="2"/>
++    <Param path="WB,SPK,VoLTE" param_id="3"/>
++    <Param path="SWB,RCV,VoLTE" param_id="0"/>
++    <Param path="SWB,HAC,VoLTE" param_id="1"/>
++    <Param path="SWB,HS,VoLTE" param_id="2"/>
++    <Param path="SWB,HP,VoLTE" param_id="2"/>
++    <Param path="SWB,SPK,VoLTE" param_id="3"/>
++    <Param path="NB,HS5POLE,VoLTE" param_id="4"/>
++    <Param path="WB,HS5POLE,VoLTE" param_id="4"/>
++    <Param path="SWB,HS5POLE,VoLTE" param_id="4"/>
++    <Param path="NB,HS5POLE_ANC,VoLTE" param_id="4"/>
++    <Param path="WB,HS5POLE_ANC,VoLTE" param_id="4"/>
++    <Param path="SWB,HS5POLE_ANC,VoLTE" param_id="4"/>
++    <Param path="NB,TTY,VoLTE" param_id="5"/>
++    <Param path="WB,TTY,VoLTE" param_id="5"/>
++    <Param path="SWB,TTY,VoLTE" param_id="5"/>
++    <Param path="NB,USB,VoLTE" param_id="2"/>
++    <Param path="WB,USB,VoLTE" param_id="2"/>
++    <Param path="SWB,USB,VoLTE" param_id="2"/>
++    <Param path="NB,RCV_SV,VoLTE" param_id="0"/>
++    <Param path="WB,RCV_SV,VoLTE" param_id="0"/>
++    <Param path="SWB,RCV_SV,VoLTE" param_id="0"/>
++    <Param path="NB,SPK_SV,VoLTE" param_id="3"/>
++    <Param path="WB,SPK_SV,VoLTE" param_id="3"/>
++    <Param path="SWB,SPK_SV,VoLTE" param_id="3"/>
++  </ParamTree>
++  <ParamUnitPool>
++    <ParamUnit param_id="0">
++      <Param name="dl_gain" value="22,19,16,13,10,7,4"/>
++      <Param name="ul_gain" value="23"/>
++      <Param name="stf_gain" value="0"/>
++    </ParamUnit>
++    <ParamUnit param_id="1">
++      <Param name="dl_gain" value="22,19,16,13,10,7,4"/>
++      <Param name="ul_gain" value="0"/>
++      <Param name="stf_gain" value="0"/>
++    </ParamUnit>
++    <ParamUnit param_id="2">
++      <Param name="dl_gain" value="27,24,21,18,15,12,9"/>
++      <Param name="ul_gain" value="27"/>
++      <Param name="stf_gain" value="0"/>
++    </ParamUnit>
++    <ParamUnit param_id="3">
++      <Param name="dl_gain" value="22,19,16,13,10,7,4"/>
++      <Param name="ul_gain" value="27"/>
++      <Param name="stf_gain" value="0"/>
++    </ParamUnit>
++    <ParamUnit param_id="4">
++      <Param name="dl_gain" value="27,24,21,18,15,12,9"/>
++      <Param name="ul_gain" value="24"/>
++      <Param name="stf_gain" value="0"/>
++    </ParamUnit>
++    <ParamUnit param_id="5">
++      <Param name="dl_gain" value="27,24,21,18,15,12,9"/>
++      <Param name="ul_gain" value="0"/>
++      <Param name="stf_gain" value="0"/>
++    </ParamUnit>
++  </ParamUnitPool>
++</AudioParam>
+diff --git a/rw-system.sh b/rw-system.sh
+index 2b6aa77..911854c 100644
+--- a/rw-system.sh
++++ b/rw-system.sh
+@@ -269,7 +269,7 @@ changeKeylayout() {
+         changed=true
+     fi
+ 
+-    if getprop ro.vendor.build.fingerprint | grep -q -e Blackview/BV9500Plus -e Blackview/BV9500plus -e Blackview/BV9800Pro;then
++    if getprop ro.vendor.build.fingerprint | grep -q -e Blackview/BV9500Plus -e Blackview/BV9500plus -e Blackview/BV9800Pro; then
+         cp /system/phh/bv9500plus-mtk-kpd.kl /mnt/phh/keylayout/mtk-kpd.kl
+         chmod 0644 /mnt/phh/keylayout/mtk-kpd.kl
+         changed=true
+@@ -517,7 +517,8 @@ done
+ 
+ if getprop ro.vendor.build.fingerprint | grep -iq -e Blackview/BV9500Plus -e Blackview/BV9500plus; then
+     for f in /vendor/ueventd.rc /vendor/bin/hw/android.hardware.light@2.0-service-mediatek \
+-            /vendor/etc/init/android.hardware.light@2.0-service-mediatek.rc; do
++            /vendor/etc/init/android.hardware.light@2.0-service-mediatek.rc \
++            /vendor/etc/audio_param/SpeechVol_AudioParam.xml; do
+         [ ! -f $f ] && continue
+         # shellcheck disable=SC2010
+         ctxt="$(ls -lZ "$f" | grep -oE 'u:object_r:[^:]*:s0')"
+@@ -537,7 +538,8 @@ if getprop ro.vendor.build.fingerprint | grep -iq -e Blackview/BV9500Plus -e Bla
+             done
+             echo "" >> "/mnt/phh/$a"
+         elif [ "$b" = "android.hardware.light@2.0-service-mediatek" ] || \
+-                [ "$b" = "android.hardware.light@2.0-service-mediatek.rc" ]; then
++                [ "$b" = "android.hardware.light@2.0-service-mediatek.rc" ] || \
++                [ "$b" = "SpeechVol_AudioParam.xml" ]; then
+             [ ! -f /system/phh/$b ] && continue
+             cp -a "/system/phh/$b" "/mnt/phh/$a"
+         else
+-- 
+2.25.1
+

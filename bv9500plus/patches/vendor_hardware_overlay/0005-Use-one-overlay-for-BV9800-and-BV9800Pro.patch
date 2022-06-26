@@ -1,7 +1,7 @@
-From f78df72693de307135c230ef355289fc564ecca6 Mon Sep 17 00:00:00 2001
+From 8d8c2ad21a25df81deb8158b5b3ef3572317f0fb Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Fri, 4 Mar 2022 14:16:06 +0300
-Subject: [PATCH] Use one overlay for BV9800 and BV9800Pro
+Subject: [PATCH 44/45] Use one overlay for BV9800 and BV9800Pro
 
 Change-Id: I73a0e46497bf50aa73bf4d80761d6dc79e4dd6e4
 ---
@@ -22,5 +22,5 @@ index 807affa..4128d7f 100644
  		android:isStatic="true" />
  </manifest>
 -- 
-2.20.1
+2.25.1
 

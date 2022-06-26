@@ -1,7 +1,7 @@
-From 378bfc20cacc508d185dd2e2b0caed4dee909b71 Mon Sep 17 00:00:00 2001
+From ad9d2bf5216f10492381ead2aaccb00f507d8434 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Mon, 8 Nov 2021 23:38:11 +0300
-Subject: [PATCH] Cleanup GMS
+Subject: [PATCH 4/6] Cleanup GMS
 
 ---
  .../privapp-permissions-google-comms-suite.xml  | 17 -----------------
@@ -158,5 +158,5 @@ index 7442a29..f1060e8 100644
 +    CarrierServices
  
 -- 
-2.20.1
+2.25.1
 

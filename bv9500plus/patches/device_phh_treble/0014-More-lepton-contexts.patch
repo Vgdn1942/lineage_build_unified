@@ -1,7 +1,7 @@
-From 3deda32708ba2ea731f83d0f1b46db944ea5f8a4 Mon Sep 17 00:00:00 2001
+From 61c0e91c469026f9f55fbf84a97e86aeeef7b94f Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Fri, 17 Dec 2021 23:26:29 +0300
-Subject: [PATCH] More lepton contexts
+Subject: [PATCH 14/24] More lepton contexts
 
 Change-Id: I263a2cc0ef851b0bcb242460536c9cfb6b306850
 ---
@@ -20,5 +20,5 @@ index 263f6a1..5673443 100644
 +ThermalCameraService                    u:object_r:lepton_service:s0
 +flir.lepton_camera_service              u:object_r:lepton_service:s0
 -- 
-2.20.1
+2.25.1
 

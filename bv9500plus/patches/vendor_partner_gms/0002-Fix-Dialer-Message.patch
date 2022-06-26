@@ -1,7 +1,7 @@
-From 73d4597806ffc20f22fe09304b6dc840a0585af8 Mon Sep 17 00:00:00 2001
+From 316b8bae6ee362517ede10231bf602d8e2f0b34b Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Mon, 8 Nov 2021 18:11:20 +0300
-Subject: [PATCH] Fix Dialer & Message
+Subject: [PATCH 2/6] Fix Dialer & Message
 
 ---
  overlay/GmsConfigFiOverlay/Android.bp         |  4 ---
@@ -94,5 +94,5 @@ index a339dde..fc62a74 100644
      <string name="platform_number_verification_package" translatable="false">com.google.android.gms</string>
  
 -- 
-2.20.1
+2.25.1
 

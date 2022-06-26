@@ -1,7 +1,7 @@
-From c1072ed9dc98355509d2e9b7238c211a698d83a5 Mon Sep 17 00:00:00 2001
+From 55ebd68c0ac515da871ef657bae9b3ac6bdfeb20 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 19 Feb 2022 17:15:33 +0300
-Subject: [PATCH] Update props bv9800 for latest build
+Subject: [PATCH 12/12] Update props bv9800 for latest build
 
 Change-Id: I848bae2b7977a34bce5aad8077a9440eca361f83
 ---
@@ -81,5 +81,5 @@ index ffd07bf67..439b029e9 100644
      // lineage version
      if ((board.find("s62v71c2k_jk_tee") == 0) || (board.find("s62v71c2k_jk_eea") == 0) || (board.find("s62v71c2k_jk_rus_tee") == 0)) {
 -- 
-2.20.1
+2.25.1
 

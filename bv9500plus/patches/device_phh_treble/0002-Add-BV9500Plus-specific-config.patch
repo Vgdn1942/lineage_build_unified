@@ -1,13 +1,13 @@
-From f138d69ecce643780840cbbab77b93594c493ff4 Mon Sep 17 00:00:00 2001
+From 9487234f5a7cff6f6f5c5e942ea97895735f54f3 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Mon, 12 Jul 2021 21:05:37 +0300
-Subject: [PATCH] Add BV9500Plus specific config
+Subject: [PATCH 02/24] Add BV9500Plus specific config
 
 Change-Id: I40d19fa5dc79d848e06c05a20dd8abb5707bca18
 ---
+ base.mk                                       |  13 ++++++-
  bv9500plus.mk                                 |  17 +++++++++
  bv9500plus/BoardConfig.mk                     |  15 ++++++++
- base.mk                                       |  13 ++++++-
  charger/images/battery_fail.png               | Bin 0 -> 4274 bytes
  charger/images/battery_scale.png              | Bin 0 -> 13931 bytes
  files/mtk-kpd.kl                              |   5 +++
@@ -32,55 +32,11 @@ Change-Id: I40d19fa5dc79d848e06c05a20dd8abb5707bca18
  create mode 100644 overlay/frameworks/base/packages/SystemUI/res/values/config.xml
  create mode 100644 overlay/packages/apps/Dialer/java/com/android/dialer/callrecord/res/values/config.xml
 
-diff --git a/bv9500plus.mk b/bv9500plus.mk
-new file mode 100644
-index 0000000..a2fc2bf
---- /dev/null
-+++ b/bv9500plus.mk
-@@ -0,0 +1,17 @@
-+TARGET_GAPPS_ARCH := arm64
-+$(call inherit-product, device/phh/treble/base-pre.mk)
-+include build/make/target/product/aosp_arm64.mk
-+$(call inherit-product, device/phh/treble/base.mk)
-+
-+$(call inherit-product, device/phh/treble/gapps.mk)
-+$(call inherit-product, device/phh/treble/lineage.mk)
-+
-+PRODUCT_NAME := bv9500plus
-+PRODUCT_DEVICE := bv9500plus
-+PRODUCT_BRAND := Blackview
-+PRODUCT_SYSTEM_BRAND := Blackview
-+PRODUCT_MODEL := BV9500Plus
-+PRODUCT_MANUFACTURER := A-gold
-+
-+PRODUCT_PACKAGES += 
-+
-diff --git a/bv9500plus/BoardConfig.mk b/bv9500plus/BoardConfig.mk
-new file mode 100644
-index 0000000..bf82dbd
---- /dev/null
-+++ b/bv9500plus/BoardConfig.mk
-@@ -0,0 +1,15 @@
-+include build/make/target/board/generic_arm64/BoardConfig.mk
-+include device/phh/treble/board-base.mk
-+
-+ifeq ($(BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE),)
-+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2147483648
-+else
-+BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 33554432
-+endif
-+
-+# Boot Animation
-+TARGET_SCREEN_HEIGHT := 1920
-+TARGET_SCREEN_WIDTH := 1080
-+
-+# Charger images
-+BOARD_HEALTHD_CUSTOM_CHARGER_RES := device/phh/treble/charger/images
 diff --git a/base.mk b/base.mk
-index 5d16dbe..75b561d 100644
+index afdd295..8dba903 100644
 --- a/base.mk
 +++ b/base.mk
-@@ -112,14 +112,25 @@ PRODUCT_PACKAGES += \
+@@ -108,14 +108,25 @@ PRODUCT_PACKAGES += \
  PRODUCT_COPY_FILES += \
  	device/phh/treble/interfaces.xml:system/etc/permissions/interfaces.xml
  
@@ -107,6 +63,50 @@ index 5d16dbe..75b561d 100644
  	device/phh/treble/files/mimix3-gpio-keys.kl:system/phh/mimix3-gpio-keys.kl \
  	device/phh/treble/files/nokia-soc_gpio_keys.kl:system/phh/nokia-soc_gpio_keys.kl \
  	device/phh/treble/files/lenovo-synaptics_dsx.kl:system/phh/lenovo-synaptics_dsx.kl \
+diff --git a/bv9500plus.mk b/bv9500plus.mk
+new file mode 100644
+index 0000000..6ad15c4
+--- /dev/null
++++ b/bv9500plus.mk
+@@ -0,0 +1,17 @@
++TARGET_GAPPS_ARCH := arm64
++$(call inherit-product, device/phh/treble/base-pre.mk)
++include build/make/target/product/aosp_arm64.mk
++$(call inherit-product, device/phh/treble/base.mk)
++
++$(call inherit-product, device/phh/treble/gapps.mk)
++$(call inherit-product, device/phh/treble/lineage.mk)
++
++PRODUCT_NAME := bv9500plus
++PRODUCT_DEVICE := bv9500plus
++PRODUCT_BRAND := Blackview
++PRODUCT_SYSTEM_BRAND := Blackview
++PRODUCT_MODEL := BV9500Plus
++PRODUCT_MANUFACTURER := A-gold
++
++PRODUCT_PACKAGES += 
++
+diff --git a/bv9500plus/BoardConfig.mk b/bv9500plus/BoardConfig.mk
+new file mode 100644
+index 0000000..2caf567
+--- /dev/null
++++ b/bv9500plus/BoardConfig.mk
+@@ -0,0 +1,15 @@
++include build/make/target/board/generic_arm64/BoardConfig.mk
++include device/phh/treble/board-base.mk
++
++ifeq ($(BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE),)
++BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2147483648
++else
++BOARD_SYSTEMIMAGE_PARTITION_RESERVED_SIZE := 33554432
++endif
++
++# Boot Animation
++TARGET_SCREEN_HEIGHT := 1920
++TARGET_SCREEN_WIDTH := 1080
++
++# Charger images
++BOARD_HEALTHD_CUSTOM_CHARGER_RES := device/phh/treble/charger/images
 diff --git a/charger/images/battery_fail.png b/charger/images/battery_fail.png
 new file mode 100644
 index 0000000000000000000000000000000000000000..8a60c486e8310852c1e6327d284641be329086fd
@@ -305,7 +305,7 @@ HcmV?d00001
 
 diff --git a/files/mtk-kpd.kl b/files/mtk-kpd.kl
 new file mode 100644
-index 0000000..0cd2823
+index 0000000..724fb50
 --- /dev/null
 +++ b/files/mtk-kpd.kl
 @@ -0,0 +1,5 @@
@@ -318,7 +318,7 @@ diff --git a/files/secure b/files/secure
 new file mode 100644
 index 0000000..e69de29
 diff --git a/generate.sh b/generate.sh
-index c1494c7..3dde60a 100644
+index 623a9ce..53f0dc1 100644
 --- a/generate.sh
 +++ b/generate.sh
 @@ -14,6 +14,8 @@ fi
@@ -595,7 +595,7 @@ HcmV?d00001
 
 diff --git a/hal/light-mt6370/android.hardware.light@2.0-service-mediatek.rc b/hal/light-mt6370/android.hardware.light@2.0-service-mediatek.rc
 new file mode 100755
-index 0000000..dbb8626
+index 0000000..b0e9383
 --- /dev/null
 +++ b/hal/light-mt6370/android.hardware.light@2.0-service-mediatek.rc
 @@ -0,0 +1,23 @@
@@ -623,7 +623,7 @@ index 0000000..dbb8626
 +    chmod 0666 /sys/class/leds/mt6370_pmu_led4/brightness
 +
 diff --git a/overlay/frameworks/base/core/res/res/values/config.xml b/overlay/frameworks/base/core/res/res/values/config.xml
-index 7a15163..35f96d2 100644
+index bad8f29..21c0a1c 100644
 --- a/overlay/frameworks/base/core/res/res/values/config.xml
 +++ b/overlay/frameworks/base/core/res/res/values/config.xml
 @@ -34,6 +34,12 @@
@@ -705,10 +705,10 @@ index 0000000..2832c87
 +    <integer name="call_recording_audio_source">4</integer>
 +</resources>
 diff --git a/rw-system.sh b/rw-system.sh
-index 43cdf55..0f48543 100644
+index fe760b1..fdb1d08 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
-@@ -465,6 +465,42 @@ for f in /vendor/lib/mtk-ril.so /vendor/lib64/mtk-ril.so /vendor/lib/libmtk-ril.
+@@ -512,6 +512,42 @@ for f in /vendor/lib/mtk-ril.so /vendor/lib64/mtk-ril.so /vendor/lib/libmtk-ril.
      setprop persist.sys.radio.ussd.fix true
  done
  
@@ -768,5 +768,5 @@ index 4d2e612..0959da5 100644
 +
 +endif
 -- 
-2.20.1
+2.25.1
 

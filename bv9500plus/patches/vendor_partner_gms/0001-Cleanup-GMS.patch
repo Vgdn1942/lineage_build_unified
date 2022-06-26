@@ -1,7 +1,7 @@
-From ae234c6319cd25040d5e11da22afa0f6c9c19742 Mon Sep 17 00:00:00 2001
+From 07ed8b738d07777b5886f0ae77ae7f91c46676dd Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sun, 7 Nov 2021 00:18:22 +0300
-Subject: [PATCH] Cleanup GMS
+Subject: [PATCH 1/6] Cleanup GMS
 
 ---
  overlay/GmsConfigOverlayComms/Android.bp      |  4 ---
@@ -140,5 +140,5 @@ index 7483d25..7442a29 100644
 +    com.google.android.dialer.support.jar
 +
 -- 
-2.20.1
+2.25.1
 

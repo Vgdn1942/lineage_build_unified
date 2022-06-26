@@ -1,7 +1,7 @@
-From edb58f455c87f8f1867edca7bce829b66dc136ca Mon Sep 17 00:00:00 2001
+From 156296dc02c7686b991abaeac34c94947fd71871 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sun, 7 Nov 2021 20:39:30 +0300
-Subject: [PATCH] Fix build vendor_init
+Subject: [PATCH 04/12] Fix build vendor_init
 
 Change-Id: I26081841fd832793f54fa3cb4a2770ea3eb25d6d
 ---
@@ -9,7 +9,7 @@ Change-Id: I26081841fd832793f54fa3cb4a2770ea3eb25d6d
  1 file changed, 7 insertions(+)
 
 diff --git a/init/Android.bp b/init/Android.bp
-index 3014df2de..bf07530d8 100644
+index 9159ace4f..be2a9688c 100644
 --- a/init/Android.bp
 +++ b/init/Android.bp
 @@ -95,6 +95,13 @@ cc_library_static {
@@ -27,5 +27,5 @@ index 3014df2de..bf07530d8 100644
  
  soong_config_module_type {
 -- 
-2.20.1
+2.25.1
 

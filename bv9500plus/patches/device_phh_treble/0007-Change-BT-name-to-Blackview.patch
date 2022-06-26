@@ -1,7 +1,7 @@
-From 365c0ee8c30ace7e02407ba92321cb044b2be68b Mon Sep 17 00:00:00 2001
+From dbadc0f318abfb9b48965db213c3f4d543b7f8cc Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Mon, 15 Nov 2021 09:26:21 +0300
-Subject: [PATCH 1/2] Change BT name to Blackview
+Subject: [PATCH 07/24] Change BT name to Blackview
 
 Change-Id: I2d054abb94e3f54e808529870a012e7ed19b5ff4
 ---
@@ -9,7 +9,7 @@ Change-Id: I2d054abb94e3f54e808529870a012e7ed19b5ff4
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/bluetooth/bdroid_buildcfg.h b/bluetooth/bdroid_buildcfg.h
-index 166bd4a..f532575 100644
+index 166bd4a..1e7096a 100644
 --- a/bluetooth/bdroid_buildcfg.h
 +++ b/bluetooth/bdroid_buildcfg.h
 @@ -37,7 +37,7 @@ static inline const char* BtmDefLocalName()
@@ -22,5 +22,5 @@ index 166bd4a..f532575 100644
  
  static inline int BtmBypassExtraAclSetup() {
 -- 
-2.20.1
+2.25.1
 

@@ -1,7 +1,7 @@
-From 589182fd414355a07dd6ae55c16efc9c34966c63 Mon Sep 17 00:00:00 2001
+From 69959ba4645f273d6fd40be3ed5e7d38f1961584 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 8 Jan 2022 23:00:36 +0300
-Subject: [PATCH] More override tags
+Subject: [PATCH 09/12] More override tags
 
 Change-Id: I4937b8b7270da7e7e546ac0f6d93b9534a3067f2
 ---
@@ -23,5 +23,5 @@ index d20d01cfc..0bdb8ca82 100644
      property_override("ro.boot.verifiedbootstate", "green");
      property_override("ro.boot.flash.locked", "1");
 -- 
-2.20.1
+2.25.1
 

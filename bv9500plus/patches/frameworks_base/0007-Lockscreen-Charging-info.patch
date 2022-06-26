@@ -1,7 +1,7 @@
-From a3daa8ffd6413a1864c4b6713c18801f3d5c13b7 Mon Sep 17 00:00:00 2001
+From 5d77055d4c43a0a0ec65aad14e8ce3c2311dfc65 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Mon, 21 Feb 2022 19:43:56 +0300
-Subject: [PATCH] [SQUASH] Lockscreen Charging info
+Subject: [PATCH 6/9] Lockscreen Charging info
 
 Change-Id: I361a247b667c3bd88773bc9d30000c554b76717f
 ---
@@ -12,7 +12,7 @@ Change-Id: I361a247b667c3bd88773bc9d30000c554b76717f
  4 files changed, 86 insertions(+), 10 deletions(-)
 
 diff --git a/packages/SettingsLib/src/com/android/settingslib/fuelgauge/BatteryStatus.java b/packages/SettingsLib/src/com/android/settingslib/fuelgauge/BatteryStatus.java
-index b3205d7563b2..14f456bafe54 100644
+index b56ae3864fb7..08bf33ebe400 100644
 --- a/packages/SettingsLib/src/com/android/settingslib/fuelgauge/BatteryStatus.java
 +++ b/packages/SettingsLib/src/com/android/settingslib/fuelgauge/BatteryStatus.java
 @@ -27,6 +27,7 @@ import static android.os.BatteryManager.EXTRA_MAX_CHARGING_VOLTAGE;
@@ -66,10 +66,10 @@ index b3205d7563b2..14f456bafe54 100644
          if (maxChargingMicroVolt <= 0) {
              maxChargingMicroVolt = DEFAULT_CHARGING_VOLTAGE_MICRO_VOLT;
 diff --git a/packages/SystemUI/res/layout/keyguard_bottom_area.xml b/packages/SystemUI/res/layout/keyguard_bottom_area.xml
-index 8dbd59d42ab7..cab47bd2991c 100644
+index 759670e01e71..175a7d7d0cf4 100644
 --- a/packages/SystemUI/res/layout/keyguard_bottom_area.xml
 +++ b/packages/SystemUI/res/layout/keyguard_bottom_area.xml
-@@ -52,7 +52,7 @@
+@@ -51,7 +51,7 @@
              android:paddingStart="@dimen/keyguard_indication_text_padding"
              android:paddingEnd="@dimen/keyguard_indication_text_padding"
              android:textAppearance="@style/TextAppearance.Keyguard.BottomArea"
@@ -79,10 +79,10 @@ index 8dbd59d42ab7..cab47bd2991c 100644
              android:alpha=".8"
              android:accessibilityLiveRegion="polite"
 diff --git a/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java b/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java
-index 4ba40ce468f5..62c256ff5452 100644
+index 361eafe1c622..e4c94d6e2cb7 100644
 --- a/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java
 +++ b/packages/SystemUI/src/com/android/keyguard/KeyguardUpdateMonitor.java
-@@ -1921,7 +1921,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
+@@ -1953,7 +1953,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
          }
  
          // Take a guess at initial SIM state, battery status and PLMN until we get an update
@@ -92,10 +92,10 @@ index 4ba40ce468f5..62c256ff5452 100644
          // Watch for interesting updates
          final IntentFilter filter = new IntentFilter();
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/KeyguardIndicationController.java b/packages/SystemUI/src/com/android/systemui/statusbar/KeyguardIndicationController.java
-index 8a397199dc84..34f4114c1423 100644
+index d7b4738340e6..8fa5bbde6eab 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/KeyguardIndicationController.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/KeyguardIndicationController.java
-@@ -48,8 +48,11 @@ import android.hardware.face.FaceManager;
+@@ -50,8 +50,11 @@ import android.hardware.face.FaceManager;
  import android.hardware.fingerprint.FingerprintManager;
  import android.os.BatteryManager;
  import android.os.Handler;
@@ -107,7 +107,7 @@ index 8a397199dc84..34f4114c1423 100644
  import android.os.UserHandle;
  import android.os.UserManager;
  import android.text.TextUtils;
-@@ -142,14 +145,18 @@ public class KeyguardIndicationController {
+@@ -155,13 +158,17 @@ public class KeyguardIndicationController {
      private boolean mBatteryOverheated;
      private boolean mEnableBatteryDefender;
      private int mChargingSpeed;
@@ -120,14 +120,13 @@ index 8a397199dc84..34f4114c1423 100644
      private boolean mBatteryPresent = true;
      private long mChargingTimeRemaining;
      private String mMessageToShowOnScreenOn;
-     protected int mLockScreenMode;
      private boolean mInited;
  
 +    private IBatteryPropertiesRegistrar mBatteryPropertiesRegistrar;
      private KeyguardUpdateMonitorCallback mUpdateMonitorCallback;
  
      private boolean mDozing;
-@@ -196,7 +203,9 @@ public class KeyguardIndicationController {
+@@ -208,7 +215,9 @@ public class KeyguardIndicationController {
          mIActivityManager = iActivityManager;
          mFalsingManager = falsingManager;
          mKeyguardBypassController = keyguardBypassController;
@@ -138,8 +137,8 @@ index 8a397199dc84..34f4114c1423 100644
      }
  
      /** Call this after construction to finish setting up the instance. */
-@@ -759,14 +768,47 @@ public class KeyguardIndicationController {
-                     : R.string.keyguard_plugged_in_wireless;
+@@ -830,14 +839,47 @@ public class KeyguardIndicationController {
+                     : R.string.keyguard_plugged_in;
          }
  
 +        String batteryInfo = "";
@@ -188,7 +187,7 @@ index 8a397199dc84..34f4114c1423 100644
          }
      }
  
-@@ -856,6 +898,20 @@ public class KeyguardIndicationController {
+@@ -939,6 +981,20 @@ public class KeyguardIndicationController {
          mRotateTextViewController.dump(fd, pw, args);
      }
  
@@ -209,8 +208,8 @@ index 8a397199dc84..34f4114c1423 100644
      protected class BaseKeyguardCallback extends KeyguardUpdateMonitorCallback {
          public static final int HIDE_DELAY_MS = 5000;
  
-@@ -872,7 +928,10 @@ public class KeyguardIndicationController {
-             mPowerPluggedInWired = status.isPluggedInWired() && isChargingOrFull;
+@@ -951,7 +1007,10 @@ public class KeyguardIndicationController {
+             mPowerPluggedInWireless = status.isPluggedInWireless() && isChargingOrFull;
              mPowerPluggedIn = status.isPluggedIn() && isChargingOrFull;
              mPowerCharged = status.isCharged();
 +            mChargingCurrent = status.maxChargingCurrent;
@@ -220,7 +219,7 @@ index 8a397199dc84..34f4114c1423 100644
              mChargingSpeed = status.getChargingSpeed(mContext);
              mBatteryLevel = status.level;
              mBatteryPresent = status.present;
-@@ -885,6 +944,13 @@ public class KeyguardIndicationController {
+@@ -964,6 +1023,13 @@ public class KeyguardIndicationController {
                  Log.e(TAG, "Error calling IBatteryStats: ", e);
                  mChargingTimeRemaining = -1;
              }
@@ -235,5 +234,5 @@ index 8a397199dc84..34f4114c1423 100644
              if (mDozing) {
                  if (!wasPluggedIn && mPowerPluggedIn) {
 -- 
-2.20.1
+2.25.1
 

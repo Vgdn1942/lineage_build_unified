@@ -1,7 +1,7 @@
-From 8f12ff17f549034410abbd424210b2da3c8dc1f7 Mon Sep 17 00:00:00 2001
+From a6a0f93727c0c92fd4c7a08c79ae1bad8db1da48 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Tue, 12 Oct 2021 20:48:41 +0300
-Subject: [PATCH] Add TARGET_BOARD_PLATFORM
+Subject: [PATCH 04/24] Add TARGET_BOARD_PLATFORM
 
 Change-Id: I9dff1971d91c8f0e8082bf0afe66a6a2b46af334
 ---
@@ -9,7 +9,7 @@ Change-Id: I9dff1971d91c8f0e8082bf0afe66a6a2b46af334
  1 file changed, 1 insertion(+)
 
 diff --git a/bv9500plus/BoardConfig.mk b/bv9500plus/BoardConfig.mk
-index 95ae8d4..99d9a54 100644
+index 35475d5..b2c7051 100644
 --- a/bv9500plus/BoardConfig.mk
 +++ b/bv9500plus/BoardConfig.mk
 @@ -15,4 +15,5 @@ TARGET_SCREEN_WIDTH := 1080
@@ -19,5 +19,5 @@ index 95ae8d4..99d9a54 100644
 +TARGET_BOARD_PLATFORM := mt6771
  
 -- 
-2.20.1
+2.25.1
 

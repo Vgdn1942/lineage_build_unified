@@ -1,7 +1,7 @@
-From 5b5659eb4fca22225b6bdac8aeef261ac07dd1ce Mon Sep 17 00:00:00 2001
+From 370f69edc6f2841315ca2c88f2b67933d54df6fb Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 25 Dec 2021 14:13:01 +0300
-Subject: [PATCH] Permissive lepton domain
+Subject: [PATCH 17/24] Permissive lepton domain
 
 Change-Id: I31bfc34612d2d86c778692800498ce28b82132bb
 ---
@@ -57,5 +57,5 @@ index e7d30c7..aaa417d 100644
  allow platform_app lepton_service:service_manager {find};
  allow untrusted_app lepton_service:service_manager {find};
 -- 
-2.20.1
+2.25.1
 

@@ -22,6 +22,7 @@ fi
 
 NOSYNC=false
 PERSONAL=false
+
 for var in "${@:2}"
 do
     if [ ${var} == "nosync" ]
@@ -44,20 +45,20 @@ echo \!\!\! failed patch application, etc.;\
 echo\
 )' ERR
 
-START=`date +%s`
+START="$(date +%s)"
 BUILD_DATE="$(date +%Y%m%d)"
 BUILD_OUTPUT=~/GSI_treble_build/build-output
 
 export WITH_SU=false
 export WITH_GAPPS=true
-#export OUT_DIR_COMMON_BASE=~/gsi_out
+#export OUT_DIR_COMMON_BASE=/media/vgdn1942/6ac92837-7dff-4a51-9106-fa31ee35978d/vgdn1942/gsi_out
 export PATH=$PATH:~/bin
 
 prep_build() {
     echo "Preparing local manifests"
     #repo init -u https://github.com/Vgdn1942/android.git -b lineage-19.1
     #repo init -u https://github.com/AndyCGYan/android.git -b lineage-19.1
-    #repo init -u https://github.com/LineageOS/android.git -b lineage-19.1
+    repo init -u https://github.com/LineageOS/android.git -b lineage-19.1
     mkdir -p .repo/local_manifests
     cp ./lineage_build_unified/local_manifests/*.xml .repo/local_manifests
 
@@ -67,16 +68,17 @@ prep_build() {
         ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
     cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0008-Keyguard-UI-Fix-status-bar-quick-settings-margins-an.patch \
         ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
-    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0015-UI-Remove-privacy-dot-padding.patch \
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0017-UI-Remove-privacy-dot-padding.patch \
         ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
 
     rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch # Back vendor_init
-    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0009-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0008-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
 
     # unneeded patches
     rm -f ./lineage_patches_unified/patches_platform/vendor_partner_gms/0001-SearchLauncher-Adapt-to-Trebuchet.patch
     rm -f ./lineage_patches_unified/patches_platform/vendor_partner_gms/0002-SearchLauncher-Fix-build-on-Sv2.patch
     rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0011-UI-Unblock-alarm-status-bar-icon.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_system_vold/0006-Log-support-for-exfat-texfat-FS-driver-names.patch
 
     rm -rf ./device/phh/treble/miravision
     echo ""
@@ -90,14 +92,19 @@ prep_build() {
     mkdir -p $BUILD_OUTPUT
     echo ""
 
-    repopick -Q "status:open+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.1"
+    repopick -Q "(status:open+AND+NOT+is:wip)+(label:Code-Review>=0+AND+label:Verified>=0)+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.1+NOT+332083"
     repopick -t twelve-burnin
+    repopick -t qs-lightmode
+    repopick -t powermenu-lightmode
 
     repopick 321337 # Deprioritize important developer notifications
     repopick 321338 # Allow disabling important developer notifications
     repopick 321339 # Allow disabling USB notifications
-    repopick 326712 # overlay: show all icons in collapsed statusbar
-    repopick 327113 # Keystore 2.0: Add CREATION_DATETIME only for Keymint V1 and higher.
+    repopick 329229 -f # Alter model name to avoid SafetyNet HW attestation enforcement
+    repopick 329230 -f # keystore: Block key attestation for SafetyNet
+    repopick 329409 # SystemUI: screenshot: open the screenshot instead of edit
+    repopick 331534 -f # SystemUI: Add support to add/remove QS tiles with one tap
+    repopick 331791 # Skip checking SystemUI's permission for observing sensor privacy
 
     repopick -f 239371 # SystemUI: Switch back to pre P mobile type icon style
 
@@ -106,9 +113,9 @@ prep_build() {
     cd ../..
 
     # fix bootloop after add lockscreen
-    cd frameworks/base
-    git revert 3d2dc3fd4d9f222259ea0fde745e20524a05e0d0 --no-edit # SystemUI: Implement hide gestural navigation hint bar [1/5]
-    cd ../..
+    #cd frameworks/base
+    #git revert 3d2dc3fd4d9f222259ea0fde745e20524a05e0d0 --no-edit # SystemUI: Implement hide gestural navigation hint bar [1/5]
+    #cd ../..
 }
 
 apply_patches() {
@@ -170,14 +177,12 @@ build_treble() {
 
 if ${NOSYNC}
 then
-    echo "ATTENTION: syncing/patching skipped!"
-    echo ""
-    echo "Setting up build environment"
+    echo -e "ATTENTION: syncing/patching skipped!\n"
+    echo -e "Setting up build environment\n"
     source build/envsetup.sh &> /dev/null
-    echo ""
 else
     prep_build
-    echo "Applying patches"
+    echo -e "Applying patches\n"
     prep_${MODE}
     apply_patches patches_platform
     apply_patches patches_${MODE}
@@ -189,7 +194,6 @@ else
         apply_patches patches_${MODE}_personal
     fi
     finalize_${MODE}
-    echo ""
 fi
 
 for var in "${@:2}"
@@ -201,16 +205,15 @@ do
     echo "Starting $(${PERSONAL} && echo "personal " || echo "")build for ${MODE} ${var}"
     build_${MODE} ${var}
 done
-ls $BUILD_OUTPUT | grep 'lineage' || true
+ls $BUILD_OUTPUT | grep "lineage" || true
 du -hs $BUILD_OUTPUT/lineage*
 
 if [ ${MODE} == "treble" ]
 then
-    echo "OTA timestamp: $START"
-    echo ""
+    echo -e "OTA timestamp: $START\n"
 fi
 
-END=`date +%s`
+END="$(date +%s)"
 ELAPSEDM=$(($(($END-$START))/60))
 ELAPSEDS=$(($(($END-$START))-$ELAPSEDM*60))
 echo "Buildbot completed in $ELAPSEDM minutes and $ELAPSEDS seconds"

@@ -1,7 +1,7 @@
-From 75d769565e172258fa8b2809be309d47f416258e Mon Sep 17 00:00:00 2001
+From 5effa0b06f7cc7e6529133d9e8ef5c3ca05f40cc Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Wed, 15 Dec 2021 12:55:24 +0300
-Subject: [PATCH] Add sepolicy for lepton
+Subject: [PATCH 13/24] Add sepolicy for lepton
 
 Change-Id: I0e8ed80e42a6255362490596b6247df4ad2d2826
 ---
@@ -12,10 +12,10 @@ Change-Id: I0e8ed80e42a6255362490596b6247df4ad2d2826
  create mode 100644 sepolicy/lepton.te
 
 diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
-index da7d6be..88090bb 100644
+index bae7e9d..35b4a30 100644
 --- a/sepolicy/file_contexts
 +++ b/sepolicy/file_contexts
-@@ -19,3 +19,8 @@
+@@ -20,3 +20,8 @@
  /dev/smcinvoke u:object_r:smcinvoke_device:s0
  
  /dev/fm(/.*)?   u:object_r:fm_device:s0
@@ -26,7 +26,7 @@ index da7d6be..88090bb 100644
 +
 diff --git a/sepolicy/lepton.te b/sepolicy/lepton.te
 new file mode 100644
-index 0000000..0f8bccd
+index 0000000..6843810
 --- /dev/null
 +++ b/sepolicy/lepton.te
 @@ -0,0 +1,31 @@
@@ -62,7 +62,7 @@ index 0000000..0f8bccd
 +allow untrusted_app_all lepton_service:service_manager {find};
 +
 diff --git a/sepolicy/service_contexts b/sepolicy/service_contexts
-index 7680633..fcaff03 100644
+index 7680633..263f6a1 100644
 --- a/sepolicy/service_contexts
 +++ b/sepolicy/service_contexts
 @@ -8,3 +8,7 @@ irit                                                 u:object_r:radio_service:s0
@@ -74,5 +74,5 @@ index 7680633..fcaff03 100644
 +LeptonCameraService                     u:object_r:lepton_service:s0
 +
 -- 
-2.20.1
+2.25.1
 

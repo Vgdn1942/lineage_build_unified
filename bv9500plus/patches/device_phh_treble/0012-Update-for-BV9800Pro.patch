@@ -1,7 +1,7 @@
-From 0c2eaa9cd8139003399483c4b4329e351b34063b Mon Sep 17 00:00:00 2001
+From 662d47483f69906687c73b457fe0d9782b940d98 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Fri, 10 Dec 2021 22:35:49 +0300
-Subject: [PATCH] Update for BV9800Pro
+Subject: [PATCH 12/24] Update for BV9800Pro
 
 Change-Id: I773515264f2eaf2f54fb1f1d76b42bfecb6398d3
 ---
@@ -22,7 +22,7 @@ Change-Id: I773515264f2eaf2f54fb1f1d76b42bfecb6398d3
  create mode 100644 hal/lepton_camera/lib64/libleptoncamera.so
 
 diff --git a/base.mk b/base.mk
-index 33e22b5..922f82e 100644
+index 613cf20..c24d79d 100644
 --- a/base.mk
 +++ b/base.mk
 @@ -148,6 +148,10 @@ PRODUCT_COPY_FILES += \
@@ -1413,7 +1413,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/rw-system.sh b/rw-system.sh
-index 6f8a91e..b25136b 100644
+index fdb1d08..8f0c3b5 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
 @@ -61,7 +61,7 @@ fi
@@ -1425,7 +1425,7 @@ index 6f8a91e..b25136b 100644
      setprop persist.adb.nonblocking_ffs true
  else
      setprop persist.adb.nonblocking_ffs false
-@@ -262,7 +262,7 @@ changeKeylayout() {
+@@ -269,7 +269,7 @@ changeKeylayout() {
          changed=true
      fi
  
@@ -1435,5 +1435,5 @@ index 6f8a91e..b25136b 100644
          chmod 0644 /mnt/phh/keylayout/mtk-kpd.kl
          changed=true
 -- 
-2.20.1
+2.25.1
 

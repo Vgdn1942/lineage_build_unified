@@ -1,7 +1,7 @@
-From b2b9afc60e7d1d4e20daf2d696d5a6c09c86a13d Mon Sep 17 00:00:00 2001
+From 61c3a44d35a6ea0fd262fc3c4bdfc9a3dfbd3839 Mon Sep 17 00:00:00 2001
 From: Vgdn1942 <vgdn1942@gmail.com>
 Date: Fri, 15 Apr 2022 17:19:23 +0300
-Subject: [PATCH] GAPPS variant
+Subject: [PATCH 24/24] GAPPS variant
 
 Change-Id: I11894ffdff8a8b5af846ab922fa6134c17557484
 ---

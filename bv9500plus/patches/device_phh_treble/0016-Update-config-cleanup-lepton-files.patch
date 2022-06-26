@@ -1,7 +1,7 @@
-From c6a329309d070d47eb54ce4fe230ceedf7a5b555 Mon Sep 17 00:00:00 2001
+From 2a28a97ecfe9f9b9b232f24421c2ae6391ecfe01 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Tue, 21 Dec 2021 20:23:57 +0300
-Subject: [PATCH] Update config, cleanup lepton files
+Subject: [PATCH 16/24] Update config, cleanup lepton files
 
 Change-Id: Ibd747e96335851462792f554cf09aaa4222554ed
 ---
@@ -1986,7 +1986,7 @@ zMW0qI>Um%+gLD4xo$|N$Bqa`KduRPP@)O33(X*bYm!oPQFRXY+`*Gcd8>cQRC-MAz
 r{^0hUN3M5Am`bD^QRF~|hVy~RlAUcy=dp_(QoIz){!SU3RO$Z!qO|<e
 
 diff --git a/overlay/frameworks/base/core/res/res/values/config.xml b/overlay/frameworks/base/core/res/res/values/config.xml
-index d4f5f09..7028454 100644
+index fa88b14..a64e54e 100644
 --- a/overlay/frameworks/base/core/res/res/values/config.xml
 +++ b/overlay/frameworks/base/core/res/res/values/config.xml
 @@ -39,6 +39,13 @@
@@ -2004,10 +2004,10 @@ index d4f5f09..7028454 100644
      <!-- Screen Wake Keys
           Determines whether the specified key groups can be used to wake up the device. -->
 diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
-index 76ad47a..328e375 100644
+index 35b4a30..a1ff9d8 100644
 --- a/sepolicy/file_contexts
 +++ b/sepolicy/file_contexts
-@@ -21,6 +21,4 @@
+@@ -22,6 +22,4 @@
  /dev/fm(/.*)?   u:object_r:fm_device:s0
  
  /dev/lepton(/.*)?               u:object_r:lepton_device:s0
@@ -2062,5 +2062,5 @@ index 5673443..7680633 100644
 -ThermalCameraService                    u:object_r:lepton_service:s0
 -flir.lepton_camera_service              u:object_r:lepton_service:s0
 -- 
-2.20.1
+2.25.1
 

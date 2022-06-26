@@ -1,7 +1,7 @@
-From 578630648b2d95f967a31e0915eb26bdf6726a05 Mon Sep 17 00:00:00 2001
+From c762d1360602fb46a0ec0c26a032db8c4ba97c0f Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Fri, 13 Aug 2021 06:49:40 +0300
-Subject: [PATCH] Fix backlight on offline charger
+Subject: [PATCH 02/12] Fix backlight on offline charger
 
 Change-Id: Icd1fecb37239ed6f8e8942edbd4f06caa8fa65e2
 ---
@@ -9,7 +9,7 @@ Change-Id: Icd1fecb37239ed6f8e8942edbd4f06caa8fa65e2
  1 file changed, 84 insertions(+)
 
 diff --git a/healthd/healthd_mode_charger.cpp b/healthd/healthd_mode_charger.cpp
-index 386ba1a9b..11fc30f71 100644
+index e95efc04c..42be5af10 100644
 --- a/healthd/healthd_mode_charger.cpp
 +++ b/healthd/healthd_mode_charger.cpp
 @@ -19,6 +19,7 @@
@@ -20,7 +20,7 @@ index 386ba1a9b..11fc30f71 100644
  #include <inttypes.h>
  #include <stdio.h>
  #include <stdlib.h>
-@@ -259,6 +260,64 @@ out:
+@@ -268,6 +269,64 @@ out:
      LOGW("\n");
  }
  
@@ -85,7 +85,7 @@ index 386ba1a9b..11fc30f71 100644
  static int request_suspend(bool enable) {
      if (!android::sysprop::ChargerProperties::enable_suspend().value_or(false)) {
          return 0;
-@@ -319,6 +378,7 @@ void Charger::UpdateScreenState(int64_t now) {
+@@ -328,6 +387,7 @@ void Charger::UpdateScreenState(int64_t now) {
          healthd_draw_.reset(new HealthdDraw(&batt_anim_));
  
          if (android::sysprop::ChargerProperties::disable_init_blank().value_or(false)) {
@@ -93,7 +93,7 @@ index 386ba1a9b..11fc30f71 100644
              healthd_draw_->blank_screen(true);
              screen_blanked_ = true;
          }
-@@ -328,6 +388,7 @@ void Charger::UpdateScreenState(int64_t now) {
+@@ -337,6 +397,7 @@ void Charger::UpdateScreenState(int64_t now) {
      if (batt_anim_.num_cycles > 0 && batt_anim_.cur_cycle == batt_anim_.num_cycles) {
          reset_animation(&batt_anim_);
          next_screen_transition_ = -1;
@@ -101,7 +101,7 @@ index 386ba1a9b..11fc30f71 100644
          healthd_draw_->blank_screen(true);
          screen_blanked_ = true;
          LOGV("[%" PRId64 "] animation done\n", now);
-@@ -369,6 +430,10 @@ void Charger::UpdateScreenState(int64_t now) {
+@@ -378,6 +439,10 @@ void Charger::UpdateScreenState(int64_t now) {
          }
      }
  
@@ -112,7 +112,7 @@ index 386ba1a9b..11fc30f71 100644
      /* draw the new frame (@ cur_frame) */
      healthd_draw_->redraw_screen(&batt_anim_, surf_unknown_);
  
-@@ -464,6 +529,7 @@ void Charger::ProcessKey(int code, int64_t now) {
+@@ -473,6 +538,7 @@ void Charger::ProcessKey(int code, int64_t now) {
                     accordingly. */
                  if (property_get_bool("ro.enable_boot_charger_mode", false)) {
                      LOGW("[%" PRId64 "] booting from charger mode\n", now);
@@ -120,7 +120,7 @@ index 386ba1a9b..11fc30f71 100644
                      property_set("sys.boot_from_charger_mode", "1");
                  } else {
                      if (batt_anim_.cur_level >= boot_min_cap_) {
-@@ -576,6 +642,24 @@ void Charger::OnHealthInfoChanged(const HealthInfo_2_1& health_info) {
+@@ -585,6 +651,24 @@ void Charger::OnHealthInfoChanged(const HealthInfo_2_1& health_info) {
      }
      health_info_ = health_info.legacy.legacy;
  
@@ -146,5 +146,5 @@ index 386ba1a9b..11fc30f71 100644
  }
  
 -- 
-2.20.1
+2.25.1
 

@@ -22,7 +22,7 @@ index 2a9a6daa6d..b9b12ad867 100644
      <string name="auto_rotate_manage_permission_button" msgid="2591146085906382385">"Управление разрешениями"</string>
 +    <string name="mira_vision_summary">"Поставщик самых лучших визуальных эффектов"</string>
      <string name="night_display_title" msgid="8532432776487216581">"Ночная подсветка"</string>
-     <string name="night_display_text" msgid="4789324042428095383">"С ночной подсветкой экран приобретает желтоватый оттенок. Это снижает напряжение глаз при тусклом свете и может помочь вам быстрее заснуть."</string>
+     <string name="night_display_text" msgid="4789324042428095383">"С ночной подсветкой экран приобретает желтоватый оттенок. Это снижает напряжение глаз и может помочь вам быстрее заснуть."</string>
      <string name="night_display_auto_mode_title" msgid="5869128421470824381">"Расписание"</string>
 @@ -3610,7 +3611,7 @@
      <string name="keywords_wifi_calling" msgid="4319184318421027136">"wifi, wi-fi, вызов, звонок"</string>

@@ -1,7 +1,7 @@
-From c1a7d231c0b0c2cdf80af94328c8f9f2336fd97e Mon Sep 17 00:00:00 2001
+From f9ea21035ff33bee7a5716a7451877bfc01a330f Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 11 Dec 2021 16:43:13 +0300
-Subject: [PATCH] Add overlay for Blackview BV9800Pro
+Subject: [PATCH 41/45] Add overlay for Blackview BV9800Pro
 
 Change-Id: I4056c6fc974de9efe49df0bc96ce358b000fde7e
 ---
@@ -300,7 +300,7 @@ index 0000000..557b298
 +</device>
 \ No newline at end of file
 diff --git a/overlay.mk b/overlay.mk
-index 59478df..0b01308 100755
+index 9058333..e6258af 100755
 --- a/overlay.mk
 +++ b/overlay.mk
 @@ -15,6 +15,7 @@ PRODUCT_PACKAGES += \
@@ -312,5 +312,5 @@ index 59478df..0b01308 100755
  	treble-overlay-caf-ims \
  	treble-overlay-devinputjack \
 -- 
-2.20.1
+2.25.1
 

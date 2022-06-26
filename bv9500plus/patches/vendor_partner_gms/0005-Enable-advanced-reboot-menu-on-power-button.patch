@@ -1,7 +1,7 @@
-From fc3343557e6db7f12601cf5b1befa4a47255d9fb Mon Sep 17 00:00:00 2001
+From 836ddd1a464ff35b5f39bfd5274c1784e1db6297 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Thu, 20 Jan 2022 14:56:05 +0300
-Subject: [PATCH] Enable advanced reboot menu on power button
+Subject: [PATCH 5/6] Enable advanced reboot menu on power button
 
 ---
  overlay/GmsConfigOverlayCommon/res/values/config.xml | 2 +-
@@ -21,5 +21,5 @@ index 517cbb0..9a28504 100644
      <!-- Control the behavior when the user presses the power and volume up buttons together.
              0 - Nothing
 -- 
-2.20.1
+2.25.1
 

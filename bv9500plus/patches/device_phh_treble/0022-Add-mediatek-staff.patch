@@ -1,7 +1,7 @@
-From 262b8aa3242e4bc605c98ac3cc762354e29bd1fc Mon Sep 17 00:00:00 2001
+From 29a21d5a72fbee71e737a6f39e2ff818fc182c42 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 5 Feb 2022 21:17:53 +0300
-Subject: [PATCH] Add mediatek staff
+Subject: [PATCH 22/24] Add mediatek staff
 
 Change-Id: I083ecac4c628af93fc9cc77caf9b2670b41a98bf
 ---
@@ -38,5 +38,5 @@ index 98fb820..eb1543f 100644
 +include device/mediatek/common/build/core/soong_config.mk
 +
 -- 
-2.20.1
+2.25.1
 

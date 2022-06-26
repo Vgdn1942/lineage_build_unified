@@ -1,7 +1,7 @@
-From c909903cf9b42a54a15f3d15524a519d74185a1c Mon Sep 17 00:00:00 2001
+From c0c7bfccced24600884315301af9f93bb2e67a24 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 13 Nov 2021 19:18:32 +0300
-Subject: [PATCH] Add fm libs for work FM radio
+Subject: [PATCH 06/24] Add fm libs for work FM radio
 
 Change-Id: I5ca1fab080a2cebadc904bab84faaad2af94d11e
 ---
@@ -69,10 +69,10 @@ Change-Id: I5ca1fab080a2cebadc904bab84faaad2af94d11e
  create mode 100644 sepolicy/fm_device.te
 
 diff --git a/base.mk b/base.mk
-index 0d75b22..cc058e7 100644
+index 8dba903..fe7c14c 100644
 --- a/base.mk
 +++ b/base.mk
-@@ -170,6 +170,9 @@ PRODUCT_PACKAGES += \
+@@ -171,6 +171,9 @@ PRODUCT_PACKAGES += \
  PRODUCT_PACKAGES += \
  	Stk
  
@@ -1554,7 +1554,7 @@ index 0000000..856719e
 +#endif
 diff --git a/fm_libs/custom/fm.h b/fm_libs/custom/fm.h
 new file mode 100644
-index 0000000..2639999
+index 0000000..4468c0c
 --- /dev/null
 +++ b/fm_libs/custom/fm.h
 @@ -0,0 +1,519 @@
@@ -7514,10 +7514,10 @@ index 0000000..5785025
 +}
 +
 diff --git a/sepolicy/file_contexts b/sepolicy/file_contexts
-index 5e39d5b..da7d6be 100644
+index 11dd447..bae7e9d 100644
 --- a/sepolicy/file_contexts
 +++ b/sepolicy/file_contexts
-@@ -17,3 +17,5 @@
+@@ -18,3 +18,5 @@
  /efs u:object_r:efs_file:s0
  
  /dev/smcinvoke u:object_r:smcinvoke_device:s0
@@ -7535,5 +7535,5 @@ index 0000000..f2615fb
 +allow priv_app fm_device:chr_file { ioctl read write getattr lock append map open };
 +allow system_app fm_device:chr_file { ioctl read write getattr lock append map open };
 -- 
-2.20.1
+2.25.1
 

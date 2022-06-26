@@ -1,7 +1,7 @@
-From 5582e217f50eedbaac8d65160af57b84ee036f89 Mon Sep 17 00:00:00 2001
+From 72611261f1bede97de21184b69d4498c0d0c4c18 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 19 Feb 2022 09:26:16 +0300
-Subject: [PATCH] Fix overlay for bv9500plus_ru
+Subject: [PATCH 43/45] Fix overlay for bv9500plus_ru
 
 Change-Id: I38684a5ac86e8f15b8e9d2b93eb90fb425c6ca25
 ---
@@ -22,5 +22,5 @@ index c8cd8cf..b27e32d 100644
  		android:isStatic="true" />
  </manifest>
 -- 
-2.20.1
+2.25.1
 

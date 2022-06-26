@@ -1,7 +1,7 @@
-From 0bee9a093db60c3193c210f5b9055380354e5cd4 Mon Sep 17 00:00:00 2001
+From aaf2b17909bdbb24805113cdaeb94d4b4e16809a Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Tue, 1 Feb 2022 17:06:44 +0300
-Subject: [PATCH] Add bv9500plus RU [1/2]
+Subject: [PATCH 11/12] Add bv9500plus RU [1/2]
 
 Change-Id: I629423eadf1d690d6beb99d6acd7004046962215
 ---
@@ -118,5 +118,5 @@ index 70367e0ef..ffd07bf67 100644
          property_override("ro.modversion", replaceString(version, device, "bv9500plus").c_str());
          property_override("ro.lineage.display.version", replaceString(version, device, "bv9500plus").c_str());
 -- 
-2.20.1
+2.25.1
 

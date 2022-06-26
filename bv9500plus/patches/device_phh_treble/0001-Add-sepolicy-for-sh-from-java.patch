@@ -1,7 +1,7 @@
-From a1fa3fca8a77b899e69c0b6c625468478c32cd18 Mon Sep 17 00:00:00 2001
+From a02d9724b7076d2ea647c29042a1dd0247f540ae Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Tue, 27 Jul 2021 18:59:23 +0300
-Subject: [PATCH] Add sepolicy for sh from java
+Subject: [PATCH 01/24] Add sepolicy for sh from java
 
 Change-Id: Ib8f4e885aa873370ed73f724e234124d37ef6bff
 ---
@@ -18,5 +18,5 @@ index 0000000..290018c
 +allow system_server { shell_exec vendor_shell_exec }:file { execute execute_no_trans };
 +
 -- 
-2.20.1
+2.25.1
 

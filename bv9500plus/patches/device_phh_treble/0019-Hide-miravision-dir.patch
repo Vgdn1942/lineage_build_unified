@@ -1,7 +1,7 @@
-From 60126df0b0420adc2ced98f6b3243273b9991a01 Mon Sep 17 00:00:00 2001
+From 3bbb7b09231d8ba9ce2f187a2dc7e1ecc8191841 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 15 Jan 2022 17:39:20 +0300
-Subject: [PATCH 1/2] Hide miravision dir
+Subject: [PATCH 19/24] Hide miravision dir
 
 Change-Id: I718097133f88154e866a5bcf017e77c47e20b32e
 ---
@@ -18,5 +18,5 @@ index a2533a7..90e77dd 100644
  AndroidProducts.mk
 +miravision/
 -- 
-2.20.1
+2.25.1
 

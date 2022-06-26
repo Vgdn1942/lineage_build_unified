@@ -1,7 +1,7 @@
-From 1c1a8f71d8a69c7e10d2cf5652edfd65f53238d0 Mon Sep 17 00:00:00 2001
+From 8733f497a7a476e63c591cb6f45923f524d52f01 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Tue, 1 Feb 2022 17:08:09 +0300
-Subject: [PATCH] Add bv9500plus RU [2/2]
+Subject: [PATCH 21/24] Add bv9500plus RU [2/2]
 
 Change-Id: Ieb04cb56285fa59c6e001afd60b705cc956b1cce
 ---
@@ -9,7 +9,7 @@ Change-Id: Ieb04cb56285fa59c6e001afd60b705cc956b1cce
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/rw-system.sh b/rw-system.sh
-index f9b252f..a59d991 100644
+index 8f0c3b5..3de3343 100644
 --- a/rw-system.sh
 +++ b/rw-system.sh
 @@ -61,7 +61,7 @@ fi
@@ -30,7 +30,7 @@ index f9b252f..a59d991 100644
          cp /system/phh/bv9500plus-mtk-kpd.kl /mnt/phh/keylayout/mtk-kpd.kl
          chmod 0644 /mnt/phh/keylayout/mtk-kpd.kl
          changed=true
-@@ -508,7 +508,7 @@ for f in /vendor/lib/mtk-ril.so /vendor/lib64/mtk-ril.so /vendor/lib/libmtk-ril.
+@@ -512,7 +512,7 @@ for f in /vendor/lib/mtk-ril.so /vendor/lib64/mtk-ril.so /vendor/lib/libmtk-ril.
      setprop persist.sys.radio.ussd.fix true
  done
  
@@ -40,5 +40,5 @@ index f9b252f..a59d991 100644
              /vendor/etc/init/android.hardware.light@2.0-service-mediatek.rc; do
          [ ! -f $f ] && continue
 -- 
-2.20.1
+2.25.1
 

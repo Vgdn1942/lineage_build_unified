@@ -1,7 +1,7 @@
-From 4a81115a6c35d36b98538f7684efed47b3196f81 Mon Sep 17 00:00:00 2001
+From 2f3eff63aed9b9d20102e64964f61d9fd2401fdf Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Tue, 16 Nov 2021 17:14:13 +0300
-Subject: [PATCH] Disable attributionTagName for now
+Subject: [PATCH 3/9] Disable attributionTagName for now
 
 Change-Id: Ib1889332188ced47010f07fc1494a0232f0a913b
 ---
@@ -22,5 +22,5 @@ index d0504fb481ca..eb74cfcd39bf 100644
      if (queue == NULL) {
          jniThrowRuntimeException(env, "Cannot construct native SensorEventQueue.");
 -- 
-2.20.1
+2.25.1
 

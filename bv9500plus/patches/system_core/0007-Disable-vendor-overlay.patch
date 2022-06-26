@@ -1,7 +1,7 @@
-From 1da945da83b8806eee75d66c2bd2dba7b593a10f Mon Sep 17 00:00:00 2001
+From 9a8a4f32e7fc2f29a978a45fe1863b45d5ce11a9 Mon Sep 17 00:00:00 2001
 From: vgdn1942 <vgdn1942@gmail.com>
 Date: Sat, 18 Dec 2021 07:42:31 +0300
-Subject: [PATCH] Disable vendor overlay
+Subject: [PATCH 07/12] Disable vendor overlay
 
 Change-Id: I5a26e43ee045f9df3120f603c710be12bc38b793
 ---
@@ -30,5 +30,5 @@ index d12e56233..01939d54d 100644
  }
 -
 -- 
-2.20.1
+2.25.1
 
