@@ -153,7 +153,12 @@ finalize_treble() {
 
 build_device() {
     brunch ${1}
-    mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.1-$BUILD_DATE-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "").zip
+    if ${WITH_GAPPS}
+    then
+        mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.1-$BUILD_DATE-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "").zip
+    else
+        mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.1-$BUILD_DATE-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "")_WO_GAPPS.zip
+    fi
 }
 
 build_treble() {
@@ -165,13 +170,18 @@ build_treble() {
         ("bv9500plus") TARGET=bv9500plus;;
         (*) echo "Invalid target - exiting"; exit 1;;
     esac
-    IMAGE_NAME=lineage-19.1-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")
+    if ${WITH_GAPPS}
+    then
+        IMAGE_NAME=lineage-19.1-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")
+    else
+        IMAGE_NAME=lineage-19.1-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")_WO_GAPPS
+    fi
     lunch lineage_${TARGET}-userdebug
     make -j$(nproc --all) installclean
     make -j$(nproc --all) systemimage
     #make -j4 systemimage
     mv $OUT/system.img $BUILD_OUTPUT/${IMAGE_NAME}.img
-    xz -c $BUILD_OUTPUT/$IMAGE_NAME.img -T$(nproc --all) > $BUILD_OUTPUT/$IMAGE_NAME.img.xz
+    xz -c $BUILD_OUTPUT/${IMAGE_NAME}.img -T$(nproc --all) > $BUILD_OUTPUT/${IMAGE_NAME}.img.xz
     #make vndk-test-sepolicy
 }
 

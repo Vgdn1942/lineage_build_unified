@@ -1,0 +1,130 @@
+#!/bin/bash
+
+BUILD_OUTPUT=~/GSI_treble_build/build-output
+IMAGE_NAME=lineage-19.1-$(date +%Y%m%d)-UNOFFICIAL
+BV9500PLUS=bv9500plus.img
+
+if [ -z $OUT ]; then
+    OUT=out/target/product/bv9500plus
+fi
+
+usage() {
+    echo "Usage $0 -key"
+    echo "where [key] is:"
+    echo "  '-m   | make' - make without clean"
+    echo "  '-f   | flash' - flash image from fastboot"
+    echo "  '-i   | installclean' - installclean && make"
+    echo "  '-c   | clean' - clean && make"
+    echo "  '-rf  | reboot' - adb reboot fastboot"
+    echo "  '-fr  | reboot' - fastboot reboot"
+    echo "  '-rfr | reboot' - reboot fastboot, flash, fastboot reboot"
+    echo "  '-s   | sync' - sync, patch, installclean && make"
+    echo "  '-p   | scp' - mv, xz && scp"
+    echo "  '-h   | help' - this help"
+}
+
+treble_cp() {
+    if [ -f $OUT/system.img ]; then
+        mv $OUT/system.img ~/GSI_treble_build/build-output/$IMAGE_NAME-$BV9500PLUS
+    fi
+    if [ -f $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS ]; then
+        if [ ! -f $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.xz ]; then
+            xz -c $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS -T$(nproc --all) > $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.xz
+        fi
+        md5sum $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS > $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.md5sum
+        md5sum $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.xz > $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.xz.md5sum
+        # push to server
+        scp -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS ubuntu@130.61.237.104:/home/ubuntu
+        scp -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.md5sum ubuntu@130.61.237.104:/home/ubuntu
+        scp -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.xz ubuntu@130.61.237.104:/home/ubuntu
+        scp -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS.xz.md5sum ubuntu@130.61.237.104:/home/ubuntu
+        # move to download on site
+        ssh -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key ubuntu@130.61.237.104 "sudo mv /home/ubuntu/$IMAGE_NAME-$BV9500PLUS /var/www/html/download/images/$IMAGE_NAME"
+        ssh -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key ubuntu@130.61.237.104 "sudo mv /home/ubuntu/$IMAGE_NAME-$BV9500PLUS.md5sum /var/www/html/download/md5sum/$IMAGE_NAME.md5sum"
+        ssh -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key ubuntu@130.61.237.104 "sudo mv /home/ubuntu/$IMAGE_NAME-$BV9500PLUS.xz /var/www/html/download/others"
+        ssh -i ~/.ssh/ssh-key-2021-09-29_oracle_vm.key ubuntu@130.61.237.104 "sudo mv /home/ubuntu/$IMAGE_NAME-$BV9500PLUS.xz.md5sum /var/www/html/download/md5sum"
+    else
+        echo "file $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS not exists!"
+    fi
+    ls $BUILD_OUTPUT | grep 'lineage' || true
+    du -hs $BUILD_OUTPUT/lineage*
+}
+
+treble_make() {
+    export OUT_DIR_COMMON_BASE=~/gsi_out
+    source build/envsetup.sh &> /dev/null
+    lunch lineage_bv9500plus-userdebug
+    if [ "$1" == clean ]; then
+        make -j$(nproc --all) clean
+    elif [ "$1" == installclean ]; then
+        make -j$(nproc --all) installclean
+    fi
+    #make -j$(nproc --all) systemimage
+    bash lineage_build_unified/buildbot_unified.sh treble bv9500plus nosync
+}
+
+treble_flash() {
+    if [ -f $OUT/system.img ]; then
+        echo "Flash $OUT/system.img"
+        fastboot flash system $OUT/system.img
+    elif [ -f $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS ]; then
+        echo "Flash $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS"
+        fastboot flash system $BUILD_OUTPUT/$IMAGE_NAME-$BV9500PLUS
+    else
+        echo "Image for flash not found!"
+        exit 1
+    fi
+}
+
+if [ -z $1 ]; then
+    usage
+    exit 1
+fi
+
+case $1 in
+    -m | make)
+      #echo "make"
+      #treble_make
+      echo "skip make, use -i key 'installclean && make'"
+      bash lineage_build_unified/buildbot_unified.sh treble bv9500plus nosync
+      ;;
+    -f | flash)
+      echo "flash image"
+      treble_flash
+      ;;
+    -i | installclean)
+      echo "installclean && make"
+      bash lineage_build_unified/buildbot_unified.sh treble bv9500plus nosync
+      ;;
+    -c | clean)
+      echo "clean && make"
+      treble_make clean
+      ;;
+    -rf )
+      echo "reboot fastboot"
+      adb -s BV9500PEEA0026225 reboot fastboot
+      ;;
+    -fr )
+      echo "fastboot reboot"
+      fastboot reboot
+      ;;
+    -rfr )
+      echo "reboot fastboot, flash, fastboot reboot"
+      adb -s BV9500PEEA0026225 reboot fastboot
+      sleep 2
+      treble_flash
+      sleep 1
+      fastboot reboot
+      ;;
+    -s | sync)
+      echo "sync && installclean && make"
+      bash lineage_build_unified/buildbot_unified.sh treble bv9500plus
+      ;;
+    -p | scp)
+      echo "mv && xz && scp"
+      treble_cp
+      ;;
+    -h | --help | help | *)
+     usage
+     ;;
+esac

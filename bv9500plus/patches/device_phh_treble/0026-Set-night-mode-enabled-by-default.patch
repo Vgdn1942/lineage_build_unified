@@ -1,0 +1,32 @@
+From a4d0a96f1016e3fbf12472e82348caacd21576ec Mon Sep 17 00:00:00 2001
+From: Vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 13 Jul 2022 21:23:19 +0300
+Subject: [PATCH] Set night mode enabled by default
+
+Change-Id: Ie73210b8f9cba6100c6e90cc1cafdb8fade3114f
+---
+ overlay/frameworks/base/core/res/res/values/config.xml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/overlay/frameworks/base/core/res/res/values/config.xml b/overlay/frameworks/base/core/res/res/values/config.xml
+index 2e6cda8..33b4a9b 100644
+--- a/overlay/frameworks/base/core/res/res/values/config.xml
++++ b/overlay/frameworks/base/core/res/res/values/config.xml
+@@ -71,6 +71,14 @@
+         <item>0:2:15</item>
+     </string-array>
+ 
++    <!-- Control the default night mode to use when there is no other mode override set.
++         One of the following values (see UiModeManager.java):
++             0 - MODE_NIGHT_AUTO
++             1 - MODE_NIGHT_NO
++             2 - MODE_NIGHT_YES
++    -->
++    <integer name="config_defaultNightMode">2</integer>
++
+     <array name="config_availableColorModes">
+         <!-- ColorDisplayManager.COLOR_MODE_NATURAL -->
+         <item>0</item>
+-- 
+2.25.1
+
