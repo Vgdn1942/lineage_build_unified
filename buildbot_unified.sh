@@ -46,7 +46,7 @@ echo\
 )' ERR
 
 START="$(date +%s)"
-BUILD_DATE="$(date +%Y%m%d)"
+#BUILD_DATE="$(date +%Y%m%d)"
 BUILD_OUTPUT=~/GSI_treble_build/build-output
 
 export WITH_SU=false
@@ -58,33 +58,42 @@ prep_build() {
     echo "Preparing local manifests"
     #repo init -u https://github.com/Vgdn1942/android.git -b lineage-19.1
     #repo init -u https://github.com/AndyCGYan/android.git -b lineage-19.1
-    repo init -u https://github.com/LineageOS/android.git -b lineage-19.1
+    repo init -u https://github.com/LineageOS/android.git -b lineage-19.1 --git-lfs
     mkdir -p .repo/local_manifests
     cp ./lineage_build_unified/local_manifests/*.xml .repo/local_manifests
 
-    rm -rf ./lineage_build_unified/bv9500plus/patches_andy_yan
-    mkdir -p ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
-    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0003-Disable-FP-lockouts.patch \
-        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
-    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0008-Keyguard-UI-Fix-status-bar-quick-settings-margins-an.patch \
-        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
-    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/0017-UI-Remove-privacy-dot-padding.patch \
-        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
-
-    rm -f ./lineage_patches_unified/patches_treble/system_core/0001-Revert-init-Add-vendor-specific-initialization-hooks.patch # Back vendor_init
-    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0008-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
-
-    # unneeded patches
-    rm -f ./lineage_patches_unified/patches_platform/vendor_partner_gms/0001-SearchLauncher-Adapt-to-Trebuchet.patch
-    rm -f ./lineage_patches_unified/patches_platform/vendor_partner_gms/0002-SearchLauncher-Fix-build-on-Sv2.patch
-    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/0011-UI-Unblock-alarm-status-bar-icon.patch
-    rm -f ./lineage_patches_unified/patches_treble_phh/platform_system_vold/0006-Log-support-for-exfat-texfat-FS-driver-names.patch
-
-    rm -rf ./device/phh/treble/miravision
-    echo ""
-
     echo "Syncing repos"
     repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
+    cd external/chromium-webview/prebuilt/arm64
+    git lfs pull
+    cd ../../../../
+    #repo forall -c git lfs pull
+    echo ""
+
+    rm -rf ./lineage_build_unified/bv9500plus/patches_andy_yan
+    mkdir -p ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    mkdir -p ./lineage_build_unified/bv9500plus/patches_andy_yan/device_phh_treble
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/*-Disable-FP-lockouts.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/*-Keyguard-UI-Fix-status-bar-quick-settings-margins-an.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/*-UI-Remove-privacy-dot-padding.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_platform_personal/frameworks_base/*-UI-Reconfigure-power-menu-items.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/frameworks_base
+    cp ./lineage_patches_unified/patches_treble_personal/device_phh_treble/*-Revert-treble-Set-BOARD_EXT4_SHARE_DUP_BLOCKS-explic.patch \
+        ./lineage_build_unified/bv9500plus/patches_andy_yan/device_phh_treble
+
+    rm -f ./lineage_patches_unified/patches_treble/system_core/*-Revert-init-Add-vendor-specific-initialization-hooks.patch # Back vendor_init
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/*-UI-Revive-navbar-layout-tuning-via-sysui_nav_bar-tun.patch # fix bootloop after add lockscreen
+
+    # unneeded patches
+    rm -f ./lineage_patches_unified/patches_platform/vendor_partner_gms/*-SearchLauncher-Adapt-to-Trebuchet.patch
+    rm -f ./lineage_patches_unified/patches_platform/vendor_partner_gms/*-SearchLauncher-Fix-build-on-Sv2.patch
+    rm -f ./lineage_patches_unified/patches_platform/frameworks_base/*-UI-Unblock-alarm-status-bar-icon.patch
+    rm -f ./lineage_patches_unified/patches_treble_phh/platform_system_vold/*-Log-support-for-exfat-texfat-FS-driver-names.patch
+
+    rm -rf ./device/phh/treble/miravision
     echo ""
 
     echo "Setting up build environment"
@@ -94,17 +103,14 @@ prep_build() {
 
     repopick -Q "(status:open+AND+NOT+is:wip)+(label:Code-Review>=0+AND+label:Verified>=0)+project:LineageOS/android_packages_apps_Trebuchet+branch:lineage-19.1+NOT+332083"
     repopick -t twelve-burnin
-    repopick -t qs-lightmode
-    repopick -t powermenu-lightmode
 
-    repopick 321337 # Deprioritize important developer notifications
-    repopick 321338 # Allow disabling important developer notifications
-    repopick 321339 # Allow disabling USB notifications
+    repopick 321337 -f # Deprioritize important developer notifications
+    repopick 321338 -f # Allow disabling important developer notifications
+    repopick 321339 -f # Allow disabling USB notifications
     repopick 329229 -f # Alter model name to avoid SafetyNet HW attestation enforcement
     repopick 329230 -f # keystore: Block key attestation for SafetyNet
-    repopick 329409 # SystemUI: screenshot: open the screenshot instead of edit
     repopick 331534 -f # SystemUI: Add support to add/remove QS tiles with one tap
-    repopick 331791 # Skip checking SystemUI's permission for observing sensor privacy
+    repopick 331791 -f # Skip checking SystemUI's permission for observing sensor privacy
 
     repopick -f 239371 # SystemUI: Switch back to pre P mobile type icon style
 
@@ -155,9 +161,9 @@ build_device() {
     brunch ${1}
     if ${WITH_GAPPS}
     then
-        mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.1-$BUILD_DATE-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "").zip
+        mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.1-$(date +%Y%m%d)-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "").zip
     else
-        mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.1-$BUILD_DATE-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "")_WO_GAPPS.zip
+        mv $OUT/lineage-*.zip $BUILD_OUTPUT/lineage-19.1-$(date +%Y%m%d)-UNOFFICIAL-${1}$($PERSONAL && echo "-personal" || echo "")_WO_GAPPS.zip
     fi
 }
 
@@ -172,9 +178,9 @@ build_treble() {
     esac
     if ${WITH_GAPPS}
     then
-        IMAGE_NAME=lineage-19.1-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")
+        IMAGE_NAME=lineage-19.1-$(date +%Y%m%d)-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")
     else
-        IMAGE_NAME=lineage-19.1-$BUILD_DATE-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")_WO_GAPPS
+        IMAGE_NAME=lineage-19.1-$(date +%Y%m%d)-UNOFFICIAL-${TARGET}$(${PERSONAL} && echo "-personal" || echo "")_WO_GAPPS
     fi
     lunch lineage_${TARGET}-userdebug
     make -j$(nproc --all) installclean

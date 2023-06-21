@@ -5,14 +5,14 @@ Subject: [PATCH 22/24] Add mediatek staff
 
 Change-Id: I083ecac4c628af93fc9cc77caf9b2670b41a98bf
 ---
- bv9500plus/BoardConfig.mk | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ bv9500plus/BoardConfig.mk | 20 +++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 diff --git a/bv9500plus/BoardConfig.mk b/bv9500plus/BoardConfig.mk
 index 98fb820..eb1543f 100644
 --- a/bv9500plus/BoardConfig.mk
 +++ b/bv9500plus/BoardConfig.mk
-@@ -14,7 +14,22 @@ TARGET_SCREEN_WIDTH := 1080
+@@ -14,7 +14,23 @@ TARGET_SCREEN_WIDTH := 1080
  # Charger images
  BOARD_HEALTHD_CUSTOM_CHARGER_RES := device/phh/treble/charger/images
  
@@ -29,6 +29,7 @@ index 98fb820..eb1543f 100644
 +
 +# MTK Rules
 +MTK_HARDWARE := true
++BOARD_HAS_MTK_HARDWARE := true
 +BOARD_GLOBAL_CLFAGS += -DMTK_HARDWARE
 +TARGET_PROVIDES_MTK_PROPRIETARY := true
 +TARGET_PROVIDES_MEDIATEK_IMS_STACK := true

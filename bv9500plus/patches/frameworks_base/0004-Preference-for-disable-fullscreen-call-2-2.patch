@@ -1,18 +1,18 @@
-From 16cf8686d5fcd4d8ac4e5f45ed620c1f7c491af7 Mon Sep 17 00:00:00 2001
-From: vgdn1942 <vgdn1942@gmail.com>
-Date: Sat, 4 Dec 2021 23:01:12 +0300
-Subject: [PATCH 5/9] Preference for disable fullscreen call [2/2]
+From 34fab1bbebc2310816d29e44adbfd7b413c606ed Mon Sep 17 00:00:00 2001
+From: Vgdn1942 <vgdn1942@gmail.com>
+Date: Wed, 21 Jun 2023 12:08:23 +0300
+Subject: [PATCH] Preference for disable fullscreen call [2/2]
 
-Change-Id: I7d5e4cc51406e0c964bf05fe204cb3f88f2e9d1b
+Change-Id: Iaca732712478f10a996c6b7ae27752cf4400d020
 ---
- .../NotificationInterruptStateProviderImpl.java       | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ .../NotificationInterruptStateProviderImpl.java           | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java b/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
-index aed24fde2155..ac71fc77843b 100644
+index a14f7a95ca2f..692434b69d79 100644
 --- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
 +++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/interruption/NotificationInterruptStateProviderImpl.java
-@@ -26,6 +26,7 @@ import android.os.Build;
+@@ -27,6 +27,7 @@ import android.os.Build;
  import android.os.Handler;
  import android.os.PowerManager;
  import android.os.RemoteException;
@@ -20,24 +20,20 @@ index aed24fde2155..ac71fc77843b 100644
  import android.os.UserHandle;
  import android.provider.Settings;
  import android.service.dreams.IDreamManager;
-@@ -176,9 +177,15 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
+@@ -177,6 +178,13 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
       */
      @Override
      public boolean shouldLaunchFullScreenIntentWhenAdded(NotificationEntry entry) {
--        return entry.getSbn().getNotification().fullScreenIntent != null
-+        String packageName = entry.getSbn().getPackageName();
-+        String propFullScreen = SystemProperties.get("persist.fullscreen.incall", "false");
-+        boolean isInCall = "com.android.dialer".equals(packageName);
-+        boolean fullScreenProp = "true".equals(propFullScreen);
++        boolean isInCall = "com.android.dialer".equals(entry.getSbn().getPackageName());
++        boolean fullScreenProp = "true".equals(SystemProperties.get("persist.fullscreen.incall", "false"));
 +
-+        return (entry.getSbn().getNotification().fullScreenIntent != null
-                 && (!shouldHeadsUp(entry)
--                || mStatusBarStateController.getState() == StatusBarState.KEYGUARD);
-+                || mStatusBarStateController.getState() == StatusBarState.KEYGUARD))
-+                || (isInCall && fullScreenProp);
-     }
- 
-     private boolean shouldHeadsUpWhenAwake(NotificationEntry entry) {
++        if (isInCall && fullScreenProp) {
++            return true;
++        }
++
+         if (entry.getSbn().getNotification().fullScreenIntent == null) {
+             return false;
+         }
 -- 
 2.25.1
 
