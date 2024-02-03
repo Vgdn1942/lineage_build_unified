@@ -109,7 +109,7 @@ prep_build() {
     repopick 321339 -f # Allow disabling USB notifications
     repopick 329229 -f # Alter model name to avoid SafetyNet HW attestation enforcement
     repopick 329230 -f # keystore: Block key attestation for SafetyNet
-    repopick 331534 -f # SystemUI: Add support to add/remove QS tiles with one tap
+    #repopick 331534 -f # SystemUI: Add support to add/remove QS tiles with one tap
     repopick 331791 -f # Skip checking SystemUI's permission for observing sensor privacy
 
     repopick -f 239371 # SystemUI: Switch back to pre P mobile type icon style
@@ -153,8 +153,8 @@ finalize_treble() {
     git clean -fdx
     bash generate.sh lineage
     rm lineage_a*.mk
-    cd ../../..
-    tar -xf ./lineage_build_unified/bv9500plus/miravision.tar.gz -C ./device/phh/treble/
+    #cd ../../..
+    #tar -xf ./lineage_build_unified/bv9500plus/miravision.tar.gz -C ./device/phh/treble/
 }
 
 build_device() {

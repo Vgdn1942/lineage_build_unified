@@ -31,8 +31,8 @@ index 5a11660..a8523b6 100644
 --- a/bv9500plus.mk
 +++ b/lineage_bv9500plus.mk
 @@ -9,7 +9,7 @@ $(call inherit-product, device/phh/treble/lineage.mk)
- MTK_PLATFORM_FOLDER := mt6771
- $(call inherit-product, device/mediatek/common/target.mk)
+ $(call inherit-product, device/phh/treble/gapps.mk)
+ $(call inherit-product, device/phh/treble/lineage.mk)
  
 -PRODUCT_NAME := bv9500plus
 +PRODUCT_NAME := lineage_bv9500plus

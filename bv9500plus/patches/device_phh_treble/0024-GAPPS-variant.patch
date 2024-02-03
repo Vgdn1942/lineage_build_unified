@@ -25,7 +25,7 @@ index e143c7b..a08880b 100644
 +
  $(call inherit-product, device/phh/treble/lineage.mk)
  
- MTK_PLATFORM_FOLDER := mt6771
+ PRODUCT_NAME := lineage_bv9500plus
 -- 
 2.25.1
 
